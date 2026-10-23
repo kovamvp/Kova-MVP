@@ -139,7 +139,8 @@ class PgStore:
             )""")
         self._exec("create table if not exists kova_meta (key text primary key, value jsonb not null)")
         row = self._exec("select value from kova_meta where key = 'seed_version'", fetch="one")
-        if not row or row[0] != SEED_VERSION:
+        # only move forward: an older deployment must never wipe data seeded by a newer one
+        if not row or str(row[0]) < SEED_VERSION:
             self.reset()
 
     def reset(self) -> None:

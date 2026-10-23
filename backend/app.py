@@ -24,7 +24,9 @@ async def on_error(request: Request, exc: Exception):
 
 @app.get("/api/health")
 def health():
-    return {"ok": True, "store": store().__class__.__name__, "time": now_ist(),
+    from .store import SEED_VERSION
+    return {"ok": True, "store": store().__class__.__name__, "time": now_ist(), "seed": SEED_VERSION,
+            "commit": (os.environ.get("VERCEL_GIT_COMMIT_SHA") or "local")[:7],
             "groq": bool(os.environ.get("GROQ_API_KEY_AGENT") or os.environ.get("GROQ_API_KEY_SPEECH"))}
 
 
