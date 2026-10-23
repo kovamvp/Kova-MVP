@@ -693,3 +693,27 @@ ul.clean.risk li::before { border-color: var(--loss); }
 .md-table { overflow-x: auto; margin: 0 0 10px; border: 1px solid var(--line); border-radius: var(--r-m); }
 .md-table .table { font-size: 12.5px; }
 .md-table .table td, .md-table .table th { padding: 7px 10px; vertical-align: top; }
+
+/* narrow screens: keep the dock on one line */
+@media (max-width: 860px) {
+  .dock a { min-width: 0; padding: 9px 10px; }
+  .dock a span { display: none; }
+  .ctxbar .cb.minor { display: none; }
+  .ctxbar-wrap { bottom: 80px; }
+  .page-head { flex-direction: column; align-items: flex-start; }
+}
+.prov .tip { display: none; }
+.prov:hover .tip, .prov:focus-visible .tip { display: block; }
+@media (max-width: 860px) {
+  .page { overflow-x: hidden; }
+  .table { display: block; overflow-x: auto; white-space: nowrap; }
+  .statline { grid-template-columns: 1fr 1fr; }
+  .req-due, .req-row .pill:not(:last-child) { display: none; }
+  .list-toolbar .select { margin-left: 0 !important; }
+}
+@media (max-width: 860px) {
+  .profile-head > .row, .profile-head > .spread { flex-wrap: wrap; }
+  .profile-head .stat { text-align: left !important; width: 100%; }
+  .searchbox span, .searchbox kbd { display: none; }
+  .topbar { grid-template-columns: auto 1fr auto; }
+}
