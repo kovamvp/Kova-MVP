@@ -564,7 +564,7 @@ for p in prospects:
     if p["stage"] != "Closed" and p["interests"]:
         p["suggestions"].append({"from": {"name": "Meera Joshi", "title": "Product Manager, Mutual Funds"} if random.random() < 0.5 else {"name": "Anand Iyer", "title": "Chief Investment Officer"},
                                  "date": d(-random.randint(1, 12)), "product_id": p["interests"][0],
-                                 "text": f"Fits the stated need ({p['need'].lower()}). Lead with liquidity and tax treatment."})
+                                 "text": f"Fits the stated need: {p['need'][0].lower() + p['need'][1:]}. Lead with liquidity and tax treatment."})
 w("prospects", prospects)
 
 # ---------------------------------------------------------------- model portfolios & RM portfolios
