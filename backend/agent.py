@@ -534,3 +534,23 @@ def dev_run(kind: str, id: str, q: str, session: str | None = None):
 @router.get("/dev/decide")
 def dev_decide(session: str, card: str, decision: str = "approve"):
     return decide(session, card, {"decision": decision})
+
+
+@router.get("/dev/bill")
+def dev_bill():
+    from .store import DATA_DIR
+    img = "data:image/jpeg;base64," + base64.b64encode((DATA_DIR / "sample-bill.jpg").read_bytes()).decode()
+    return read_bill({"image": img})
+
+
+@router.get("/dev/speech")
+def dev_speech():
+    import io, math, struct, wave
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000)
+        w.writeframes(b"".join(struct.pack("<h", int(3000 * math.sin(2 * math.pi * 440 * i / 16000))) for i in range(16000)))
+    try:
+        return llm.transcribe(buf.getvalue(), "tone.wav", "audio/wav") | {"note": "A pure tone: an empty or nonsense transcript with status 200 means the speech path works."}
+    except llm.LLMError as e:
+        return {"error": str(e)}
