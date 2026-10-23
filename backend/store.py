@@ -17,7 +17,7 @@ from typing import Any
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 ANCHOR = dt.date(2026, 10, 26)
-SEED_VERSION = "2026-10-23.4"
+SEED_VERSION = "2026-10-23.5"
 IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
 
 # collections stored as lists of documents with an "id"
