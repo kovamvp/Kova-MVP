@@ -105,7 +105,7 @@ export default function Meetings() {
             {days.map((d) => (
               <div key={iso(d)} className="cal-col">
                 {HOURS.map((h) => <div key={h} className="cal-slot" />)}
-                {iso(d) === todayISO() && <div className="cal-now" style={{ top: `${((new Date().getHours() + new Date().getMinutes() / 60 - 9) / 11) * 100}%` }} />}
+                {iso(d) === todayISO() && new Date().getHours() >= 9 && new Date().getHours() < 20 && <div className="cal-now" style={{ top: `${((new Date().getHours() + new Date().getMinutes() / 60 - 9) / 11) * 100}%` }} />}
                 {inDay(d).map((m) => {
                   const s = parse(m.start), e = parse(m.end)
                   const top = ((s.getHours() + s.getMinutes() / 60 - 9) / 11) * 100

@@ -151,8 +151,8 @@ def ld_modules(p):
          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."},
         {"id": "m4", "title": "Suitability: who it fits and who it doesn't", "type": "reading", "minutes": 7,
          "body": f"Risk level {p['risk']}. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."},
-        {"id": "m5", "title": "Five-question check", "type": "quiz", "minutes": 5,
-         "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+        {"id": "m5", "title": "Quick check", "type": "quiz", "minutes": 5,
+         "body": "Two questions on liquidity and risk. Answer both correctly to complete the module.",
          "questions": [
              {"q": "What is the exit / liquidity condition?", "options": [p["liquidity"], "Daily liquidity with no conditions", "Locked in for 10 years"], "answer": 0},
              {"q": "What is the product's risk level?", "options": ["Low", p["risk"], "Not rated"] if p["risk"] != "Low" else ["Very high", p["risk"], "Not rated"], "answer": 1},
@@ -786,7 +786,7 @@ w("ld_progress", [{"id": k, "product_id": k, "completed": v} for k, v in ld_prog
 outbox = [
     {"id": "OB-9001", "at": t(-12, 19, 5), "action": "send_mom", "channel": "Email", "to": {"name": "Rajesh Mehta", "address": "rajesh.mehta@gmail.com"},
      "subject": "Notes from our call on PMS fees", "body": "Hi Rajesh,\n\nThank you for your time today. Summary:\n- You feel the 1.75% fixed fee on the Coastline PMS is high.\n- I'll send a fee-versus-return comparison against Banyan Flexi Cap by Friday.\n- No change to the portfolio for now.\n\nRegards,\nPriya",
-     "source": {"session_id": None, "card_id": None, "kind": "client", "id": "CL-1001", "said": "Log the MoM for the Mehta call about PMS fees and email it to him."},
+     "source": {"session_id": "AS-3999", "card_id": "CD-6999", "kind": "client", "id": "CL-1001", "said": "Log the MoM for the Mehta call about PMS fees and email it to him."},
      "review": "correct", "edited": False},
 ]
 w("outbox", outbox)
