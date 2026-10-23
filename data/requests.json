@@ -1,0 +1,314 @@
+[
+  {
+    "id": "RQ-3101",
+    "type": "reimbursement",
+    "title": "Client lunch: Mehta review",
+    "team": "Accounts",
+    "direction": "waiting_on_others",
+    "status": "in_review",
+    "priority": "normal",
+    "created": "2026-10-22T15:00",
+    "due": "2026-10-29",
+    "link": {
+      "kind": "client",
+      "id": "CL-1001"
+    },
+    "payload": {
+      "category": "Client meeting meals",
+      "amount": 4280,
+      "merchant": "Global Fusion, Andheri",
+      "bill_date": "2026-10-21",
+      "gst": "27AAACG1234F1Z5"
+    },
+    "trail": [
+      {
+        "at": "2026-10-22T15:00",
+        "by": "Priya Sharma",
+        "text": "Submitted with bill"
+      },
+      {
+        "at": "2026-10-23T10:20",
+        "by": "Accounts (Kiran)",
+        "text": "Picked up for verification"
+      }
+    ]
+  },
+  {
+    "id": "RQ-3102",
+    "type": "product_feedback",
+    "title": "Small cap fund: clients asking about the review",
+    "team": "Product: Mutual Funds",
+    "direction": "waiting_on_others",
+    "status": "sent",
+    "priority": "high",
+    "created": "2026-10-24T12:00",
+    "due": "2026-10-28",
+    "link": {
+      "kind": "product",
+      "id": "PD-104"
+    },
+    "payload": {
+      "feedback": "Three clients asked whether to stop SIPs in Indus Peak Small Cap. Need a client-ready note on the CIO review."
+    },
+    "trail": [
+      {
+        "at": "2026-10-24T12:00",
+        "by": "Priya Sharma",
+        "text": "Sent to Meera Joshi"
+      }
+    ]
+  },
+  {
+    "id": "RQ-3103",
+    "type": "service_request",
+    "title": "Nominee update for Bhatt folios",
+    "team": "Client Experience",
+    "direction": "waiting_on_others",
+    "status": "in_review",
+    "priority": "high",
+    "created": "2026-10-20T11:00",
+    "due": "2026-10-25",
+    "link": {
+      "kind": "client",
+      "id": "CL-1014"
+    },
+    "payload": {
+      "request": "Register Leena Bhatt as nominee on all folios. Signed form collected."
+    },
+    "trail": [
+      {
+        "at": "2026-10-20T11:00",
+        "by": "Priya Sharma",
+        "text": "Raised"
+      },
+      {
+        "at": "2026-10-21T09:30",
+        "by": "CX (Asha)",
+        "text": "Form received; sent to registrar"
+      }
+    ]
+  },
+  {
+    "id": "RQ-3104",
+    "type": "mom_ack",
+    "title": "MoM acknowledgement: Nair family review",
+    "team": "Client",
+    "direction": "waiting_on_others",
+    "status": "done",
+    "priority": "normal",
+    "created": "2026-10-06T13:00",
+    "due": null,
+    "link": {
+      "kind": "client",
+      "id": "CL-1018"
+    },
+    "payload": {
+      "meeting_id": "MT-515"
+    },
+    "trail": [
+      {
+        "at": "2026-10-06T13:00",
+        "by": "Priya Sharma",
+        "text": "MoM sent"
+      },
+      {
+        "at": "2026-10-07T21:00",
+        "by": "Deepak Nair",
+        "text": "Acknowledged in Kova Client"
+      }
+    ]
+  },
+  {
+    "id": "RQ-3105",
+    "type": "portfolio_approval",
+    "title": "Desai retirement income",
+    "team": "CIO Office",
+    "direction": "waiting_on_others",
+    "status": "in_review",
+    "priority": "normal",
+    "created": "2026-10-22T16:00",
+    "due": "2026-10-27",
+    "link": {
+      "kind": "portfolio",
+      "id": "PF-2026-000121"
+    },
+    "payload": {
+      "portfolio_id": "PF-2026-000121",
+      "amount": 12600000
+    },
+    "trail": [
+      {
+        "at": "2026-10-22T16:00",
+        "by": "Priya Sharma",
+        "text": "Sent for approval"
+      },
+      {
+        "at": "2026-10-23T12:00",
+        "by": "CIO Office (Anand Iyer)",
+        "text": "Under review"
+      }
+    ]
+  },
+  {
+    "id": "RQ-3106",
+    "type": "portfolio_approval",
+    "title": "Shah SGB switch",
+    "team": "CIO Office",
+    "direction": "waiting_on_me",
+    "status": "changes_requested",
+    "priority": "high",
+    "created": "2026-10-16T11:00",
+    "due": "2026-10-26",
+    "link": {
+      "kind": "portfolio",
+      "id": "PF-2026-000102"
+    },
+    "payload": {
+      "portfolio_id": "PF-2026-000102",
+      "comment": "Cap PMS at 15% for a moderate profile; move the 5% to the corporate bond fund."
+    },
+    "trail": [
+      {
+        "at": "2026-10-16T11:00",
+        "by": "Priya Sharma",
+        "text": "Sent for approval"
+      },
+      {
+        "at": "2026-10-19T15:00",
+        "by": "CIO Office (Anand Iyer)",
+        "text": "Changes requested: cap PMS at 15%"
+      }
+    ]
+  },
+  {
+    "id": "RQ-3107",
+    "type": "ticket",
+    "title": "Wrong address on Wadia consolidated statement",
+    "team": "Operations",
+    "direction": "waiting_on_others",
+    "status": "in_review",
+    "priority": "normal",
+    "created": "2026-10-18T10:00",
+    "due": "2026-10-24",
+    "link": {
+      "kind": "client",
+      "id": "CL-1016"
+    },
+    "payload": {
+      "summary": "Statement shows the old Colaba address. Client updated address in KYC in August.",
+      "assignee": "Operations team lead (Vinod)"
+    },
+    "trail": [
+      {
+        "at": "2026-10-18T10:00",
+        "by": "Priya Sharma",
+        "text": "Ticket raised"
+      },
+      {
+        "at": "2026-10-19T11:00",
+        "by": "Ops (Vinod)",
+        "text": "Assigned to Sameer"
+      }
+    ],
+    "escalations": 0,
+    "reminders": true
+  },
+  {
+    "id": "RQ-3108",
+    "type": "ticket",
+    "title": "SIP failed: Iyer, Banyan Flexi Cap",
+    "team": "Operations",
+    "direction": "waiting_on_me",
+    "status": "needs_info",
+    "priority": "high",
+    "created": "2026-10-23T09:00",
+    "due": "2026-10-27",
+    "link": {
+      "kind": "client",
+      "id": "CL-1007"
+    },
+    "payload": {
+      "summary": "October SIP bounced. Ops needs the new bank mandate form signed by the client.",
+      "assignee": "Operations team lead (Vinod)"
+    },
+    "trail": [
+      {
+        "at": "2026-10-23T09:00",
+        "by": "Ops (Sameer)",
+        "text": "Raised on RM: mandate expired"
+      },
+      {
+        "at": "2026-10-24T18:00",
+        "by": "Ops (Sameer)",
+        "text": "Waiting on signed mandate from RM"
+      }
+    ],
+    "escalations": 0,
+    "reminders": true
+  },
+  {
+    "id": "RQ-3109",
+    "type": "reimbursement",
+    "title": "Cab: bond seminar, Nariman Point",
+    "team": "Accounts",
+    "direction": "completed",
+    "status": "done",
+    "priority": "normal",
+    "created": "2026-10-01T18:00",
+    "due": null,
+    "link": null,
+    "payload": {
+      "category": "Local travel",
+      "amount": 860,
+      "merchant": "Uber",
+      "bill_date": "2026-10-01"
+    },
+    "trail": [
+      {
+        "at": "2026-10-01T18:00",
+        "by": "Priya Sharma",
+        "text": "Submitted"
+      },
+      {
+        "at": "2026-10-04T11:00",
+        "by": "Accounts (Kiran)",
+        "text": "Verified"
+      },
+      {
+        "at": "2026-10-11T10:00",
+        "by": "Accounts",
+        "text": "Paid in October cycle"
+      }
+    ]
+  },
+  {
+    "id": "RQ-3110",
+    "type": "portfolio_approval",
+    "title": "Iyer growth rebalance",
+    "team": "CIO Office",
+    "direction": "completed",
+    "status": "approved",
+    "priority": "normal",
+    "created": "2026-09-26T12:00",
+    "due": null,
+    "link": {
+      "kind": "portfolio",
+      "id": "PF-2026-000109"
+    },
+    "payload": {
+      "portfolio_id": "PF-2026-000109"
+    },
+    "trail": [
+      {
+        "at": "2026-09-26T12:00",
+        "by": "Priya Sharma",
+        "text": "Sent for approval"
+      },
+      {
+        "at": "2026-10-05T17:00",
+        "by": "CIO Office (Anand Iyer)",
+        "text": "Approved"
+      }
+    ]
+  }
+]

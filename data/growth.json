@@ -1,0 +1,260 @@
+{
+  "period": {
+    "name": "Q3 FY27",
+    "start": "2026-09-30",
+    "end": "2026-12-30"
+  },
+  "goals": [
+    {
+      "id": "G1",
+      "text": "Bring Rs 15 Cr of fresh money this quarter",
+      "by": "self",
+      "achieved": false,
+      "created": "2026-10-06",
+      "progress": 0.46
+    },
+    {
+      "id": "G2",
+      "text": "Get every family above Rs 1 Cr a written plan",
+      "by": "self",
+      "achieved": false,
+      "created": "2026-08-27",
+      "progress": 0.6
+    },
+    {
+      "id": "G3",
+      "text": "Convert Vivek Malhotra and Aditya Saraf",
+      "by": "self",
+      "achieved": false,
+      "created": "2026-10-11",
+      "progress": null
+    },
+    {
+      "id": "G4",
+      "text": "Finish L&D for all PMS and AIF products",
+      "by": "self",
+      "achieved": false,
+      "created": "2026-09-26",
+      "progress": 0.4
+    },
+    {
+      "id": "G5",
+      "text": "Re-engage every dormant client before Diwali",
+      "by": "manager",
+      "set_by": "Rohan Kapoor",
+      "achieved": false,
+      "created": "2026-09-21",
+      "progress": 0.33
+    }
+  ],
+  "achieved_goals": [
+    {
+      "id": "G0",
+      "text": "Clear all pending nominee updates",
+      "achieved_on": "2026-10-14",
+      "by": "self"
+    }
+  ],
+  "points": {
+    "total": 1840,
+    "this_quarter": 612,
+    "slabs": [
+      {
+        "name": "Bronze",
+        "from": 0,
+        "payout_pct": 0
+      },
+      {
+        "name": "Silver",
+        "from": 500,
+        "payout_pct": 6
+      },
+      {
+        "name": "Gold",
+        "from": 800,
+        "payout_pct": 10
+      },
+      {
+        "name": "Platinum",
+        "from": 1200,
+        "payout_pct": 14
+      }
+    ],
+    "projected_quarter": 870,
+    "projected_payout": 186000,
+    "payout_basis": "Projected at current pace; final after compliance checks."
+  },
+  "kpis": [
+    {
+      "name": "Net new money",
+      "weight": 35,
+      "target": 150000000,
+      "actual": 69000000,
+      "unit": "inr"
+    },
+    {
+      "name": "Revenue",
+      "weight": 25,
+      "target": 4200000,
+      "actual": 2310000,
+      "unit": "inr"
+    },
+    {
+      "name": "Meetings with written MoM",
+      "weight": 15,
+      "target": 40,
+      "actual": 27,
+      "unit": "count"
+    },
+    {
+      "name": "Client retention",
+      "weight": 15,
+      "target": 98,
+      "actual": 96,
+      "unit": "pct"
+    },
+    {
+      "name": "L&D completion",
+      "weight": 10,
+      "target": 100,
+      "actual": 62,
+      "unit": "pct"
+    }
+  ],
+  "points_history": [
+    {
+      "month": "May",
+      "points": 180
+    },
+    {
+      "month": "Jun",
+      "points": 210
+    },
+    {
+      "month": "Jul",
+      "points": 195
+    },
+    {
+      "month": "Aug",
+      "points": 240
+    },
+    {
+      "month": "Sep",
+      "points": 268
+    },
+    {
+      "month": "Oct",
+      "points": 344
+    }
+  ],
+  "contests": [
+    {
+      "id": "CT-01",
+      "name": "Hybrid Harvest",
+      "rule": "Net inflows into balanced advantage and multi asset funds",
+      "ends": "2026-11-13",
+      "prize": "Rs 25,000 voucher for the top 3",
+      "my_rank": 4,
+      "my_value": 21000000,
+      "leaderboard": [
+        {
+          "name": "Arjun N.",
+          "value": 34000000
+        },
+        {
+          "name": "Sneha P.",
+          "value": 28500000
+        },
+        {
+          "name": "Rahul V.",
+          "value": 22000000
+        },
+        {
+          "name": "Priya Sharma",
+          "value": 21000000,
+          "me": true
+        },
+        {
+          "name": "Faisal K.",
+          "value": 15600000
+        }
+      ]
+    },
+    {
+      "id": "CT-02",
+      "name": "Fixed Income Fortnight",
+      "rule": "Bond and corporate bond fund inflows",
+      "ends": "2026-11-01",
+      "prize": "Team dinner for the winning branch",
+      "my_rank": 2,
+      "my_value": 18000000,
+      "leaderboard": [
+        {
+          "name": "Mumbai South",
+          "value": 41000000
+        },
+        {
+          "name": "Mumbai West (you)",
+          "value": 38000000,
+          "me": true
+        },
+        {
+          "name": "Pune",
+          "value": 26000000
+        }
+      ]
+    },
+    {
+      "id": "CT-03",
+      "name": "PMS Pathfinder",
+      "rule": "New PMS clients (count)",
+      "ends": "2026-12-10",
+      "prize": "Kova Leaders offsite",
+      "my_rank": 7,
+      "my_value": 1,
+      "leaderboard": [
+        {
+          "name": "Kabir S.",
+          "value": 4
+        },
+        {
+          "name": "Arjun N.",
+          "value": 3
+        },
+        {
+          "name": "Sneha P.",
+          "value": 3
+        },
+        {
+          "name": "Priya Sharma",
+          "value": 1,
+          "me": true
+        }
+      ]
+    }
+  ],
+  "suggestions": [
+    {
+      "text": "Sanjay Desai's retirement income plan is awaiting CIO approval. Once approved it adds about Rs 1.26 Cr of reallocation.",
+      "link": {
+        "kind": "portfolio",
+        "id": "PF-2026-000121"
+      }
+    },
+    {
+      "text": "4 completed meetings have no MoM. Writing them takes you to 31 of 40.",
+      "link": {
+        "kind": "page",
+        "id": "/meetings"
+      }
+    },
+    {
+      "text": "Zubin Wadia's property sale proceeds need a parking plan; the Liquidity Event Parking model fits his stated horizon.",
+      "link": {
+        "kind": "client",
+        "id": "CL-1016"
+      }
+    }
+  ],
+  "guardrail": "Suggestions come only from suitable client-product matches. They are never ranked by points."
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><defs><clipPath id="kc76djd"><rect x="0" y="0" width="511.3122535326155" height="172"></rect></clipPath><mask id="kc76djdm" maskUnits="userSpaceOnUse" x="-50" y="-50" width="572" height="272"><rect x="-50" y="-50" width="572" height="272" fill="#fff"></rect>
+      <rect x="21" y="-50" width="17" height="272" fill="#000"></rect>
+      <polygon points="22,86 82,71.6 82,100.4" fill="#000"></polygon></mask></defs><g transform="translate(14,158.90612676630775) rotate(-90)"><g clip-path="url(#kc76djd)"><rect x="0" y="0" width="22" height="172" fill="#1D3A2E"></rect>
+     <polyline points="127.72655352833728,-39.999999999999986 14.3,86 127.72655352833728,212" fill="none" stroke="#1D3A2E" stroke-width="22" stroke-miterlimit="12" mask="url(#kc76djdm)"></polyline></g>
+     <circle cx="85.31225353261551" cy="86" r="26" fill="none" stroke="#9A7A47" stroke-width="13"></circle></g></svg>

@@ -1,0 +1,30 @@
+{
+  "id": "RM-0042",
+  "name": "Priya Sharma",
+  "title": "Senior Relationship Manager",
+  "grade": "AVP",
+  "branch": "Mumbai West",
+  "email": "priya.sharma@kova.in",
+  "phone": "+91 98200 41842",
+  "joined": "2024-09-16",
+  "euin": "E482913",
+  "arn": "ARN-271845",
+  "certifications": [
+    "NISM Series V-A (Mutual Fund Distributors)",
+    "NISM Series XV (Research Analyst)",
+    "NISM Series X-A (Investment Adviser L1)"
+  ],
+  "languages": [
+    "English",
+    "Hindi",
+    "Marathi",
+    "Gujarati"
+  ],
+  "manager": {
+    "id": "RM-0007",
+    "name": "Rohan Kapoor",
+    "title": "Branch Head, Mumbai West"
+  },
+  "photo": null,
+  "about": "Works with business-owner and professional families across the western suburbs. Focus on long-term portfolios, debt allocation and succession conversations."
+}

@@ -1,0 +1,395 @@
+[
+  {
+    "id": "MT-501",
+    "title": "Quarterly review: Mehta family",
+    "type": "Family meeting",
+    "with": {
+      "kind": "client",
+      "id": "CL-1001"
+    },
+    "start": "2026-10-26T11:00",
+    "end": "2026-10-26T12:00",
+    "status": "scheduled",
+    "location": "Mehta Textiles office, Andheri",
+    "attendees": [
+      {
+        "name": "Rohan Kapoor",
+        "title": "Branch Head"
+      }
+    ],
+    "agenda": [
+      "Rebalance after equity drift",
+      "Rhea's wedding corpus",
+      "PMS fee question"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-502",
+    "title": "Proposal walk-through",
+    "type": "Proposal",
+    "with": {
+      "kind": "prospect",
+      "id": "PR-2001"
+    },
+    "start": "2026-10-26T16:30",
+    "end": "2026-10-26T17:15",
+    "status": "scheduled",
+    "location": "Kova office, Bandra",
+    "attendees": [],
+    "agenda": [
+      "Liquidity plan for stake sale",
+      "Private credit fund intro"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-503",
+    "title": "Retirement income plan",
+    "type": "Review",
+    "with": {
+      "kind": "client",
+      "id": "CL-1004"
+    },
+    "start": "2026-10-27T12:00",
+    "end": "2026-10-27T13:00",
+    "status": "scheduled",
+    "location": "Desai residence, Juhu",
+    "attendees": [],
+    "agenda": [
+      "Income ladder",
+      "Sunita's dormant account"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-504",
+    "title": "Family office conversation",
+    "type": "First meeting",
+    "with": {
+      "kind": "prospect",
+      "id": "PR-2016"
+    },
+    "start": "2026-10-28T10:00",
+    "end": "2026-10-28T11:00",
+    "status": "scheduled",
+    "location": "Saraf Group office, Lower Parel",
+    "attendees": [
+      {
+        "name": "Anand Iyer",
+        "title": "CIO"
+      }
+    ],
+    "agenda": [
+      "Kova approach",
+      "Reporting and governance"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-505",
+    "title": "SGB switch discussion",
+    "type": "Proposal",
+    "with": {
+      "kind": "client",
+      "id": "CL-1009"
+    },
+    "start": "2026-10-29T15:00",
+    "end": "2026-10-29T15:45",
+    "status": "scheduled",
+    "location": "Shah residence, Santacruz",
+    "attendees": [],
+    "agenda": [
+      "Gold outside Kova",
+      "SGB secondary"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-506",
+    "title": "Parking strategy for property sale",
+    "type": "Proposal",
+    "with": {
+      "kind": "client",
+      "id": "CL-1016"
+    },
+    "start": "2026-10-30T11:30",
+    "end": "2026-10-30T12:30",
+    "status": "scheduled",
+    "location": "Wadia Hotels, Colaba",
+    "attendees": [],
+    "agenda": [
+      "Liquidity Event Parking model",
+      "STP plan"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-507",
+    "title": "First bond purchase",
+    "type": "Service",
+    "with": {
+      "kind": "prospect",
+      "id": "PR-2006"
+    },
+    "start": "2026-10-27T17:00",
+    "end": "2026-10-27T17:30",
+    "status": "scheduled",
+    "location": "Phone",
+    "attendees": [],
+    "agenda": [
+      "Western Highways NCD allotment"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-508",
+    "title": "Annual review",
+    "type": "Review",
+    "with": {
+      "kind": "client",
+      "id": "CL-1014"
+    },
+    "start": "2026-11-02T11:00",
+    "end": "2026-11-02T12:00",
+    "status": "scheduled",
+    "location": "Bhatt residence, Vile Parle",
+    "attendees": [],
+    "agenda": [
+      "Nominee update",
+      "FD maturities"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-509",
+    "title": "Retirement workshop follow-up",
+    "type": "First meeting",
+    "with": {
+      "kind": "prospect",
+      "id": "PR-2012"
+    },
+    "start": "2026-11-03T18:00",
+    "end": "2026-11-03T18:45",
+    "status": "scheduled",
+    "location": "Kova office, Bandra",
+    "attendees": [],
+    "agenda": [],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-510",
+    "title": "ESOP concentration",
+    "type": "Review",
+    "with": {
+      "kind": "client",
+      "id": "CL-1007"
+    },
+    "start": "2026-11-05T19:00",
+    "end": "2026-11-05T19:45",
+    "status": "scheduled",
+    "location": "Video call",
+    "attendees": [],
+    "agenda": [],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-511",
+    "title": "Children's education plan",
+    "type": "Review",
+    "with": {
+      "kind": "client",
+      "id": "CL-1006"
+    },
+    "start": "2026-10-24T17:00",
+    "end": "2026-10-24T18:00",
+    "status": "needs_mom",
+    "location": "Kapadia & Co., Bandra",
+    "attendees": [],
+    "agenda": [
+      "Overseas education corpus",
+      "Tax on international funds"
+    ],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-512",
+    "title": "Clinic surplus discussion",
+    "type": "First meeting",
+    "with": {
+      "kind": "prospect",
+      "id": "PR-2003"
+    },
+    "start": "2026-10-25T13:00",
+    "end": "2026-10-25T13:45",
+    "status": "needs_mom",
+    "location": "Qureshi Clinic, Malad",
+    "attendees": [],
+    "agenda": [],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-513",
+    "title": "Bond maturity reinvestment",
+    "type": "Service",
+    "with": {
+      "kind": "client",
+      "id": "CL-1012"
+    },
+    "start": "2026-10-23T12:00",
+    "end": "2026-10-23T12:30",
+    "status": "needs_mom",
+    "location": "Phone",
+    "attendees": [],
+    "agenda": [],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-514",
+    "title": "Mehta: PMS fee concerns",
+    "type": "Service",
+    "with": {
+      "kind": "client",
+      "id": "CL-1001"
+    },
+    "start": "2026-10-14T18:00",
+    "end": "2026-10-14T18:30",
+    "status": "completed",
+    "location": "Phone",
+    "attendees": [],
+    "agenda": [
+      "PMS fee explanation"
+    ],
+    "mom": {
+      "summary": "Rajesh feels the 1.75% fixed fee is high. Agreed to share a fee-vs-return comparison against the flexi cap fund. No switch for now.",
+      "feedback": "Wants fee transparency up front.",
+      "portfolio_reaction": "Keeps current PMS.",
+      "changes_asked": [],
+      "personal": "Rhea's wedding likely December 2027.",
+      "approved_at": "2026-10-14T19:00"
+    },
+    "promises": [
+      {
+        "text": "Send PMS fee vs return comparison",
+        "due": "2026-10-21",
+        "done": false
+      }
+    ],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-515",
+    "title": "Nair family review",
+    "type": "Family meeting",
+    "with": {
+      "kind": "client",
+      "id": "CL-1018"
+    },
+    "start": "2026-10-06T11:00",
+    "end": "2026-10-06T12:00",
+    "status": "completed",
+    "location": "Nair residence, Malad",
+    "attendees": [],
+    "agenda": [],
+    "mom": {
+      "summary": "Reviewed SIPs; increased by Rs 25,000. Discussed term insurance gap.",
+      "feedback": "Happy with returns.",
+      "portfolio_reaction": "Positive",
+      "changes_asked": [
+        "Add ELSS for Radhika"
+      ],
+      "personal": "Planning a Kerala trip in December.",
+      "approved_at": "2026-10-06T13:00"
+    },
+    "promises": [
+      {
+        "text": "Share ELSS options for Radhika",
+        "due": "2026-10-16",
+        "done": true
+      },
+      {
+        "text": "Intro to insurance partner",
+        "due": "2026-10-29",
+        "done": false
+      }
+    ],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-516",
+    "title": "Bond ladder walk-through",
+    "type": "Proposal",
+    "with": {
+      "kind": "prospect",
+      "id": "PR-2002"
+    },
+    "start": "2026-10-20T16:00",
+    "end": "2026-10-20T16:45",
+    "status": "completed",
+    "location": "Kova office, Bandra",
+    "attendees": [],
+    "agenda": [],
+    "mom": {
+      "summary": "Ritu liked the 5-rung ladder. KYC started. Wants to keep 20% in her bank FD.",
+      "feedback": "Clear explanation helped.",
+      "portfolio_reaction": "Liked it",
+      "changes_asked": [
+        "Keep 20% in FD"
+      ],
+      "personal": "",
+      "approved_at": "2026-10-20T18:00"
+    },
+    "promises": [
+      {
+        "text": "Send revised ladder with 20% FD",
+        "due": "2026-10-27",
+        "done": false
+      }
+    ],
+    "created_by": "rm"
+  },
+  {
+    "id": "MT-517",
+    "title": "Check-in call",
+    "type": "Service",
+    "with": {
+      "kind": "client",
+      "id": "CL-1005"
+    },
+    "start": "2026-09-16T11:00",
+    "end": "2026-09-16T11:20",
+    "status": "cancelled",
+    "location": "Phone",
+    "attendees": [],
+    "agenda": [],
+    "mom": null,
+    "promises": [],
+    "created_by": "rm"
+  }
+]

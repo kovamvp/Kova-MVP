@@ -1,0 +1,182 @@
+[
+  {
+    "id": "UP-01",
+    "kind": "meeting",
+    "priority": 1,
+    "title": "Mehta family review at 11:00",
+    "body": "Prep pack ready: equity drift, wedding corpus, PMS fee question.",
+    "due": "2026-10-26T11:00",
+    "link": {
+      "kind": "meeting",
+      "id": "MT-501"
+    },
+    "source": "Meetings",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-02",
+    "kind": "approval",
+    "priority": 1,
+    "title": "CIO asked for changes: Shah SGB switch",
+    "body": "Cap PMS at 15%. Due today.",
+    "due": "2026-10-26T18:00",
+    "link": {
+      "kind": "portfolio",
+      "id": "PF-2026-000102"
+    },
+    "source": "Requests",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-03",
+    "kind": "nudge",
+    "priority": 2,
+    "title": "3 meetings still need a MoM",
+    "body": "Kapadia, Qureshi and Fernandes. Complete MoMs count toward your KPIs.",
+    "due": "2026-10-26T20:00",
+    "link": {
+      "kind": "page",
+      "id": "/meetings"
+    },
+    "source": "Meetings",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-04",
+    "kind": "client",
+    "priority": 2,
+    "title": "Dr. Imran Qureshi viewed Meridian Multi Asset 3 times",
+    "body": "Registered prospect. Good moment for a short note.",
+    "due": null,
+    "link": {
+      "kind": "prospect",
+      "id": "PR-2003"
+    },
+    "source": "Prospects",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-05",
+    "kind": "company",
+    "priority": 3,
+    "title": "CIO note: small cap review",
+    "body": "Pause fresh lumpsums into Indus Peak Small Cap until the review closes on 6 Nov.",
+    "due": null,
+    "link": {
+      "kind": "product",
+      "id": "PD-104"
+    },
+    "source": "CIO Office",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-06",
+    "kind": "contest",
+    "priority": 3,
+    "title": "Fixed Income Fortnight ends in 6 days",
+    "body": "Mumbai West is 2nd, Rs 3 Cr behind Mumbai South.",
+    "due": "2026-11-01T18:00",
+    "link": {
+      "kind": "page",
+      "id": "/growth"
+    },
+    "source": "Growth",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-07",
+    "kind": "deadline",
+    "priority": 2,
+    "title": "Meridian Private Credit Fund III final close",
+    "body": "Commitments due before final close. 4 clients are eligible.",
+    "due": "2026-12-17T17:00",
+    "link": {
+      "kind": "product",
+      "id": "PD-301"
+    },
+    "source": "Products",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-08",
+    "kind": "cash",
+    "priority": 2,
+    "title": "Rs 38 L FD maturity for Mahesh Patil",
+    "body": "Matures this week. Reinvestment plan not yet discussed.",
+    "due": "2026-10-30T10:00",
+    "link": {
+      "kind": "client",
+      "id": "CL-1012"
+    },
+    "source": "Clients",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-09",
+    "kind": "personal",
+    "priority": 3,
+    "title": "Kavita Mehta's birthday on Thursday",
+    "body": "Consent covers personal greetings.",
+    "due": "2026-10-29T09:00",
+    "link": {
+      "kind": "client",
+      "id": "CL-1002"
+    },
+    "source": "Clients",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-10",
+    "kind": "task",
+    "priority": 2,
+    "title": "Send PMS fee comparison to Rajesh Mehta",
+    "body": "Promised on the last call. Overdue by 5 days.",
+    "due": "2026-10-21T18:00",
+    "link": {
+      "kind": "client",
+      "id": "CL-1001"
+    },
+    "source": "Meetings: promises",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-11",
+    "kind": "company",
+    "priority": 4,
+    "title": "New on the shelf: Coastal Housing Finance NCD",
+    "body": "AA+, 8.85% monthly payout. L&D module is live.",
+    "due": null,
+    "link": {
+      "kind": "product",
+      "id": "PD-402"
+    },
+    "source": "Products",
+    "done": false,
+    "snoozed_until": null
+  },
+  {
+    "id": "UP-12",
+    "kind": "task",
+    "priority": 2,
+    "title": "Signed SIP mandate for Arvind Iyer",
+    "body": "Ops is waiting on you. SIP bounced in October.",
+    "due": "2026-10-27T18:00",
+    "link": {
+      "kind": "request",
+      "id": "RQ-3108"
+    },
+    "source": "Requests",
+    "done": false,
+    "snoozed_until": null
+  }
+]

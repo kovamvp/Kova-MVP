@@ -1,0 +1,3306 @@
+[
+  {
+    "id": "PD-101",
+    "name": "Banyan Flexi Cap Fund",
+    "manufacturer": "Banyan Mutual Fund",
+    "category": "Mutual fund",
+    "sub_category": "Equity: Flexi cap",
+    "risk": "Very high",
+    "returns": {
+      "1y": 14.2,
+      "3y": 18.6,
+      "5y": 19.4
+    },
+    "min_investment": 5000,
+    "liquidity": "T+3, exit load 1% within 1 year",
+    "expense_ratio": 0.68,
+    "aum_cr": 48210,
+    "benchmark": "Nifty 500 TRI",
+    "fund_manager": "Aditi Rao",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Our core equity holding for most moderate and above profiles. Manager has stayed true to style through two cycles; portfolio turnover is low. Use as the anchor, not as a satellite.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-16"
+    },
+    "rewards": {
+      "points_per_lakh": 6,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2025-06-11",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Banyan Flexi Cap Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Banyan Flexi Cap Fund from Banyan Mutual Fund sits in Equity: Flexi cap. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, exit load 1% within 1 year",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Banyan Flexi Cap Fund (Equity: Flexi cap) from Banyan Mutual Fund.\nRisk: Very high. Minimum: Rs 5,000. Liquidity: T+3, exit load 1% within 1 year.\nReturns: 14.2% (1y), 18.6% (3y CAGR), 19.4% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.68.\nCIO stance: Preferred. Our core equity holding for most moderate and above profiles. Manager has stayed true to style through two cycles; portfolio turnover is low. Use as the anchor, not as a satellite.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-01",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-102",
+    "name": "Meridian Large Cap Fund",
+    "manufacturer": "Meridian AMC",
+    "category": "Mutual fund",
+    "sub_category": "Equity: Large cap",
+    "risk": "Very high",
+    "returns": {
+      "1y": 9.8,
+      "3y": 14.1,
+      "5y": 15.3
+    },
+    "min_investment": 5000,
+    "liquidity": "T+3, exit load 1% within 1 year",
+    "expense_ratio": 0.74,
+    "aum_cr": 36120,
+    "benchmark": "Nifty 100 TRI",
+    "fund_manager": "Karan Bhatia",
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Fine as a large-cap anchor but the index fund delivers most of the same at a fraction of the cost. Prefer PD-111 for new money unless the client wants active management.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-06"
+    },
+    "rewards": {
+      "points_per_lakh": 4,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2022-12-23",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Meridian Large Cap Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Meridian Large Cap Fund from Meridian AMC sits in Equity: Large cap. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, exit load 1% within 1 year",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Meridian Large Cap Fund (Equity: Large cap) from Meridian AMC.\nRisk: Very high. Minimum: Rs 5,000. Liquidity: T+3, exit load 1% within 1 year.\nReturns: 9.8% (1y), 14.1% (3y CAGR), 15.3% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.74.\nCIO stance: Neutral. Fine as a large-cap anchor but the index fund delivers most of the same at a fraction of the cost. Prefer PD-111 for new money unless the client wants active management.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-17",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-103",
+    "name": "Sahyadri Mid Cap Opportunities",
+    "manufacturer": "Sahyadri Mutual Fund",
+    "category": "Mutual fund",
+    "sub_category": "Equity: Mid cap",
+    "risk": "Very high",
+    "returns": {
+      "1y": 21.4,
+      "3y": 24.8,
+      "5y": 26.1
+    },
+    "min_investment": 5000,
+    "liquidity": "T+3, exit load 1% within 1 year",
+    "expense_ratio": 0.81,
+    "aum_cr": 22840,
+    "benchmark": "Nifty Midcap 150 TRI",
+    "fund_manager": "Neha Kulkarni",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Mid-cap valuations are stretched; stagger entry over 6 months through STP. Cap at 15% of equity for moderate profiles.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-15"
+    },
+    "rewards": {
+      "points_per_lakh": 6,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2024-07-29",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Sahyadri Mid Cap Opportunities is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Sahyadri Mid Cap Opportunities from Sahyadri Mutual Fund sits in Equity: Mid cap. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, exit load 1% within 1 year",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Sahyadri Mid Cap Opportunities (Equity: Mid cap) from Sahyadri Mutual Fund.\nRisk: Very high. Minimum: Rs 5,000. Liquidity: T+3, exit load 1% within 1 year.\nReturns: 21.4% (1y), 24.8% (3y CAGR), 26.1% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.81.\nCIO stance: Preferred. Mid-cap valuations are stretched; stagger entry over 6 months through STP. Cap at 15% of equity for moderate profiles.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-03",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-104",
+    "name": "Indus Peak Small Cap Fund",
+    "manufacturer": "Indus Peak Asset Managers",
+    "category": "Mutual fund",
+    "sub_category": "Equity: Small cap",
+    "risk": "Very high",
+    "returns": {
+      "1y": 18.9,
+      "3y": 27.2,
+      "5y": 29.0
+    },
+    "min_investment": 5000,
+    "liquidity": "T+3, exit load 1% within 1 year",
+    "expense_ratio": 0.88,
+    "aum_cr": 14310,
+    "benchmark": "Nifty Smallcap 250 TRI",
+    "fund_manager": "Vikram Shetty",
+    "cio_view": {
+      "stance": "Under review",
+      "comment": "Strong numbers, but liquidity in the small-cap segment is thin. We are reviewing position sizing guidance; don't add fresh lumpsums until the review closes.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-19"
+    },
+    "rewards": {
+      "points_per_lakh": 5,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2024-09-30",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Indus Peak Small Cap Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Indus Peak Small Cap Fund from Indus Peak Asset Managers sits in Equity: Small cap. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, exit load 1% within 1 year",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Indus Peak Small Cap Fund (Equity: Small cap) from Indus Peak Asset Managers.\nRisk: Very high. Minimum: Rs 5,000. Liquidity: T+3, exit load 1% within 1 year.\nReturns: 18.9% (1y), 27.2% (3y CAGR), 29.0% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.88.\nCIO stance: Under review. Strong numbers, but liquidity in the small-cap segment is thin. We are reviewing position sizing guidance; don't add fresh lumpsums until the review closes.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-06",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-105",
+    "name": "Banyan Balanced Advantage Fund",
+    "manufacturer": "Banyan Mutual Fund",
+    "category": "Mutual fund",
+    "sub_category": "Hybrid: Balanced advantage",
+    "risk": "High",
+    "returns": {
+      "1y": 10.6,
+      "3y": 12.4,
+      "5y": 12.9
+    },
+    "min_investment": 5000,
+    "liquidity": "T+3, exit load 1% within 1 year",
+    "expense_ratio": 0.71,
+    "aum_cr": 29880,
+    "benchmark": "Nifty 50 Hybrid Composite Debt 50:50",
+    "fund_manager": "Aditi Rao",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Good first equity product for conservative clients moving up the risk ladder. Dynamic equity range 30-80%.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-26"
+    },
+    "rewards": {
+      "points_per_lakh": 6,
+      "contest": "CT-01"
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2025-05-14",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Banyan Balanced Advantage Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Banyan Balanced Advantage Fund from Banyan Mutual Fund sits in Hybrid: Balanced advantage. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level High. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, exit load 1% within 1 year",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "High",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Banyan Balanced Advantage Fund (Hybrid: Balanced advantage) from Banyan Mutual Fund.\nRisk: High. Minimum: Rs 5,000. Liquidity: T+3, exit load 1% within 1 year.\nReturns: 10.6% (1y), 12.4% (3y CAGR), 12.9% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.71.\nCIO stance: Preferred. Good first equity product for conservative clients moving up the risk ladder. Dynamic equity range 30-80%.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-24",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-106",
+    "name": "Meridian Multi Asset Allocation",
+    "manufacturer": "Meridian AMC",
+    "category": "Mutual fund",
+    "sub_category": "Hybrid: Multi asset",
+    "risk": "High",
+    "returns": {
+      "1y": 13.1,
+      "3y": 15.0,
+      "5y": 14.6
+    },
+    "min_investment": 5000,
+    "liquidity": "T+3, exit load 1% within 1 year",
+    "expense_ratio": 0.65,
+    "aum_cr": 11250,
+    "benchmark": "Nifty 500 65% + Debt 25% + Gold 10%",
+    "fund_manager": "Karan Bhatia",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "The single-fund answer for clients who want equity, debt and gold in one place. Taxed as equity.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-18"
+    },
+    "rewards": {
+      "points_per_lakh": 6,
+      "contest": "CT-01"
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2023-04-10",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Meridian Multi Asset Allocation is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Meridian Multi Asset Allocation from Meridian AMC sits in Hybrid: Multi asset. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level High. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, exit load 1% within 1 year",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "High",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Meridian Multi Asset Allocation (Hybrid: Multi asset) from Meridian AMC.\nRisk: High. Minimum: Rs 5,000. Liquidity: T+3, exit load 1% within 1 year.\nReturns: 13.1% (1y), 15.0% (3y CAGR), 14.6% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.65.\nCIO stance: Preferred. The single-fund answer for clients who want equity, debt and gold in one place. Taxed as equity.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-17",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-107",
+    "name": "Sahyadri Corporate Bond Fund",
+    "manufacturer": "Sahyadri Mutual Fund",
+    "category": "Mutual fund",
+    "sub_category": "Debt: Corporate bond",
+    "risk": "Moderate",
+    "returns": {
+      "1y": 7.9,
+      "3y": 7.1,
+      "5y": 7.0
+    },
+    "min_investment": 5000,
+    "liquidity": "T+1, no exit load",
+    "expense_ratio": 0.32,
+    "aum_cr": 26400,
+    "benchmark": "CRISIL Corporate Bond A-II",
+    "fund_manager": "Rahul Menon",
+    "ytm": 7.42,
+    "duration_yrs": 3.1,
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Core debt holding. Portfolio is 90%+ AAA. Suits 3-year horizons.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-21"
+    },
+    "rewards": {
+      "points_per_lakh": 4,
+      "contest": "CT-02"
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2018-12-22",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Sahyadri Corporate Bond Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Sahyadri Corporate Bond Fund from Sahyadri Mutual Fund sits in Debt: Corporate bond. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Moderate. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+1, no exit load",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Moderate",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Sahyadri Corporate Bond Fund (Debt: Corporate bond) from Sahyadri Mutual Fund.\nRisk: Moderate. Minimum: Rs 5,000. Liquidity: T+1, no exit load.\nReturns: 7.9% (1y), 7.1% (3y CAGR), 7.0% (5y CAGR). Past returns don't guarantee future returns.\nYtm: 7.42.\nExpense ratio: 0.32.\nCIO stance: Preferred. Core debt holding. Portfolio is 90%+ AAA. Suits 3-year horizons.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-24",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-108",
+    "name": "Meridian Short Duration Fund",
+    "manufacturer": "Meridian AMC",
+    "category": "Mutual fund",
+    "sub_category": "Debt: Short duration",
+    "risk": "Low to moderate",
+    "returns": {
+      "1y": 7.6,
+      "3y": 6.9,
+      "5y": 6.8
+    },
+    "min_investment": 5000,
+    "liquidity": "T+1, no exit load",
+    "expense_ratio": 0.29,
+    "aum_cr": 15620,
+    "benchmark": "CRISIL Short Duration A-II",
+    "fund_manager": "Ishaan Gupta",
+    "ytm": 7.28,
+    "duration_yrs": 2.4,
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Use for 1-3 year money. Rate cuts are mostly priced in.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-18"
+    },
+    "rewards": {
+      "points_per_lakh": 3,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2023-06-30",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Meridian Short Duration Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Meridian Short Duration Fund from Meridian AMC sits in Debt: Short duration. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Low to moderate. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+1, no exit load",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Low to moderate",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Meridian Short Duration Fund (Debt: Short duration) from Meridian AMC.\nRisk: Low to moderate. Minimum: Rs 5,000. Liquidity: T+1, no exit load.\nReturns: 7.6% (1y), 6.9% (3y CAGR), 6.8% (5y CAGR). Past returns don't guarantee future returns.\nYtm: 7.28.\nExpense ratio: 0.29.\nCIO stance: Neutral. Use for 1-3 year money. Rate cuts are mostly priced in.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-02",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-109",
+    "name": "Banyan Liquid Fund",
+    "manufacturer": "Banyan Mutual Fund",
+    "category": "Mutual fund",
+    "sub_category": "Debt: Liquid",
+    "risk": "Low to moderate",
+    "returns": {
+      "1y": 7.1,
+      "3y": 6.6,
+      "5y": 5.4
+    },
+    "min_investment": 500,
+    "liquidity": "T+1, graded exit load for 7 days",
+    "expense_ratio": 0.18,
+    "aum_cr": 61200,
+    "benchmark": "CRISIL Liquid Debt A-I",
+    "fund_manager": "Rahul Menon",
+    "ytm": 6.95,
+    "duration_yrs": 0.1,
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Parking only. Move to arbitrage for anything held longer than 3 months in the higher tax brackets.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-19"
+    },
+    "rewards": {
+      "points_per_lakh": 1,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2021-01-07",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Banyan Liquid Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Banyan Liquid Fund from Banyan Mutual Fund sits in Debt: Liquid. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Low to moderate. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+1, graded exit load for 7 days",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Low to moderate",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Banyan Liquid Fund (Debt: Liquid) from Banyan Mutual Fund.\nRisk: Low to moderate. Minimum: Rs 500. Liquidity: T+1, graded exit load for 7 days.\nReturns: 7.1% (1y), 6.6% (3y CAGR), 5.4% (5y CAGR). Past returns don't guarantee future returns.\nYtm: 6.95.\nExpense ratio: 0.18.\nCIO stance: Neutral. Parking only. Move to arbitrage for anything held longer than 3 months in the higher tax brackets.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-17",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-110",
+    "name": "Indus Peak Arbitrage Fund",
+    "manufacturer": "Indus Peak Asset Managers",
+    "category": "Mutual fund",
+    "sub_category": "Hybrid: Arbitrage",
+    "risk": "Low",
+    "returns": {
+      "1y": 7.4,
+      "3y": 6.9,
+      "5y": 5.8
+    },
+    "min_investment": 5000,
+    "liquidity": "T+2, exit load 0.25% within 30 days",
+    "expense_ratio": 0.35,
+    "aum_cr": 18730,
+    "benchmark": "Nifty 50 Arbitrage",
+    "fund_manager": "Pooja Iyer",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Equity taxation with debt-like returns. Best parking option for 30%-bracket clients holding cash over 3 months.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-25"
+    },
+    "rewards": {
+      "points_per_lakh": 2,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2019-02-12",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Indus Peak Arbitrage Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Indus Peak Arbitrage Fund from Indus Peak Asset Managers sits in Hybrid: Arbitrage. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Low. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+2, exit load 0.25% within 30 days",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Very high",
+                "Low",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Indus Peak Arbitrage Fund (Hybrid: Arbitrage) from Indus Peak Asset Managers.\nRisk: Low. Minimum: Rs 5,000. Liquidity: T+2, exit load 0.25% within 30 days.\nReturns: 7.4% (1y), 6.9% (3y CAGR), 5.8% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.35.\nCIO stance: Preferred. Equity taxation with debt-like returns. Best parking option for 30%-bracket clients holding cash over 3 months.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-16",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-111",
+    "name": "Sahyadri Nifty 50 Index Fund",
+    "manufacturer": "Sahyadri Mutual Fund",
+    "category": "Mutual fund",
+    "sub_category": "Equity: Index",
+    "risk": "Very high",
+    "returns": {
+      "1y": 8.9,
+      "3y": 13.2,
+      "5y": 14.8
+    },
+    "min_investment": 1000,
+    "liquidity": "T+3, no exit load",
+    "expense_ratio": 0.18,
+    "aum_cr": 9420,
+    "benchmark": "Nifty 50 TRI",
+    "fund_manager": "Neha Kulkarni",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Lowest-cost core equity exposure on the shelf.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-23"
+    },
+    "rewards": {
+      "points_per_lakh": 3,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2023-12-08",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Sahyadri Nifty 50 Index Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Sahyadri Nifty 50 Index Fund from Sahyadri Mutual Fund sits in Equity: Index. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, no exit load",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Sahyadri Nifty 50 Index Fund (Equity: Index) from Sahyadri Mutual Fund.\nRisk: Very high. Minimum: Rs 1,000. Liquidity: T+3, no exit load.\nReturns: 8.9% (1y), 13.2% (3y CAGR), 14.8% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.18.\nCIO stance: Preferred. Lowest-cost core equity exposure on the shelf.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-02",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-112",
+    "name": "Meridian ELSS Tax Saver",
+    "manufacturer": "Meridian AMC",
+    "category": "Mutual fund",
+    "sub_category": "Equity: ELSS",
+    "risk": "Very high",
+    "returns": {
+      "1y": 15.6,
+      "3y": 17.9,
+      "5y": 18.2
+    },
+    "min_investment": 500,
+    "liquidity": "3-year lock-in",
+    "expense_ratio": 0.79,
+    "aum_cr": 12880,
+    "benchmark": "Nifty 500 TRI",
+    "fund_manager": "Karan Bhatia",
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Only for clients still on the old tax regime who need 80C.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-26"
+    },
+    "rewards": {
+      "points_per_lakh": 5,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2021-11-28",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Meridian ELSS Tax Saver is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Meridian ELSS Tax Saver from Meridian AMC sits in Equity: ELSS. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "3-year lock-in",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Meridian ELSS Tax Saver (Equity: ELSS) from Meridian AMC.\nRisk: Very high. Minimum: Rs 500. Liquidity: 3-year lock-in.\nReturns: 15.6% (1y), 17.9% (3y CAGR), 18.2% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.79.\nCIO stance: Neutral. Only for clients still on the old tax regime who need 80C.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-16",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-113",
+    "name": "Coastline International Equity FoF",
+    "manufacturer": "Coastline Capital",
+    "category": "Mutual fund",
+    "sub_category": "Equity: International FoF",
+    "risk": "Very high",
+    "returns": {
+      "1y": 22.3,
+      "3y": 12.6,
+      "5y": 15.1
+    },
+    "min_investment": 5000,
+    "liquidity": "T+5, exit load 1% within 1 year",
+    "expense_ratio": 0.62,
+    "aum_cr": 3870,
+    "benchmark": "MSCI ACWI",
+    "fund_manager": "Sana Merchant",
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Max 10% of equity. Currency adds to returns but also to volatility.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-14"
+    },
+    "rewards": {
+      "points_per_lakh": 4,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2023-04-24",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Coastline International Equity FoF is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Coastline International Equity FoF from Coastline Capital sits in Equity: International FoF. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+5, exit load 1% within 1 year",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Coastline International Equity FoF (Equity: International FoF) from Coastline Capital.\nRisk: Very high. Minimum: Rs 5,000. Liquidity: T+5, exit load 1% within 1 year.\nReturns: 22.3% (1y), 12.6% (3y CAGR), 15.1% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.62.\nCIO stance: Neutral. Max 10% of equity. Currency adds to returns but also to volatility.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-09-30",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-114",
+    "name": "Banyan Gold ETF FoF",
+    "manufacturer": "Banyan Mutual Fund",
+    "category": "Mutual fund",
+    "sub_category": "Commodity: Gold",
+    "risk": "High",
+    "returns": {
+      "1y": 24.8,
+      "3y": 17.2,
+      "5y": 13.4
+    },
+    "min_investment": 1000,
+    "liquidity": "T+3, exit load 1% within 15 days",
+    "expense_ratio": 0.15,
+    "aum_cr": 5240,
+    "benchmark": "Domestic gold price",
+    "fund_manager": "Pooja Iyer",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "5-8% allocation as a hedge. We prefer SGB secondary for long holding periods because of tax treatment at maturity.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-02"
+    },
+    "rewards": {
+      "points_per_lakh": 3,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Meera Joshi",
+      "title": "Product Manager, Mutual Funds"
+    },
+    "is_new": false,
+    "launched": "2024-07-30",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Banyan Gold ETF FoF is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Banyan Gold ETF FoF from Banyan Mutual Fund sits in Commodity: Gold. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Meera Joshi explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level High. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "T+3, exit load 1% within 15 days",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "High",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Banyan Gold ETF FoF (Commodity: Gold) from Banyan Mutual Fund.\nRisk: High. Minimum: Rs 1,000. Liquidity: T+3, exit load 1% within 15 days.\nReturns: 24.8% (1y), 17.2% (3y CAGR), 13.4% (5y CAGR). Past returns don't guarantee future returns.\nExpense ratio: 0.15.\nCIO stance: Preferred. 5-8% allocation as a hedge. We prefer SGB secondary for long holding periods because of tax treatment at maturity.",
+    "highlights": [
+      "Daily NAV, SIP and STP available",
+      "Regulated by SEBI, held with registrar",
+      "Diversified across 40-80 holdings"
+    ],
+    "risks": [
+      "Market-linked; can fall 20-30% in a bad year",
+      "Exit load if redeemed early"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "kind": "product",
+        "date": "2026-10-22",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-201",
+    "name": "Indus Peak Emerging Leaders PMS",
+    "manufacturer": "Indus Peak Asset Managers",
+    "category": "PMS",
+    "sub_category": "Equity: Mid and small cap",
+    "risk": "Very high",
+    "returns": {
+      "1y": 26.1,
+      "3y": 25.4,
+      "5y": 24.0
+    },
+    "min_investment": 5000000,
+    "liquidity": "Redeem any time; exit load 2% in year 1",
+    "fee": "2% fixed or 1% + 15% over 10% hurdle",
+    "strategy_aum_cr": 3120,
+    "fund_manager": "Vikram Shetty",
+    "stocks": 24,
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "For clients with 5+ year horizon and high risk appetite only. Concentrated 24-stock book.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-29"
+    },
+    "rewards": {
+      "points_per_lakh": 8,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Siddharth Rao",
+      "title": "Product Manager, PMS & AIF"
+    },
+    "is_new": false,
+    "launched": "2024-08-21",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Indus Peak Emerging Leaders PMS is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Indus Peak Emerging Leaders PMS from Indus Peak Asset Managers sits in Equity: Mid and small cap. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Siddharth Rao explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m3b",
+          "title": "Eligibility, agreements and fees",
+          "type": "reading",
+          "minutes": 8,
+          "body": "Minimum ticket size, accredited investor rules, the client agreement, and how fixed and performance fees are charged."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Redeem any time; exit load 2% in year 1",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Indus Peak Emerging Leaders PMS (Equity: Mid and small cap) from Indus Peak Asset Managers.\nRisk: Very high. Minimum: Rs 5,000,000. Liquidity: Redeem any time; exit load 2% in year 1.\nReturns: 26.1% (1y), 25.4% (3y CAGR), 24.0% (5y CAGR). Past returns don't guarantee future returns.\nFee: 2% fixed or 1% + 15% over 10% hurdle.\nCIO stance: Preferred. For clients with 5+ year horizon and high risk appetite only. Concentrated 24-stock book.",
+    "highlights": [
+      "Stocks held directly in the client's demat",
+      "Concentrated portfolio run by a dedicated manager",
+      "Quarterly manager letters"
+    ],
+    "risks": [
+      "Rs 50 lakh minimum",
+      "Higher fees than mutual funds",
+      "Concentration risk"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Siddharth Rao",
+          "title": "Product Manager, PMS & AIF"
+        },
+        "kind": "product",
+        "date": "2026-10-13",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-202",
+    "name": "Coastline Quality Compounders PMS",
+    "manufacturer": "Coastline Capital",
+    "category": "PMS",
+    "sub_category": "Equity: Multi cap quality",
+    "risk": "Very high",
+    "returns": {
+      "1y": 15.4,
+      "3y": 19.8,
+      "5y": 20.6
+    },
+    "min_investment": 5000000,
+    "liquidity": "Redeem any time; exit load 1% in year 1",
+    "fee": "1.75% fixed",
+    "strategy_aum_cr": 5860,
+    "fund_manager": "Arjun Desai",
+    "stocks": 20,
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Steadier of our two PMS options. Good fit for business owners moving surplus from FDs into equity over time.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-01"
+    },
+    "rewards": {
+      "points_per_lakh": 8,
+      "contest": "CT-03"
+    },
+    "product_manager": {
+      "name": "Siddharth Rao",
+      "title": "Product Manager, PMS & AIF"
+    },
+    "is_new": false,
+    "launched": "2018-12-15",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Coastline Quality Compounders PMS is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Coastline Quality Compounders PMS from Coastline Capital sits in Equity: Multi cap quality. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Siddharth Rao explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m3b",
+          "title": "Eligibility, agreements and fees",
+          "type": "reading",
+          "minutes": 8,
+          "body": "Minimum ticket size, accredited investor rules, the client agreement, and how fixed and performance fees are charged."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Redeem any time; exit load 1% in year 1",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Coastline Quality Compounders PMS (Equity: Multi cap quality) from Coastline Capital.\nRisk: Very high. Minimum: Rs 5,000,000. Liquidity: Redeem any time; exit load 1% in year 1.\nReturns: 15.4% (1y), 19.8% (3y CAGR), 20.6% (5y CAGR). Past returns don't guarantee future returns.\nFee: 1.75% fixed.\nCIO stance: Preferred. Steadier of our two PMS options. Good fit for business owners moving surplus from FDs into equity over time.",
+    "highlights": [
+      "Stocks held directly in the client's demat",
+      "Concentrated portfolio run by a dedicated manager",
+      "Quarterly manager letters"
+    ],
+    "risks": [
+      "Rs 50 lakh minimum",
+      "Higher fees than mutual funds",
+      "Concentration risk"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Siddharth Rao",
+          "title": "Product Manager, PMS & AIF"
+        },
+        "kind": "product",
+        "date": "2026-10-16",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-301",
+    "name": "Meridian Private Credit Fund III",
+    "manufacturer": "Meridian AMC",
+    "category": "AIF",
+    "sub_category": "Category II: Private credit",
+    "risk": "High",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 10000000,
+    "liquidity": "Closed-ended, 4 years + 1 year extension",
+    "target_irr": "13-14% gross",
+    "commitment_period": "18 months",
+    "close_date": "2026-12-17",
+    "fee": "1.5% on drawn capital + 10% carry over 10% hurdle",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Senior secured lending to mid-market companies. Final close in under two months. Accredited or Rs 1 Cr+ clients only.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-21"
+    },
+    "rewards": {
+      "points_per_lakh": 9,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Siddharth Rao",
+      "title": "Product Manager, PMS & AIF"
+    },
+    "is_new": false,
+    "launched": "2020-07-28",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Meridian Private Credit Fund III is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Meridian Private Credit Fund III from Meridian AMC sits in Category II: Private credit. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Siddharth Rao explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m3b",
+          "title": "Eligibility, agreements and fees",
+          "type": "reading",
+          "minutes": 8,
+          "body": "Minimum ticket size, accredited investor rules, the client agreement, and how fixed and performance fees are charged."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level High. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Closed-ended, 4 years + 1 year extension",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "High",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Meridian Private Credit Fund III (Category II: Private credit) from Meridian AMC.\nRisk: High. Minimum: Rs 10,000,000. Liquidity: Closed-ended, 4 years + 1 year extension.\nTarget irr: 13-14% gross.\nFee: 1.5% on drawn capital + 10% carry over 10% hurdle.\nCIO stance: Preferred. Senior secured lending to mid-market companies. Final close in under two months. Accredited or Rs 1 Cr+ clients only.",
+    "highlights": [
+      "Access to private markets",
+      "Institutional-grade diligence",
+      "Accredited and Rs 1 Cr+ investors"
+    ],
+    "risks": [
+      "Illiquid for the fund's term",
+      "Capital is drawn down over time",
+      "Returns are targets, not guarantees"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Siddharth Rao",
+          "title": "Product Manager, PMS & AIF"
+        },
+        "kind": "product",
+        "date": "2026-10-07",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open, closing 2026-12-17"
+  },
+  {
+    "id": "PD-302",
+    "name": "Indus Peak Long-Short Fund",
+    "manufacturer": "Indus Peak Asset Managers",
+    "category": "AIF",
+    "sub_category": "Category III: Long-short equity",
+    "risk": "Very high",
+    "returns": {
+      "1y": 16.2,
+      "3y": 15.1,
+      "5y": null
+    },
+    "min_investment": 10000000,
+    "liquidity": "Monthly liquidity after 1-year lock-in",
+    "fee": "1.5% + 20% over 10% hurdle",
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Lower drawdowns than long-only, but the fee drag is high. Discuss only with clients who value lower volatility over return.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-16"
+    },
+    "rewards": {
+      "points_per_lakh": 7,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Siddharth Rao",
+      "title": "Product Manager, PMS & AIF"
+    },
+    "is_new": false,
+    "launched": "2021-06-24",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Indus Peak Long-Short Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Indus Peak Long-Short Fund from Indus Peak Asset Managers sits in Category III: Long-short equity. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Siddharth Rao explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m3b",
+          "title": "Eligibility, agreements and fees",
+          "type": "reading",
+          "minutes": 8,
+          "body": "Minimum ticket size, accredited investor rules, the client agreement, and how fixed and performance fees are charged."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Very high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Monthly liquidity after 1-year lock-in",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Very high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Indus Peak Long-Short Fund (Category III: Long-short equity) from Indus Peak Asset Managers.\nRisk: Very high. Minimum: Rs 10,000,000. Liquidity: Monthly liquidity after 1-year lock-in.\nReturns: 16.2% (1y), 15.1% (3y CAGR), -% (5y CAGR). Past returns don't guarantee future returns.\nFee: 1.5% + 20% over 10% hurdle.\nCIO stance: Neutral. Lower drawdowns than long-only, but the fee drag is high. Discuss only with clients who value lower volatility over return.",
+    "highlights": [
+      "Access to private markets",
+      "Institutional-grade diligence",
+      "Accredited and Rs 1 Cr+ investors"
+    ],
+    "risks": [
+      "Illiquid for the fund's term",
+      "Capital is drawn down over time",
+      "Returns are targets, not guarantees"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Siddharth Rao",
+          "title": "Product Manager, PMS & AIF"
+        },
+        "kind": "product",
+        "date": "2026-10-22",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-303",
+    "name": "Coastline Real Estate Yield Fund",
+    "manufacturer": "Coastline Capital",
+    "category": "AIF",
+    "sub_category": "Category II: Real estate",
+    "risk": "High",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 10000000,
+    "liquidity": "Closed-ended, 5 years",
+    "target_irr": "15-16% gross",
+    "close_date": "2026-11-19",
+    "fee": "2% + 15% carry over 12% hurdle",
+    "is_new": true,
+    "cio_view": {
+      "stance": "Under review",
+      "comment": "New launch. Diligence on the sponsor's track record is ongoing; hold client conversations until the CIO note is out.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-18"
+    },
+    "rewards": {
+      "points_per_lakh": 9,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Siddharth Rao",
+      "title": "Product Manager, PMS & AIF"
+    },
+    "launched": "2026-10-12",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Coastline Real Estate Yield Fund is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Coastline Real Estate Yield Fund from Coastline Capital sits in Category II: Real estate. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Siddharth Rao explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m3b",
+          "title": "Eligibility, agreements and fees",
+          "type": "reading",
+          "minutes": 8,
+          "body": "Minimum ticket size, accredited investor rules, the client agreement, and how fixed and performance fees are charged."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level High. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Closed-ended, 5 years",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "High",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Coastline Real Estate Yield Fund (Category II: Real estate) from Coastline Capital.\nRisk: High. Minimum: Rs 10,000,000. Liquidity: Closed-ended, 5 years.\nTarget irr: 15-16% gross.\nFee: 2% + 15% carry over 12% hurdle.\nCIO stance: Under review. New launch. Diligence on the sponsor's track record is ongoing; hold client conversations until the CIO note is out.",
+    "highlights": [
+      "Access to private markets",
+      "Institutional-grade diligence",
+      "Accredited and Rs 1 Cr+ investors"
+    ],
+    "risks": [
+      "Illiquid for the fund's term",
+      "Capital is drawn down over time",
+      "Returns are targets, not guarantees"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Siddharth Rao",
+          "title": "Product Manager, PMS & AIF"
+        },
+        "kind": "product",
+        "date": "2026-09-28",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open, closing 2026-11-19"
+  },
+  {
+    "id": "PD-401",
+    "name": "Western Highways InvIT NCD 2031",
+    "manufacturer": "Western Highways InvIT",
+    "category": "Bond",
+    "sub_category": "Secured NCD, AAA",
+    "risk": "Moderate",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 100000,
+    "liquidity": "Listed; secondary market liquidity limited",
+    "coupon": 7.95,
+    "ytm": 7.88,
+    "rating": "AAA (CRISIL)",
+    "maturity": "2031-09-25",
+    "payout": "Quarterly",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "AAA, secured on toll cash flows. Good quarterly income for retirees.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-30"
+    },
+    "rewards": {
+      "points_per_lakh": 3,
+      "contest": "CT-02"
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "is_new": false,
+    "launched": "2019-04-02",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Western Highways InvIT NCD 2031 is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Western Highways InvIT NCD 2031 from Western Highways InvIT sits in Secured NCD, AAA. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Moderate. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Listed; secondary market liquidity limited",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Moderate",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Western Highways InvIT NCD 2031 (Secured NCD, AAA) from Western Highways InvIT.\nRisk: Moderate. Minimum: Rs 100,000. Liquidity: Listed; secondary market liquidity limited.\nCoupon: 7.95.\nYtm: 7.88.\nRating: AAA (CRISIL).\nMaturity: 2031-09-25.\nCIO stance: Preferred. AAA, secured on toll cash flows. Good quarterly income for retirees.",
+    "highlights": [
+      "Fixed income on a known schedule",
+      "Listed on the exchange",
+      "Rated by an approved agency"
+    ],
+    "risks": [
+      "Price changes if sold before maturity",
+      "Credit risk below AAA"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-18",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-402",
+    "name": "Coastal Housing Finance NCD 2029",
+    "manufacturer": "Coastal Housing Finance",
+    "category": "Bond",
+    "sub_category": "Secured NCD, AA+",
+    "risk": "Moderately high",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 10000,
+    "liquidity": "Listed; secondary market liquidity limited",
+    "coupon": 8.85,
+    "ytm": 8.9,
+    "rating": "AA+ (ICRA)",
+    "maturity": "2029-08-11",
+    "payout": "Monthly",
+    "is_new": true,
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Higher yield for AA+ risk. Keep under 10% of debt for any one client.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-19"
+    },
+    "rewards": {
+      "points_per_lakh": 4,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "launched": "2026-10-20",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Coastal Housing Finance NCD 2029 is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Coastal Housing Finance NCD 2029 from Coastal Housing Finance sits in Secured NCD, AA+. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Moderately high. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Listed; secondary market liquidity limited",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Moderately high",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Coastal Housing Finance NCD 2029 (Secured NCD, AA+) from Coastal Housing Finance.\nRisk: Moderately high. Minimum: Rs 10,000. Liquidity: Listed; secondary market liquidity limited.\nCoupon: 8.85.\nYtm: 8.9.\nRating: AA+ (ICRA).\nMaturity: 2029-08-11.\nCIO stance: Neutral. Higher yield for AA+ risk. Keep under 10% of debt for any one client.",
+    "highlights": [
+      "Fixed income on a known schedule",
+      "Listed on the exchange",
+      "Rated by an approved agency"
+    ],
+    "risks": [
+      "Price changes if sold before maturity",
+      "Credit risk below AAA"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-03",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-403",
+    "name": "Government of India 7.18% 2037",
+    "manufacturer": "Government of India",
+    "category": "Bond",
+    "sub_category": "G-Sec",
+    "risk": "Low to moderate",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 10000,
+    "liquidity": "Listed; RBI Retail Direct and secondary market",
+    "coupon": 7.18,
+    "ytm": 6.98,
+    "rating": "Sovereign",
+    "maturity": "2037-10-23",
+    "payout": "Half-yearly",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Locks in today's yields for 11 years. Best for clients who want zero credit risk.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-09"
+    },
+    "rewards": {
+      "points_per_lakh": 2,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "is_new": false,
+    "launched": "2022-06-24",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Government of India 7.18% 2037 is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Government of India 7.18% 2037 from Government of India sits in G-Sec. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Low to moderate. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Listed; RBI Retail Direct and secondary market",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Low to moderate",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Government of India 7.18% 2037 (G-Sec) from Government of India.\nRisk: Low to moderate. Minimum: Rs 10,000. Liquidity: Listed; RBI Retail Direct and secondary market.\nCoupon: 7.18.\nYtm: 6.98.\nRating: Sovereign.\nMaturity: 2037-10-23.\nCIO stance: Preferred. Locks in today's yields for 11 years. Best for clients who want zero credit risk.",
+    "highlights": [
+      "Fixed income on a known schedule",
+      "Listed on the exchange",
+      "Rated by an approved agency"
+    ],
+    "risks": [
+      "Price changes if sold before maturity",
+      "Credit risk below AAA"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-22",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-404",
+    "name": "State Power Utility Tax-free 2032",
+    "manufacturer": "State Power Utility",
+    "category": "Bond",
+    "sub_category": "Tax-free bond, AAA",
+    "risk": "Low to moderate",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 1000,
+    "liquidity": "Listed; secondary market only",
+    "coupon": 7.35,
+    "ytm": 5.6,
+    "rating": "AAA (CARE)",
+    "maturity": "2032-10-04",
+    "payout": "Annual",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Excellent post-tax yield for 30%-bracket clients. Supply is thin; buy when available.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-09"
+    },
+    "rewards": {
+      "points_per_lakh": 2,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "is_new": false,
+    "launched": "2024-08-04",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What State Power Utility Tax-free 2032 is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "State Power Utility Tax-free 2032 from State Power Utility sits in Tax-free bond, AAA. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Low to moderate. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Listed; secondary market only",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Low to moderate",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "State Power Utility Tax-free 2032 (Tax-free bond, AAA) from State Power Utility.\nRisk: Low to moderate. Minimum: Rs 1,000. Liquidity: Listed; secondary market only.\nCoupon: 7.35.\nYtm: 5.6.\nRating: AAA (CARE).\nMaturity: 2032-10-04.\nCIO stance: Preferred. Excellent post-tax yield for 30%-bracket clients. Supply is thin; buy when available.",
+    "highlights": [
+      "Fixed income on a known schedule",
+      "Listed on the exchange",
+      "Rated by an approved agency"
+    ],
+    "risks": [
+      "Price changes if sold before maturity",
+      "Credit risk below AAA"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-12",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-501",
+    "name": "Harbor Bank Senior Citizen FD",
+    "manufacturer": "Harbor Bank",
+    "category": "Fixed deposit",
+    "sub_category": "Bank FD",
+    "risk": "Low",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 10000,
+    "liquidity": "Premature withdrawal with 0.5% penalty",
+    "rate": 7.75,
+    "tenor": "1-5 years",
+    "insured_upto": 500000,
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Only for senior citizens who insist on FDs; prefer the bond ladder.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-06"
+    },
+    "rewards": {
+      "points_per_lakh": 1,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "is_new": false,
+    "launched": "2020-08-21",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Harbor Bank Senior Citizen FD is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Harbor Bank Senior Citizen FD from Harbor Bank sits in Bank FD. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Low. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Premature withdrawal with 0.5% penalty",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Very high",
+                "Low",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Harbor Bank Senior Citizen FD (Bank FD) from Harbor Bank.\nRisk: Low. Minimum: Rs 10,000. Liquidity: Premature withdrawal with 0.5% penalty.\nRate: 7.75.\nCIO stance: Neutral. Only for senior citizens who insist on FDs; prefer the bond ladder.",
+    "highlights": [
+      "Fixed rate for the tenor",
+      "Simple to understand"
+    ],
+    "risks": [
+      "Interest fully taxable",
+      "Penalty on early withdrawal"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-04",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-502",
+    "name": "Coastal Housing Finance FD",
+    "manufacturer": "Coastal Housing Finance",
+    "category": "Fixed deposit",
+    "sub_category": "Corporate FD, AAA",
+    "risk": "Low to moderate",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 25000,
+    "liquidity": "Premature withdrawal after 3 months",
+    "rate": 8.05,
+    "tenor": "1-5 years",
+    "rating": "AAA (CRISIL)",
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Rate is competitive, but bank FDs have deposit insurance; explain the difference.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-09-30"
+    },
+    "rewards": {
+      "points_per_lakh": 2,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "is_new": false,
+    "launched": "2023-11-25",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Coastal Housing Finance FD is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Coastal Housing Finance FD from Coastal Housing Finance sits in Corporate FD, AAA. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level Low to moderate. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Premature withdrawal after 3 months",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "Low to moderate",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Coastal Housing Finance FD (Corporate FD, AAA) from Coastal Housing Finance.\nRisk: Low to moderate. Minimum: Rs 25,000. Liquidity: Premature withdrawal after 3 months.\nRate: 8.05.\nRating: AAA (CRISIL).\nCIO stance: Neutral. Rate is competitive, but bank FDs have deposit insurance; explain the difference.",
+    "highlights": [
+      "Fixed rate for the tenor",
+      "Simple to understand"
+    ],
+    "risks": [
+      "Interest fully taxable",
+      "Penalty on early withdrawal"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-13",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-601",
+    "name": "Sovereign Gold Bond (secondary)",
+    "manufacturer": "Reserve Bank of India",
+    "category": "Bond",
+    "sub_category": "Sovereign gold bond",
+    "risk": "High",
+    "returns": {
+      "1y": 25.6,
+      "3y": 17.0,
+      "5y": 14.1
+    },
+    "min_investment": 5000,
+    "liquidity": "Listed; RBI early redemption after year 5",
+    "coupon": 2.5,
+    "rating": "Sovereign",
+    "cio_view": {
+      "stance": "Preferred",
+      "comment": "Preferred gold route for 5+ years: interest plus tax-free redemption at maturity.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-01"
+    },
+    "rewards": {
+      "points_per_lakh": 2,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "is_new": false,
+    "launched": "2023-05-17",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Sovereign Gold Bond (secondary) is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Sovereign Gold Bond (secondary) from Reserve Bank of India sits in Sovereign gold bond. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level High. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Listed; RBI early redemption after year 5",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "High",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Sovereign Gold Bond (secondary) (Sovereign gold bond) from Reserve Bank of India.\nRisk: High. Minimum: Rs 5,000. Liquidity: Listed; RBI early redemption after year 5.\nReturns: 25.6% (1y), 17.0% (3y CAGR), 14.1% (5y CAGR). Past returns don't guarantee future returns.\nCoupon: 2.5.\nRating: Sovereign.\nCIO stance: Preferred. Preferred gold route for 5+ years: interest plus tax-free redemption at maturity.",
+    "highlights": [
+      "Fixed income on a known schedule",
+      "Listed on the exchange",
+      "Rated by an approved agency"
+    ],
+    "risks": [
+      "Price changes if sold before maturity",
+      "Credit risk below AAA"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-03",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  },
+  {
+    "id": "PD-701",
+    "name": "Kova Loan Against Securities",
+    "manufacturer": "Partner NBFC",
+    "category": "Credit",
+    "sub_category": "Loan against mutual funds and shares",
+    "risk": "—",
+    "returns": {
+      "1y": null,
+      "3y": null,
+      "5y": null
+    },
+    "min_investment": 1000000,
+    "liquidity": "Overdraft; repay any time",
+    "rate": 9.75,
+    "ltv": "Up to 50% equity, 80% debt",
+    "is_new": true,
+    "cio_view": {
+      "stance": "Neutral",
+      "comment": "Liquidity tool, not a leverage tool. Never pitch it for investing borrowed money.",
+      "author": {
+        "name": "Anand Iyer",
+        "title": "Chief Investment Officer"
+      },
+      "date": "2026-10-06"
+    },
+    "rewards": {
+      "points_per_lakh": 3,
+      "contest": null
+    },
+    "product_manager": {
+      "name": "Farah Khan",
+      "title": "Product Manager, Fixed Income"
+    },
+    "launched": "2026-10-01",
+    "ld": {
+      "modules": [
+        {
+          "id": "m1",
+          "title": "What Kova Loan Against Securities is",
+          "type": "reading",
+          "minutes": 6,
+          "body": "Kova Loan Against Securities from Partner NBFC sits in Loan against mutual funds and shares. Read the one-page summary covering who it is for, how it makes money and what can go wrong."
+        },
+        {
+          "id": "m2",
+          "title": "Product manager walkthrough",
+          "type": "video",
+          "minutes": 12,
+          "url": null,
+          "body": "Farah Khan explains the strategy, fees and the questions clients ask most. (Video link to be added by the product team.)"
+        },
+        {
+          "id": "m3",
+          "title": "Fact sheet and offer document",
+          "type": "document",
+          "minutes": 10,
+          "body": "Latest fact sheet, key information memorandum and the regulatory disclosures you must share before the client invests."
+        },
+        {
+          "id": "m4",
+          "title": "Suitability: who it fits and who it doesn't",
+          "type": "reading",
+          "minutes": 7,
+          "body": "Risk level —. Match against the client's risk profile, horizon and liquidity needs. Never pitch to a client whose profile is lower than the product's risk."
+        },
+        {
+          "id": "m5",
+          "title": "Five-question check",
+          "type": "quiz",
+          "minutes": 5,
+          "body": "Short check on fees, liquidity, taxation, risk and suitability. Pass mark 4 of 5.",
+          "questions": [
+            {
+              "q": "What is the exit / liquidity condition?",
+              "options": [
+                "Overdraft; repay any time",
+                "Daily liquidity with no conditions",
+                "Locked in for 10 years"
+              ],
+              "answer": 0
+            },
+            {
+              "q": "What is the product's risk level?",
+              "options": [
+                "Low",
+                "—",
+                "Not rated"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ],
+      "video_url": null
+    },
+    "brief": "Kova Loan Against Securities (Loan against mutual funds and shares) from Partner NBFC.\nRisk: —. Minimum: Rs 1,000,000. Liquidity: Overdraft; repay any time.\nRate: 9.75.\nCIO stance: Neutral. Liquidity tool, not a leverage tool. Never pitch it for investing borrowed money.",
+    "highlights": [
+      "Liquidity without selling investments",
+      "Interest only on amount used"
+    ],
+    "risks": [
+      "Margin calls if pledged securities fall",
+      "Not to be used to buy more investments"
+    ],
+    "comments": [
+      {
+        "by": {
+          "name": "Farah Khan",
+          "title": "Product Manager, Fixed Income"
+        },
+        "kind": "product",
+        "date": "2026-10-22",
+        "text": "Updated fact sheet uploaded. Ask me if a client needs the full portfolio disclosure."
+      }
+    ],
+    "status": "Open"
+  }
+]

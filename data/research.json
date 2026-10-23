@@ -1,0 +1,42 @@
+[
+  {
+    "id": "RS-01",
+    "kind": "House view",
+    "title": "Equity: neutral weight, prefer large and flexi caps",
+    "date": "2026-10-22",
+    "author": "Anand Iyer",
+    "body": "Valuations in mid and small caps are above long-run averages. Add through STP over six months."
+  },
+  {
+    "id": "RS-02",
+    "kind": "House view",
+    "title": "Debt: lock in 3-5 year AAA yields",
+    "date": "2026-10-22",
+    "author": "Anand Iyer",
+    "body": "With the rate cycle near its end, extend duration modestly using corporate bond funds and AAA NCDs."
+  },
+  {
+    "id": "RS-03",
+    "kind": "Market event",
+    "title": "RBI keeps repo rate at 5.25%",
+    "date": "2026-10-15",
+    "author": "Research desk",
+    "body": "Stance unchanged. Short-term yields eased 8 bps."
+  },
+  {
+    "id": "RS-04",
+    "kind": "Market event",
+    "title": "Gold at a record high in rupee terms",
+    "date": "2026-10-24",
+    "author": "Research desk",
+    "body": "Up 24% in a year. Review clients above 10% gold."
+  },
+  {
+    "id": "RS-05",
+    "kind": "Daily note",
+    "title": "Nifty closes at 26,410, up 0.6%",
+    "date": "2026-10-25",
+    "author": "Research desk",
+    "body": "Banks and IT led. FPIs net buyers for the fifth session."
+  }
+]

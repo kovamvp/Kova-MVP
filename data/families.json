@@ -1,0 +1,146 @@
+[
+  {
+    "id": "FM-01",
+    "name": "Mehta family",
+    "locality": "Andheri West",
+    "head": "CL-1001",
+    "members": [
+      "CL-1001",
+      "CL-1002",
+      "CL-1003"
+    ],
+    "aum": 232499000.0,
+    "business": "Textile exports business"
+  },
+  {
+    "id": "FM-02",
+    "name": "Desai family",
+    "locality": "Juhu",
+    "head": "CL-1004",
+    "members": [
+      "CL-1004",
+      "CL-1005"
+    ],
+    "aum": 164000000.0,
+    "business": "Pharma distribution"
+  },
+  {
+    "id": "FM-03",
+    "name": "Kapadia family",
+    "locality": "Bandra West",
+    "head": "CL-1006",
+    "members": [
+      "CL-1006",
+      "CL-1024"
+    ],
+    "aum": 84001000.0,
+    "business": "Chartered accountant practice"
+  },
+  {
+    "id": "FM-04",
+    "name": "Iyer family",
+    "locality": "Powai",
+    "head": "CL-1007",
+    "members": [
+      "CL-1007",
+      "CL-1008"
+    ],
+    "aum": 75000000.0,
+    "business": "Senior technology executive"
+  },
+  {
+    "id": "FM-05",
+    "name": "Shah family",
+    "locality": "Santacruz",
+    "head": "CL-1009",
+    "members": [
+      "CL-1009",
+      "CL-1010"
+    ],
+    "aum": 248999000.0,
+    "business": "Diamond trading"
+  },
+  {
+    "id": "FM-06",
+    "name": "Khanna family",
+    "locality": "Khar",
+    "head": "CL-1011",
+    "members": [
+      "CL-1011"
+    ],
+    "aum": 31000000.0,
+    "business": "Film production"
+  },
+  {
+    "id": "FM-07",
+    "name": "Patil family",
+    "locality": "Goregaon",
+    "head": "CL-1012",
+    "members": [
+      "CL-1012",
+      "CL-1013"
+    ],
+    "aum": 169998000.0,
+    "business": "Real estate developer"
+  },
+  {
+    "id": "FM-08",
+    "name": "Bhatt family",
+    "locality": "Vile Parle",
+    "head": "CL-1014",
+    "members": [
+      "CL-1014",
+      "CL-1015"
+    ],
+    "aum": 70001000.0,
+    "business": "Retired banker"
+  },
+  {
+    "id": "FM-09",
+    "name": "Wadia family",
+    "locality": "Bandra West",
+    "head": "CL-1016",
+    "members": [
+      "CL-1016",
+      "CL-1017"
+    ],
+    "aum": 249999000.0,
+    "business": "Hospitality family"
+  },
+  {
+    "id": "FM-10",
+    "name": "Nair family",
+    "locality": "Malad",
+    "head": "CL-1018",
+    "members": [
+      "CL-1018",
+      "CL-1019"
+    ],
+    "aum": 64001000.0,
+    "business": "Doctor couple"
+  },
+  {
+    "id": "FM-11",
+    "name": "Agarwal family",
+    "locality": "Andheri East",
+    "head": "CL-1020",
+    "members": [
+      "CL-1020",
+      "CL-1021"
+    ],
+    "aum": 3499000.0,
+    "business": "Logistics business"
+  },
+  {
+    "id": "FM-12",
+    "name": "Fernandes family",
+    "locality": "Bandra West",
+    "head": "CL-1022",
+    "members": [
+      "CL-1022",
+      "CL-1023"
+    ],
+    "aum": 28999000.0,
+    "business": "Advertising agency founder"
+  }
+]

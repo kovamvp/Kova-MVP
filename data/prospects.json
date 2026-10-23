@@ -1,0 +1,1488 @@
+[
+  {
+    "id": "PR-2001",
+    "name": "Vivek Malhotra",
+    "age": 46,
+    "gender": "M",
+    "source": "Referral",
+    "source_detail": "Amit Kapadia (client)",
+    "stage": "Prospect",
+    "estimated_investable": 25000000,
+    "need": "Selling a stake in his SaaS company; wants a plan for the proceeds",
+    "last_contact": "2026-10-12",
+    "meetings_held": 3,
+    "created": "2026-09-04",
+    "phone": "+91 9967457 13495",
+    "email": "vivek.malhotra@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Not assessed",
+    "probability": 30,
+    "next_step": "First meeting",
+    "next_step_date": "2026-11-04",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-202",
+      "PD-301",
+      "PD-110"
+    ],
+    "app_activity": [],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Anand Iyer",
+          "title": "Chief Investment Officer"
+        },
+        "date": "2026-10-20",
+        "product_id": "PD-202",
+        "text": "Fits the stated need (selling a stake in his saas company; wants a plan for the proceeds). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": "PF-2026-000118",
+    "notes": "Selling a stake in his SaaS company; wants a plan for the proceeds",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-07T19:00",
+        "title": "Internal note",
+        "body": "Selling a stake in his SaaS company; wants a plan for the proceeds",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-12T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2002",
+    "name": "Ritu Sabharwal",
+    "age": 52,
+    "gender": "F",
+    "source": "Event",
+    "source_detail": "Kova bond seminar, Sep",
+    "stage": "KYC in progress",
+    "estimated_investable": 8000000,
+    "need": "Moving from bank FDs to a bond ladder",
+    "last_contact": "2026-10-20",
+    "meetings_held": 1,
+    "created": "2026-08-07",
+    "phone": "+91 9957341 60615",
+    "email": "ritu.sabharwal@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderate",
+    "probability": 65,
+    "next_step": "Follow up on KYC documents",
+    "next_step_date": "2026-10-30",
+    "app_access": true,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": true
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": true
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-401",
+      "PD-403",
+      "PD-107"
+    ],
+    "app_activity": [],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Anand Iyer",
+          "title": "Chief Investment Officer"
+        },
+        "date": "2026-10-17",
+        "product_id": "PD-401",
+        "text": "Fits the stated need (moving from bank fds to a bond ladder). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Moving from bank FDs to a bond ladder",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-15T19:00",
+        "title": "Internal note",
+        "body": "Moving from bank FDs to a bond ladder",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-20T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2003",
+    "name": "Dr. Imran Qureshi",
+    "age": 44,
+    "gender": "M",
+    "source": "Referral",
+    "source_detail": "Deepak Nair (client)",
+    "stage": "Registered",
+    "estimated_investable": 12000000,
+    "need": "Surplus from clinic; no time to manage it",
+    "last_contact": "2026-10-22",
+    "meetings_held": 0,
+    "created": "2026-06-27",
+    "phone": "+91 9993443 29142",
+    "email": "imran.qureshi@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderately aggressive",
+    "probability": 45,
+    "next_step": "First meeting",
+    "next_step_date": "2026-11-01",
+    "app_access": true,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": true
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-106",
+      "PD-105"
+    ],
+    "app_activity": [
+      {
+        "at": "2026-10-25T22:10",
+        "text": "Viewed Meridian Multi Asset Allocation 3 times"
+      },
+      {
+        "at": "2026-10-24T21:40",
+        "text": "Opened the Kova approach video"
+      }
+    ],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "date": "2026-10-17",
+        "product_id": "PD-106",
+        "text": "Fits the stated need (surplus from clinic; no time to manage it). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Surplus from clinic; no time to manage it",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-17T19:00",
+        "title": "Internal note",
+        "body": "Surplus from clinic; no time to manage it",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-22T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2004",
+    "name": "Neeraj Choksi",
+    "age": 38,
+    "gender": "M",
+    "source": "Inbound",
+    "source_detail": "Kova Client app sign-up",
+    "stage": "Lead",
+    "estimated_investable": 3000000,
+    "need": "Downloaded the Kova Client app; asked about SIPs",
+    "last_contact": "2026-09-23",
+    "meetings_held": 0,
+    "created": "2026-05-30",
+    "phone": "+91 9970812 28191",
+    "email": "neeraj.choksi@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Not assessed",
+    "probability": 10,
+    "next_step": "Portfolio review meeting",
+    "next_step_date": "2026-10-23",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [],
+    "app_activity": [],
+    "suggestions": [],
+    "recommended_portfolio_id": null,
+    "notes": "Downloaded the Kova Client app; asked about SIPs",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-09-18T19:00",
+        "title": "Internal note",
+        "body": "Downloaded the Kova Client app; asked about SIPs",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-09-23T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2005",
+    "name": "Sneha Kulkarni",
+    "age": 41,
+    "gender": "F",
+    "source": "Cold outreach",
+    "source_detail": "LinkedIn",
+    "stage": "Prospect",
+    "estimated_investable": 6000000,
+    "need": "Recently promoted; RSUs vesting",
+    "last_contact": "2026-09-15",
+    "meetings_held": 0,
+    "created": "2026-08-26",
+    "phone": "+91 9912362 38266",
+    "email": "sneha.kulkarni@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderately aggressive",
+    "probability": 30,
+    "next_step": "Share bond ladder note",
+    "next_step_date": "2026-11-08",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [],
+    "app_activity": [],
+    "suggestions": [],
+    "recommended_portfolio_id": null,
+    "notes": "Recently promoted; RSUs vesting",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-09-10T19:00",
+        "title": "Internal note",
+        "body": "Recently promoted; RSUs vesting",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-09-15T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2006",
+    "name": "Pervez Engineer",
+    "age": 66,
+    "gender": "M",
+    "source": "Referral",
+    "source_detail": "Zubin Wadia (client)",
+    "stage": "Investing client",
+    "estimated_investable": 20000000,
+    "need": "Wants monthly income; KYC done, first bond purchase next",
+    "last_contact": "2026-10-24",
+    "meetings_held": 5,
+    "created": "2026-08-21",
+    "phone": "+91 9924894 47762",
+    "email": "pervez.engineer@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderately aggressive",
+    "probability": 85,
+    "next_step": "Follow up on KYC documents",
+    "next_step_date": "2026-10-26",
+    "app_access": true,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": true
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": true
+      },
+      {
+        "step": "Bank account",
+        "done": true
+      },
+      {
+        "step": "FATCA declaration",
+        "done": true
+      },
+      {
+        "step": "Nominee",
+        "done": true
+      },
+      {
+        "step": "Risk profile",
+        "done": true
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-401",
+      "PD-404"
+    ],
+    "app_activity": [],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "date": "2026-10-25",
+        "product_id": "PD-401",
+        "text": "Fits the stated need (wants monthly income; kyc done, first bond purchase next). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Wants monthly income; KYC done, first bond purchase next",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-19T19:00",
+        "title": "Internal note",
+        "body": "Wants monthly income; KYC done, first bond purchase next",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-24T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2007",
+    "name": "Ananya Rao",
+    "age": 29,
+    "gender": "F",
+    "source": "Inbound",
+    "source_detail": "Website enquiry",
+    "stage": "Lead",
+    "estimated_investable": 1500000,
+    "need": "Asked about international funds",
+    "last_contact": "2026-10-14",
+    "meetings_held": 0,
+    "created": "2026-09-28",
+    "phone": "+91 9940529 93748",
+    "email": "ananya.rao@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Not assessed",
+    "probability": 10,
+    "next_step": "First meeting",
+    "next_step_date": "2026-10-26",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [],
+    "app_activity": [],
+    "suggestions": [],
+    "recommended_portfolio_id": null,
+    "notes": "Asked about international funds",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-09T19:00",
+        "title": "Internal note",
+        "body": "Asked about international funds",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-14T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2008",
+    "name": "Hitesh Gala",
+    "age": 50,
+    "gender": "M",
+    "source": "Event",
+    "source_detail": "Chamber of commerce dinner",
+    "stage": "Prospect",
+    "estimated_investable": 40000000,
+    "need": "Family business; three brothers splitting assets",
+    "last_contact": "2026-10-04",
+    "meetings_held": 2,
+    "created": "2026-06-09",
+    "phone": "+91 9973711 80261",
+    "email": "hitesh.gala@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderate",
+    "probability": 30,
+    "next_step": "Intro call",
+    "next_step_date": "2026-11-08",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-202",
+      "PD-201"
+    ],
+    "app_activity": [],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Anand Iyer",
+          "title": "Chief Investment Officer"
+        },
+        "date": "2026-10-22",
+        "product_id": "PD-202",
+        "text": "Fits the stated need (family business; three brothers splitting assets). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Family business; three brothers splitting assets",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-09-29T19:00",
+        "title": "Internal note",
+        "body": "Family business; three brothers splitting assets",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-04T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2009",
+    "name": "Mrs. Lata Venkatesh",
+    "age": 70,
+    "gender": "F",
+    "source": "Referral",
+    "source_detail": "Suresh Bhatt (client)",
+    "stage": "Registered",
+    "estimated_investable": 9000000,
+    "need": "Widowed recently; son in US wants her money managed simply",
+    "last_contact": "2026-10-17",
+    "meetings_held": 1,
+    "created": "2026-07-26",
+    "phone": "+91 9940835 28818",
+    "email": "lata.venkatesh@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderately conservative",
+    "probability": 45,
+    "next_step": "Portfolio review meeting",
+    "next_step_date": "2026-10-23",
+    "app_access": true,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": true
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-401",
+      "PD-501"
+    ],
+    "app_activity": [
+      {
+        "at": "2026-10-24T11:05",
+        "text": "Viewed Western Highways InvIT NCD 2031"
+      }
+    ],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "date": "2026-10-25",
+        "product_id": "PD-401",
+        "text": "Fits the stated need (widowed recently; son in us wants her money managed simply). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Widowed recently; son in US wants her money managed simply",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-12T19:00",
+        "title": "Internal note",
+        "body": "Widowed recently; son in US wants her money managed simply",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-17T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2010",
+    "name": "Kunal Bajaj",
+    "age": 35,
+    "gender": "M",
+    "source": "Cold outreach",
+    "source_detail": "Founders meet-up",
+    "stage": "Lead",
+    "estimated_investable": 5000000,
+    "need": "Startup founder; liquidity event possible next year",
+    "last_contact": "2026-08-29",
+    "meetings_held": 0,
+    "created": "2026-06-02",
+    "phone": "+91 9955346 84798",
+    "email": "kunal.bajaj@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Not assessed",
+    "probability": 10,
+    "next_step": "Send proposal",
+    "next_step_date": "2026-10-25",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [],
+    "app_activity": [],
+    "suggestions": [],
+    "recommended_portfolio_id": null,
+    "notes": "Startup founder; liquidity event possible next year",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-08-24T19:00",
+        "title": "Internal note",
+        "body": "Startup founder; liquidity event possible next year",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-08-29T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2011",
+    "name": "Sahil & Priyanka Arora",
+    "age": 39,
+    "gender": "M",
+    "source": "Referral",
+    "source_detail": "Arvind Iyer (client)",
+    "stage": "Investing and trading client",
+    "estimated_investable": 15000000,
+    "need": "Want PMS once demat is live",
+    "last_contact": "2026-10-21",
+    "meetings_held": 4,
+    "created": "2026-08-05",
+    "phone": "+91 9956169 78951",
+    "email": "sahil.priyanka.arora@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderate",
+    "probability": 90,
+    "next_step": "Portfolio review meeting",
+    "next_step_date": "2026-11-07",
+    "app_access": true,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": true
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": true
+      },
+      {
+        "step": "Bank account",
+        "done": true
+      },
+      {
+        "step": "FATCA declaration",
+        "done": true
+      },
+      {
+        "step": "Nominee",
+        "done": true
+      },
+      {
+        "step": "Risk profile",
+        "done": true
+      },
+      {
+        "step": "Demat and trading account",
+        "done": true
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": true
+      },
+      {
+        "step": "DDPI",
+        "done": true
+      }
+    ],
+    "interests": [
+      "PD-202"
+    ],
+    "app_activity": [],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Anand Iyer",
+          "title": "Chief Investment Officer"
+        },
+        "date": "2026-10-20",
+        "product_id": "PD-202",
+        "text": "Fits the stated need (want pms once demat is live). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Want PMS once demat is live",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-16T19:00",
+        "title": "Internal note",
+        "body": "Want PMS once demat is live",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-21T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2012",
+    "name": "Joseph D'Souza",
+    "age": 57,
+    "gender": "M",
+    "source": "Event",
+    "source_detail": "Kova retirement workshop",
+    "stage": "Prospect",
+    "estimated_investable": 11000000,
+    "need": "Retiring from shipping company next year",
+    "last_contact": "2026-09-25",
+    "meetings_held": 1,
+    "created": "2026-09-10",
+    "phone": "+91 9991496 58929",
+    "email": "joseph.dsouza@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderately conservative",
+    "probability": 30,
+    "next_step": "Intro call",
+    "next_step_date": "2026-10-23",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-107",
+      "PD-401",
+      "PD-105"
+    ],
+    "app_activity": [],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "date": "2026-10-20",
+        "product_id": "PD-107",
+        "text": "Fits the stated need (retiring from shipping company next year). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Retiring from shipping company next year",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-09-20T19:00",
+        "title": "Internal note",
+        "body": "Retiring from shipping company next year",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-09-25T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2013",
+    "name": "Nandini Hegde",
+    "age": 48,
+    "gender": "F",
+    "source": "Inbound",
+    "source_detail": "Kova Client app sign-up",
+    "stage": "KYC in progress",
+    "estimated_investable": 7000000,
+    "need": "Doctor; FATCA declaration pending",
+    "last_contact": "2026-10-11",
+    "meetings_held": 2,
+    "created": "2026-08-17",
+    "phone": "+91 9918453 41604",
+    "email": "nandini.hegde@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderate",
+    "probability": 65,
+    "next_step": "Share bond ladder note",
+    "next_step_date": "2026-11-02",
+    "app_access": true,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": true
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": true
+      },
+      {
+        "step": "Bank account",
+        "done": true
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [],
+    "app_activity": [],
+    "suggestions": [],
+    "recommended_portfolio_id": null,
+    "notes": "Doctor; FATCA declaration pending",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-06T19:00",
+        "title": "Internal note",
+        "body": "Doctor; FATCA declaration pending",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-11T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  },
+  {
+    "id": "PR-2014",
+    "name": "Rohan Thakkar",
+    "age": 33,
+    "gender": "M",
+    "source": "Cold outreach",
+    "source_detail": "LinkedIn",
+    "stage": "Closed",
+    "estimated_investable": 4000000,
+    "need": "Chose a robo-advisor",
+    "last_contact": "2026-06-28",
+    "meetings_held": 1,
+    "created": "2026-05-06",
+    "phone": "+91 9992279 99742",
+    "email": "rohan.thakkar@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Not assessed",
+    "probability": 0,
+    "next_step": null,
+    "next_step_date": null,
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [],
+    "app_activity": [],
+    "suggestions": [],
+    "recommended_portfolio_id": null,
+    "notes": "Chose a robo-advisor",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-06-23T19:00",
+        "title": "Internal note",
+        "body": "Chose a robo-advisor",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-06-28T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": {
+      "reason": "Chose a robo-advisor",
+      "date": "2026-07-08",
+      "learning": "Price-sensitive; lead with fee transparency next time."
+    }
+  },
+  {
+    "id": "PR-2015",
+    "name": "Meher Batliwala",
+    "age": 61,
+    "gender": "F",
+    "source": "Referral",
+    "source_detail": "Zarine Wadia (client)",
+    "stage": "Closed",
+    "estimated_investable": 18000000,
+    "need": "Paused: family property dispute; revisit next year",
+    "last_contact": "2026-07-23",
+    "meetings_held": 2,
+    "created": "2026-04-15",
+    "phone": "+91 9971746 33891",
+    "email": "meher.batliwala@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderately aggressive",
+    "probability": 0,
+    "next_step": null,
+    "next_step_date": null,
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [],
+    "app_activity": [],
+    "suggestions": [],
+    "recommended_portfolio_id": null,
+    "notes": "Paused: family property dispute; revisit next year",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-07-18T19:00",
+        "title": "Internal note",
+        "body": "Paused: family property dispute; revisit next year",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-07-23T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": {
+      "reason": "Paused: family property dispute; revisit next year",
+      "date": "2026-08-02",
+      "learning": "Timing; keep warm with quarterly notes."
+    }
+  },
+  {
+    "id": "PR-2016",
+    "name": "Aditya Saraf",
+    "age": 43,
+    "gender": "M",
+    "source": "Event",
+    "source_detail": "Kova CIO breakfast",
+    "stage": "Prospect",
+    "estimated_investable": 30000000,
+    "need": "Considering a family office; comparing three firms",
+    "last_contact": "2026-10-18",
+    "meetings_held": 2,
+    "created": "2026-09-30",
+    "phone": "+91 9968137 48462",
+    "email": "aditya.saraf@example.com",
+    "city": "Mumbai",
+    "risk_indication": "Moderately aggressive",
+    "probability": 30,
+    "next_step": "First meeting",
+    "next_step_date": "2026-10-29",
+    "app_access": false,
+    "kyc_steps": [
+      {
+        "step": "Mobile and email verified",
+        "done": false
+      },
+      {
+        "step": "PAN and KYC (KRA)",
+        "done": false
+      },
+      {
+        "step": "Bank account",
+        "done": false
+      },
+      {
+        "step": "FATCA declaration",
+        "done": false
+      },
+      {
+        "step": "Nominee",
+        "done": false
+      },
+      {
+        "step": "Risk profile",
+        "done": false
+      },
+      {
+        "step": "Demat and trading account",
+        "done": false
+      },
+      {
+        "step": "Exchange registration (UCC)",
+        "done": false
+      },
+      {
+        "step": "DDPI",
+        "done": false
+      }
+    ],
+    "interests": [
+      "PD-202",
+      "PD-301",
+      "PD-302"
+    ],
+    "app_activity": [],
+    "suggestions": [
+      {
+        "from": {
+          "name": "Meera Joshi",
+          "title": "Product Manager, Mutual Funds"
+        },
+        "date": "2026-10-19",
+        "product_id": "PD-202",
+        "text": "Fits the stated need (considering a family office; comparing three firms). Lead with liquidity and tax treatment."
+      }
+    ],
+    "recommended_portfolio_id": null,
+    "notes": "Considering a family office; comparing three firms",
+    "timeline": [
+      {
+        "id": "e1",
+        "kind": "note",
+        "at": "2026-10-13T19:00",
+        "title": "Internal note",
+        "body": "Considering a family office; comparing three firms",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-10-18T10:30",
+        "title": "Follow-up email",
+        "body": "Shared Kova's approach note and asked for a convenient time to meet."
+      }
+    ],
+    "closed": null
+  }
+]

@@ -1,0 +1,4643 @@
+[
+  {
+    "id": "CL-1001",
+    "name": "Rajesh Mehta",
+    "first_name": "Rajesh",
+    "gender": "M",
+    "age": 54,
+    "dob": "1972-09-11",
+    "family_id": "FM-01",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Andheri West",
+    "occupation": "Textile exports business",
+    "segment": "active",
+    "risk_profile": "Moderately aggressive",
+    "risk_profile_date": "2025-02-24",
+    "client_since": "2022-03-08",
+    "phone": "+91 9844887 94012",
+    "email": "rajesh.mehta@outlook.com",
+    "pan_masked": "XXXXX2827X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-09-21",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": false,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-05-11",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 183999000.0,
+    "invested": 135135000.0,
+    "xirr": 16.3,
+    "allocation": {
+      "Equity": 65.0,
+      "Debt": 27.0,
+      "Gold": 5.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 8902000.0,
+        "value": 19747000.0,
+        "since": "2023-03-24",
+        "mode": "SIP",
+        "sip_amount": 10000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 19270000.0,
+        "value": 32437000.0,
+        "since": "2024-08-27",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 23060000.0,
+        "value": 27844000.0,
+        "since": "2025-05-23",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-105",
+        "asset_class": "Equity",
+        "invested": 11693000.0,
+        "value": 18773000.0,
+        "since": "2022-10-09",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-202",
+        "asset_class": "Equity",
+        "invested": 16875000.0,
+        "value": 20799000.0,
+        "since": "2025-08-30",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-401",
+        "asset_class": "Debt",
+        "invested": 10424000.0,
+        "value": 12277000.0,
+        "since": "2024-08-30",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-108",
+        "asset_class": "Debt",
+        "invested": 8604000.0,
+        "value": 9481000.0,
+        "since": "2025-05-13",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 8936000.0,
+        "value": 12494000.0,
+        "since": "2022-05-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-301",
+        "asset_class": "Debt",
+        "invested": 14980000.0,
+        "value": 15427000.0,
+        "since": "2026-06-09",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 7609000.0,
+        "value": 9200000.0,
+        "since": "2025-08-16",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 4782000.0,
+        "value": 5520000.0,
+        "since": "2024-07-29",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-22",
+    "last_transaction": "2026-06-08",
+    "photo": null,
+    "tags": [
+      "Business owner",
+      "Family office candidate"
+    ],
+    "goals": [
+      {
+        "name": "Rhea's wedding",
+        "target": 15000000,
+        "year": 2028
+      },
+      {
+        "name": "Business succession corpus",
+        "target": 200000000,
+        "year": 2034
+      }
+    ],
+    "interests": [
+      "Golf",
+      "Single malts",
+      "Cricket (MI season ticket)"
+    ],
+    "notes_summary": "Decision-maker for the family. Prefers short WhatsApp updates, quarterly in-person reviews at his Andheri office. Sceptical of PMS fees.",
+    "revenue_ytd": 1010600.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-21T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-16T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-10-02T18:40",
+        "title": "Internal note",
+        "body": "Rajesh asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-09-28T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Rajesh, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-12T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-18T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-10-31",
+        "kind": "SIP debit",
+        "product_id": "PD-103",
+        "amount": -10000
+      },
+      {
+        "date": "2026-11-01",
+        "kind": "SIP debit",
+        "product_id": "PD-104",
+        "amount": -100000
+      },
+      {
+        "date": "2026-11-09",
+        "kind": "Coupon",
+        "product_id": "PD-401",
+        "amount": 244000.0
+      },
+      {
+        "date": "2026-11-21",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 12494000.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "medium",
+        "text": "Risk profile older than 18 months"
+      },
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      }
+    ]
+  },
+  {
+    "id": "CL-1002",
+    "name": "Kavita Mehta",
+    "first_name": "Kavita",
+    "gender": "F",
+    "age": 51,
+    "dob": "1975-06-02",
+    "family_id": "FM-01",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Andheri West",
+    "occupation": "Homemaker / co-owner",
+    "segment": "active",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2025-07-15",
+    "client_since": "2021-12-31",
+    "phone": "+91 9895765 58944",
+    "email": "kavita.mehta@outlook.com",
+    "pan_masked": "XXXXX9479X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-04-12",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-06-28",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 42000000.0,
+    "invested": 32356000.0,
+    "xirr": 10.6,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-106",
+        "asset_class": "Equity",
+        "invested": 3511000.0,
+        "value": 6312000.0,
+        "since": "2022-08-16",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 2526000.0,
+        "value": 5120000.0,
+        "since": "2023-11-20",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 8346000.0,
+        "value": 9568000.0,
+        "since": "2025-10-13",
+        "mode": "SIP",
+        "sip_amount": 25000,
+        "sip_date": 10
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 7715000.0,
+        "value": 8226000.0,
+        "since": "2025-11-20",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-108",
+        "asset_class": "Debt",
+        "invested": 7259000.0,
+        "value": 8574000.0,
+        "since": "2024-04-29",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 1922000.0,
+        "value": 2940000.0,
+        "since": "2024-02-22",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 1077000.0,
+        "value": 1260000.0,
+        "since": "2024-05-14",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-07",
+    "last_transaction": "2026-07-05",
+    "photo": null,
+    "tags": [
+      "Regular investor"
+    ],
+    "goals": [],
+    "interests": [
+      "Yoga",
+      "Cricket"
+    ],
+    "notes_summary": "Spouse in the Mehta family. Homemaker / co-owner.",
+    "revenue_ytd": 358100.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-13T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-05T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-04T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Kavita, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-16T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-12T18:40",
+        "title": "Internal note",
+        "body": "Kavita asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-11T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-19",
+        "kind": "SIP debit",
+        "product_id": "PD-102",
+        "amount": -25000
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      },
+      {
+        "severity": "high",
+        "text": "Equity above the risk-profile band after the rally"
+      }
+    ]
+  },
+  {
+    "id": "CL-1003",
+    "name": "Rhea Mehta",
+    "first_name": "Rhea",
+    "gender": "F",
+    "age": 26,
+    "dob": "2000-03-17",
+    "family_id": "FM-01",
+    "family_role": "Daughter",
+    "city": "Mumbai",
+    "locality": "Andheri West",
+    "occupation": "Product designer",
+    "segment": "engaged",
+    "risk_profile": "Aggressive",
+    "risk_profile_date": "2026-04-06",
+    "client_since": "2022-12-28",
+    "phone": "+91 9864287 46509",
+    "email": "rhea.mehta@outlook.com",
+    "pan_masked": "XXXXX5092X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2026-05-02",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-05-24",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 6500000.0,
+    "invested": 4713000.0,
+    "xirr": 16.8,
+    "allocation": {
+      "Equity": 80.0,
+      "Debt": 15.0,
+      "Gold": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 1268000.0,
+        "value": 1524000.0,
+        "since": "2025-09-14",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 1508000.0,
+        "value": 2189000.0,
+        "since": "2023-12-30",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 945000.0,
+        "value": 1487000.0,
+        "since": "2023-03-01",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-403",
+        "asset_class": "Debt",
+        "invested": 350000.0,
+        "value": 407000.0,
+        "since": "2024-07-27",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 481000.0,
+        "value": 568000.0,
+        "since": "2024-05-26",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 161000.0,
+        "value": 325000.0,
+        "since": "2022-05-21",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-15",
+    "last_transaction": "2025-12-03",
+    "photo": null,
+    "tags": [
+      "Warm, not transacting"
+    ],
+    "goals": [],
+    "interests": [
+      "Cooking",
+      "Reading"
+    ],
+    "notes_summary": "Daughter in the Mehta family. Product designer.",
+    "revenue_ytd": 53600.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-05T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-10-04T18:40",
+        "title": "Internal note",
+        "body": "Rhea asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-04T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Rhea, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-04T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-26",
+        "kind": "Coupon",
+        "product_id": "PD-403",
+        "amount": 7300.0
+      }
+    ],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1004",
+    "name": "Sanjay Desai",
+    "first_name": "Sanjay",
+    "gender": "M",
+    "age": 61,
+    "dob": "1965-09-30",
+    "family_id": "FM-02",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Juhu",
+    "occupation": "Pharma distribution",
+    "segment": "active",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2025-06-24",
+    "client_since": "2022-07-11",
+    "phone": "+91 9894697 84085",
+    "email": "sanjay.desai@yahoo.co.in",
+    "pan_masked": "XXXXX6183X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-10-24",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": true
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-06-14",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 125999000.0,
+    "invested": 86351000.0,
+    "xirr": 8.6,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 5599000.0,
+        "value": 14983000.0,
+        "since": "2022-05-19",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-113",
+        "asset_class": "Equity",
+        "invested": 13701000.0,
+        "value": 17894000.0,
+        "since": "2024-07-27",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 4276000.0,
+        "value": 12571000.0,
+        "since": "2022-05-05",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-105",
+        "asset_class": "Equity",
+        "invested": 11792000.0,
+        "value": 17551000.0,
+        "since": "2023-06-03",
+        "mode": "SIP",
+        "sip_amount": 25000,
+        "sip_date": 10
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 14860000.0,
+        "value": 18104000.0,
+        "since": "2023-12-11",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-404",
+        "asset_class": "Debt",
+        "invested": 18253000.0,
+        "value": 20987000.0,
+        "since": "2024-04-05",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 8437000.0,
+        "value": 11309000.0,
+        "since": "2022-11-24",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 5856000.0,
+        "value": 8820000.0,
+        "since": "2024-03-29",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 3577000.0,
+        "value": 3780000.0,
+        "since": "2025-12-15",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-09-27",
+    "last_transaction": "2026-05-29",
+    "photo": null,
+    "tags": [
+      "Pre-retiree",
+      "Income focus"
+    ],
+    "goals": [
+      {
+        "name": "Retirement income from 2027",
+        "target": 3500000,
+        "year": 2027,
+        "kind": "annual income"
+      }
+    ],
+    "interests": [
+      "Classical music",
+      "Temple trust work"
+    ],
+    "notes_summary": "Planning to hand the distribution business to his nephew next year. Wants predictable monthly income. Wife Sunita's account has been untouched for 8 months.",
+    "revenue_ytd": 895300.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-17T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-08T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Sanjay, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-04T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-24T18:40",
+        "title": "Internal note",
+        "body": "Sanjay asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-21T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-07T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-10-28",
+        "kind": "SIP debit",
+        "product_id": "PD-103",
+        "amount": -50000
+      },
+      {
+        "date": "2026-11-09",
+        "kind": "SIP debit",
+        "product_id": "PD-105",
+        "amount": -25000
+      },
+      {
+        "date": "2026-11-21",
+        "kind": "Coupon",
+        "product_id": "PD-404",
+        "amount": 385600.0
+      },
+      {
+        "date": "2026-11-30",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 11309000.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      },
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      }
+    ]
+  },
+  {
+    "id": "CL-1005",
+    "name": "Sunita Desai",
+    "first_name": "Sunita",
+    "gender": "F",
+    "age": 58,
+    "dob": "1967-12-21",
+    "family_id": "FM-02",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Juhu",
+    "occupation": "Homemaker / co-owner",
+    "segment": "dormant",
+    "risk_profile": "Moderately conservative",
+    "risk_profile_date": "2025-06-20",
+    "client_since": "2025-06-24",
+    "phone": "+91 9845145 10464",
+    "email": "sunita.desai@outlook.com",
+    "pan_masked": "XXXXX3143X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2024-10-04",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-03-28",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 38001000.0,
+    "invested": 27952000.0,
+    "xirr": 13.4,
+    "allocation": {
+      "Equity": 30.0,
+      "Debt": 60.0,
+      "Gold": 5.0,
+      "Cash": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 1761000.0,
+        "value": 2999000.0,
+        "since": "2022-10-15",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-106",
+        "asset_class": "Equity",
+        "invested": 2376000.0,
+        "value": 3161000.0,
+        "since": "2024-10-11",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 3620000.0,
+        "value": 5241000.0,
+        "since": "2023-11-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 10974000.0,
+        "value": 13656000.0,
+        "since": "2023-08-20",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 6652000.0,
+        "value": 9144000.0,
+        "since": "2022-07-24",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 996000.0,
+        "value": 1900000.0,
+        "since": "2022-10-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 1573000.0,
+        "value": 1900000.0,
+        "since": "2023-11-12",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-02-26",
+    "last_transaction": "2025-12-02",
+    "photo": null,
+    "tags": [
+      "Needs re-engagement"
+    ],
+    "goals": [],
+    "interests": [
+      "Cricket",
+      "Badminton"
+    ],
+    "notes_summary": "Spouse in the Desai family. Homemaker / co-owner.",
+    "revenue_ytd": 310600.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-20T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-04T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Sunita, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-10-03T18:40",
+        "title": "Internal note",
+        "body": "Sunita asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "system",
+        "at": "2026-09-26T09:00",
+        "title": "No contact in 6 months",
+        "body": "Flagged as dormant by the re-engagement rule."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-23T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-10",
+        "kind": "SIP debit",
+        "product_id": "PD-106",
+        "amount": -100000
+      },
+      {
+        "date": "2026-12-06",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 9144000.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      },
+      {
+        "severity": "medium",
+        "text": "No contact in over 6 months"
+      }
+    ]
+  },
+  {
+    "id": "CL-1006",
+    "name": "Amit Kapadia",
+    "first_name": "Amit",
+    "gender": "M",
+    "age": 47,
+    "dob": "1979-07-14",
+    "family_id": "FM-03",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Bandra West",
+    "occupation": "Chartered accountant practice",
+    "segment": "active",
+    "risk_profile": "Moderately aggressive",
+    "risk_profile_date": "2026-01-11",
+    "client_since": "2024-04-14",
+    "phone": "+91 9813775 35313",
+    "email": "amit.kapadia@outlook.com",
+    "pan_masked": "XXXXX6378X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-10-06",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": false,
+      "ddpi": true
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-07-30",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 69001000.0,
+    "invested": 46327000.0,
+    "xirr": 9.5,
+    "allocation": {
+      "Equity": 65.0,
+      "Debt": 27.0,
+      "Gold": 5.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-106",
+        "asset_class": "Equity",
+        "invested": 6016000.0,
+        "value": 6686000.0,
+        "since": "2026-01-24",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 5
+      },
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 6071000.0,
+        "value": 9412000.0,
+        "since": "2024-11-03",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 5414000.0,
+        "value": 14211000.0,
+        "since": "2022-10-23",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 9136000.0,
+        "value": 14541000.0,
+        "since": "2023-04-20",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-403",
+        "asset_class": "Debt",
+        "invested": 6239000.0,
+        "value": 6539000.0,
+        "since": "2026-02-14",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-502",
+        "asset_class": "Debt",
+        "invested": 4518000.0,
+        "value": 5912000.0,
+        "since": "2023-05-08",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-108",
+        "asset_class": "Debt",
+        "invested": 5446000.0,
+        "value": 6180000.0,
+        "since": "2024-12-04",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 1850000.0,
+        "value": 3450000.0,
+        "since": "2022-11-08",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 1637000.0,
+        "value": 2070000.0,
+        "since": "2023-02-25",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-21",
+    "last_transaction": "2026-08-26",
+    "photo": null,
+    "tags": [
+      "Referral source"
+    ],
+    "goals": [
+      {
+        "name": "Children's overseas education",
+        "target": 25000000,
+        "year": 2031
+      }
+    ],
+    "interests": [
+      "Tax law",
+      "Trekking"
+    ],
+    "notes_summary": "CA; has referred four clients. Detailed questions on taxation, always.",
+    "revenue_ytd": 610800.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-21T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-15T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-09-26T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Amit, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-19T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-15T18:40",
+        "title": "Internal note",
+        "body": "Amit asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-02T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-20",
+        "kind": "SIP debit",
+        "product_id": "PD-106",
+        "amount": -15000
+      },
+      {
+        "date": "2026-12-15",
+        "kind": "Coupon",
+        "product_id": "PD-403",
+        "amount": 117400.0
+      },
+      {
+        "date": "2026-12-27",
+        "kind": "Maturity",
+        "product_id": "PD-502",
+        "amount": 5912000.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      },
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      }
+    ]
+  },
+  {
+    "id": "CL-1007",
+    "name": "Arvind Iyer",
+    "first_name": "Arvind",
+    "gender": "M",
+    "age": 44,
+    "dob": "1982-08-09",
+    "family_id": "FM-04",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Powai",
+    "occupation": "Senior technology executive",
+    "segment": "active",
+    "risk_profile": "Aggressive",
+    "risk_profile_date": "2024-12-05",
+    "client_since": "2022-03-14",
+    "phone": "+91 9882408 63225",
+    "email": "arvind.iyer@yahoo.co.in",
+    "pan_masked": "XXXXX1006X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-09-10",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-04-30",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 54000000.0,
+    "invested": 38473000.0,
+    "xirr": 15.6,
+    "allocation": {
+      "Equity": 80.0,
+      "Debt": 15.0,
+      "Gold": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 4213000.0,
+        "value": 11263000.0,
+        "since": "2022-05-20",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 10
+      },
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 7521000.0,
+        "value": 9164000.0,
+        "since": "2025-03-24",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 11587000.0,
+        "value": 12850000.0,
+        "since": "2026-03-19",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-113",
+        "asset_class": "Equity",
+        "invested": 7203000.0,
+        "value": 9923000.0,
+        "since": "2024-02-14",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-403",
+        "asset_class": "Debt",
+        "invested": 1772000.0,
+        "value": 2004000.0,
+        "since": "2024-12-30",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-401",
+        "asset_class": "Debt",
+        "invested": 2570000.0,
+        "value": 3456000.0,
+        "since": "2022-11-30",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-402",
+        "asset_class": "Debt",
+        "invested": 1974000.0,
+        "value": 2640000.0,
+        "since": "2023-06-01",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 1633000.0,
+        "value": 2700000.0,
+        "since": "2023-08-15",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-14",
+    "last_transaction": "2026-09-02",
+    "photo": null,
+    "tags": [
+      "ESOP holder",
+      "Tech executive"
+    ],
+    "goals": [
+      {
+        "name": "Early retirement at 52",
+        "target": 120000000,
+        "year": 2034
+      }
+    ],
+    "interests": [
+      "Marathons",
+      "Carnatic music"
+    ],
+    "notes_summary": "Large unvested ESOPs. Concentration in employer stock outside Kova is the main risk to discuss.",
+    "revenue_ytd": 475200.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-18T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-11T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Arvind, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-10-04T18:40",
+        "title": "Internal note",
+        "body": "Arvind asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-01T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-23T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-22T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-03",
+        "kind": "SIP debit",
+        "product_id": "PD-103",
+        "amount": -100000
+      },
+      {
+        "date": "2026-11-13",
+        "kind": "Coupon",
+        "product_id": "PD-401",
+        "amount": 68700.0
+      },
+      {
+        "date": "2026-11-17",
+        "kind": "Coupon",
+        "product_id": "PD-402",
+        "amount": 58400.0
+      },
+      {
+        "date": "2026-12-02",
+        "kind": "Coupon",
+        "product_id": "PD-403",
+        "amount": 36000.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "medium",
+        "text": "Risk profile older than 18 months"
+      }
+    ]
+  },
+  {
+    "id": "CL-1008",
+    "name": "Meenal Iyer",
+    "first_name": "Meenal",
+    "gender": "F",
+    "age": 42,
+    "dob": "1984-07-01",
+    "family_id": "FM-04",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Powai",
+    "occupation": "Homemaker / co-owner",
+    "segment": "engaged",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2026-04-25",
+    "client_since": "2022-11-15",
+    "phone": "+91 9868236 70901",
+    "email": "meenal.iyer@yahoo.co.in",
+    "pan_masked": "XXXXX9702X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2024-12-23",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": false,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-04-28",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 21000000.0,
+    "invested": 14967000.0,
+    "xirr": 12.6,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 1536000.0,
+        "value": 3559000.0,
+        "since": "2023-01-11",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 2542000.0,
+        "value": 3889000.0,
+        "since": "2023-08-07",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 10
+      },
+      {
+        "product_id": "PD-106",
+        "asset_class": "Equity",
+        "invested": 2769000.0,
+        "value": 3052000.0,
+        "since": "2026-02-15",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 5
+      },
+      {
+        "product_id": "PD-402",
+        "asset_class": "Debt",
+        "invested": 3472000.0,
+        "value": 4640000.0,
+        "since": "2023-06-03",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-403",
+        "asset_class": "Debt",
+        "invested": 3264000.0,
+        "value": 3760000.0,
+        "since": "2024-09-21",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 895000.0,
+        "value": 1470000.0,
+        "since": "2023-08-31",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 489000.0,
+        "value": 630000.0,
+        "since": "2022-11-13",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-12",
+    "last_transaction": "2025-07-18",
+    "photo": null,
+    "tags": [
+      "Warm, not transacting"
+    ],
+    "goals": [],
+    "interests": [
+      "Badminton",
+      "Yoga"
+    ],
+    "notes_summary": "Spouse in the Iyer family. Homemaker / co-owner.",
+    "revenue_ytd": 162900.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-18T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-09-29T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Meenal, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-03T18:40",
+        "title": "Internal note",
+        "body": "Meenal asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-11T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-21",
+        "kind": "SIP debit",
+        "product_id": "PD-102",
+        "amount": -15000
+      },
+      {
+        "date": "2026-11-21",
+        "kind": "SIP debit",
+        "product_id": "PD-106",
+        "amount": -50000
+      },
+      {
+        "date": "2026-11-28",
+        "kind": "Coupon",
+        "product_id": "PD-402",
+        "amount": 102700.0
+      },
+      {
+        "date": "2026-12-25",
+        "kind": "Coupon",
+        "product_id": "PD-403",
+        "amount": 67500.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      }
+    ]
+  },
+  {
+    "id": "CL-1009",
+    "name": "Harish Shah",
+    "first_name": "Harish",
+    "gender": "M",
+    "age": 58,
+    "dob": "1968-01-26",
+    "family_id": "FM-05",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Santacruz",
+    "occupation": "Diamond trading",
+    "segment": "active",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2026-07-31",
+    "client_since": "2022-09-05",
+    "phone": "+91 9820758 66179",
+    "email": "harish.shah@gmail.com",
+    "pan_masked": "XXXXX8564X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2026-01-13",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": true,
+      "ddpi": true
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-06-22",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 234999000.0,
+    "invested": 176843000.0,
+    "xirr": 10.8,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 19606000.0,
+        "value": 21959000.0,
+        "since": "2025-11-27",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 10
+      },
+      {
+        "product_id": "PD-105",
+        "asset_class": "Equity",
+        "invested": 18247000.0,
+        "value": 27010000.0,
+        "since": "2023-06-20",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 11617000.0,
+        "value": 18169000.0,
+        "since": "2024-02-08",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 15153000.0,
+        "value": 20039000.0,
+        "since": "2024-09-13",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-202",
+        "asset_class": "Equity",
+        "invested": 13970000.0,
+        "value": 30322000.0,
+        "since": "2022-07-14",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 18069000.0,
+        "value": 23657000.0,
+        "since": "2022-11-23",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-502",
+        "asset_class": "Debt",
+        "invested": 11324000.0,
+        "value": 15820000.0,
+        "since": "2022-07-03",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-404",
+        "asset_class": "Debt",
+        "invested": 20415000.0,
+        "value": 23058000.0,
+        "since": "2024-08-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-301",
+        "asset_class": "Debt",
+        "invested": 29605000.0,
+        "value": 31465000.0,
+        "since": "2026-01-11",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 12631000.0,
+        "value": 16450000.0,
+        "since": "2025-02-26",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 6206000.0,
+        "value": 7050000.0,
+        "since": "2024-11-28",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-03",
+    "last_transaction": "2026-09-19",
+    "photo": null,
+    "tags": [
+      "Top 10 client",
+      "Philanthropy"
+    ],
+    "goals": [
+      {
+        "name": "Grandchildren's education",
+        "target": 40000000,
+        "year": 2038
+      },
+      {
+        "name": "Charitable trust",
+        "target": 50000000,
+        "year": 2030
+      }
+    ],
+    "interests": [
+      "Jain community trust",
+      "Gemology"
+    ],
+    "notes_summary": "Largest relationship. Gold-heavy outside Kova; open to moving part of it to SGBs. Always wants son Nikhil copied on decisions.",
+    "revenue_ytd": 1036200.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-13T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-11T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-09T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Harish, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-25T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-13T18:40",
+        "title": "Internal note",
+        "body": "Harish asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-16T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-02",
+        "kind": "SIP debit",
+        "product_id": "PD-105",
+        "amount": -50000
+      },
+      {
+        "date": "2026-11-07",
+        "kind": "SIP debit",
+        "product_id": "PD-112",
+        "amount": -15000
+      },
+      {
+        "date": "2026-11-22",
+        "kind": "SIP debit",
+        "product_id": "PD-111",
+        "amount": -50000
+      },
+      {
+        "date": "2026-11-26",
+        "kind": "Coupon",
+        "product_id": "PD-404",
+        "amount": 423700.0
+      },
+      {
+        "date": "2027-01-12",
+        "kind": "Maturity",
+        "product_id": "PD-502",
+        "amount": 15820000.0
+      }
+    ],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1010",
+    "name": "Tanvi Shah",
+    "first_name": "Tanvi",
+    "gender": "F",
+    "age": 31,
+    "dob": "1994-11-12",
+    "family_id": "FM-05",
+    "family_role": "Daughter-in-law",
+    "city": "Mumbai",
+    "locality": "Santacruz",
+    "occupation": "Architect",
+    "segment": "engaged",
+    "risk_profile": "Moderately aggressive",
+    "risk_profile_date": "2025-10-23",
+    "client_since": "2025-06-05",
+    "phone": "+91 9897714 25866",
+    "email": "tanvi.shah@yahoo.co.in",
+    "pan_masked": "XXXXX1672X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-07-28",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": true
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-06-10",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 14000000.0,
+    "invested": 10994000.0,
+    "xirr": 17.1,
+    "allocation": {
+      "Equity": 65.0,
+      "Debt": 27.0,
+      "Gold": 5.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 2226000.0,
+        "value": 2533000.0,
+        "since": "2026-01-23",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 10
+      },
+      {
+        "product_id": "PD-106",
+        "asset_class": "Equity",
+        "invested": 1238000.0,
+        "value": 2128000.0,
+        "since": "2022-12-13",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 3163000.0,
+        "value": 4439000.0,
+        "since": "2025-04-16",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-108",
+        "asset_class": "Debt",
+        "invested": 1980000.0,
+        "value": 2203000.0,
+        "since": "2025-03-22",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-404",
+        "asset_class": "Debt",
+        "invested": 1411000.0,
+        "value": 1577000.0,
+        "since": "2024-10-12",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 575000.0,
+        "value": 700000.0,
+        "since": "2025-07-31",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 401000.0,
+        "value": 420000.0,
+        "since": "2026-02-13",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-09-12",
+    "last_transaction": "2026-03-02",
+    "photo": null,
+    "tags": [
+      "Warm, not transacting"
+    ],
+    "goals": [],
+    "interests": [
+      "Badminton",
+      "Theatre"
+    ],
+    "notes_summary": "Daughter-in-law in the Shah family. Architect.",
+    "revenue_ytd": 100500.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-03T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-10-03T18:40",
+        "title": "Internal note",
+        "body": "Tanvi asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-09-28T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Tanvi, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-17T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-10",
+        "kind": "SIP debit",
+        "product_id": "PD-101",
+        "amount": -15000
+      },
+      {
+        "date": "2026-12-17",
+        "kind": "Coupon",
+        "product_id": "PD-404",
+        "amount": 29000.0
+      }
+    ],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1011",
+    "name": "Karan Khanna",
+    "first_name": "Karan",
+    "gender": "M",
+    "age": 39,
+    "dob": "1987-06-26",
+    "family_id": "FM-06",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Khar",
+    "occupation": "Film production",
+    "segment": "dormant",
+    "risk_profile": "Aggressive",
+    "risk_profile_date": "2025-09-13",
+    "client_since": "2021-07-11",
+    "phone": "+91 9845710 46211",
+    "email": "karan.khanna@yahoo.co.in",
+    "pan_masked": "XXXXX1166X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-02-04",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-04-12",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 31000000.0,
+    "invested": 17169000.0,
+    "xirr": 12.5,
+    "allocation": {
+      "Equity": 80.0,
+      "Debt": 15.0,
+      "Gold": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-105",
+        "asset_class": "Equity",
+        "invested": 4494000.0,
+        "value": 6383000.0,
+        "since": "2023-10-27",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 3930000.0,
+        "value": 8765000.0,
+        "since": "2023-03-15",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 3850000.0,
+        "value": 9652000.0,
+        "since": "2023-01-01",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 1523000.0,
+        "value": 1727000.0,
+        "since": "2025-02-17",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-502",
+        "asset_class": "Debt",
+        "invested": 2435000.0,
+        "value": 2923000.0,
+        "since": "2024-06-18",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 937000.0,
+        "value": 1550000.0,
+        "since": "2023-08-13",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2025-12-14",
+    "last_transaction": "2025-12-22",
+    "photo": null,
+    "tags": [
+      "Needs re-engagement"
+    ],
+    "goals": [],
+    "interests": [
+      "Theatre",
+      "Reading"
+    ],
+    "notes_summary": "Head in the Khanna family. Film production.",
+    "revenue_ytd": 126700.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-20T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-08T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Karan, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-10-02T18:40",
+        "title": "Internal note",
+        "body": "Karan asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "system",
+        "at": "2026-09-26T09:00",
+        "title": "No contact in 6 months",
+        "body": "Flagged as dormant by the re-engagement rule."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-17T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-12-06",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 1727000.0
+      },
+      {
+        "date": "2026-12-18",
+        "kind": "Maturity",
+        "product_id": "PD-502",
+        "amount": 2923000.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      },
+      {
+        "severity": "medium",
+        "text": "No contact in over 6 months"
+      },
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      }
+    ]
+  },
+  {
+    "id": "CL-1012",
+    "name": "Mahesh Patil",
+    "first_name": "Mahesh",
+    "gender": "M",
+    "age": 63,
+    "dob": "1963-01-20",
+    "family_id": "FM-07",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Goregaon",
+    "occupation": "Real estate developer",
+    "segment": "active",
+    "risk_profile": "Moderately conservative",
+    "risk_profile_date": "2026-07-04",
+    "client_since": "2025-08-01",
+    "phone": "+91 9829252 83772",
+    "email": "mahesh.patil@outlook.com",
+    "pan_masked": "XXXXX2395X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-11-06",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-10-27",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 151999000.0,
+    "invested": 129907000.0,
+    "xirr": 16.2,
+    "allocation": {
+      "Equity": 30.0,
+      "Debt": 60.0,
+      "Gold": 5.0,
+      "Cash": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 5138000.0,
+        "value": 7938000.0,
+        "since": "2023-04-25",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 6496000.0,
+        "value": 10007000.0,
+        "since": "2025-01-09",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-105",
+        "asset_class": "Equity",
+        "invested": 8116000.0,
+        "value": 9193000.0,
+        "since": "2025-10-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 5346000.0,
+        "value": 9627000.0,
+        "since": "2023-04-02",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-201",
+        "asset_class": "Equity",
+        "invested": 6043000.0,
+        "value": 8835000.0,
+        "since": "2025-02-21",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-404",
+        "asset_class": "Debt",
+        "invested": 19260000.0,
+        "value": 20443000.0,
+        "since": "2025-09-22",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 20579000.0,
+        "value": 21706000.0,
+        "since": "2026-01-16",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-108",
+        "asset_class": "Debt",
+        "invested": 19476000.0,
+        "value": 20561000.0,
+        "since": "2026-01-03",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-301",
+        "asset_class": "Debt",
+        "invested": 26077000.0,
+        "value": 28489000.0,
+        "since": "2025-09-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 6865000.0,
+        "value": 7600000.0,
+        "since": "2026-03-04",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 6511000.0,
+        "value": 7600000.0,
+        "since": "2024-07-02",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-19",
+    "last_transaction": "2026-09-22",
+    "photo": null,
+    "tags": [
+      "Business owner",
+      "Real estate"
+    ],
+    "goals": [
+      {
+        "name": "Debt-free company by 2027",
+        "target": 80000000,
+        "year": 2027
+      }
+    ],
+    "interests": [
+      "Ganesh mandal committee"
+    ],
+    "notes_summary": "Lumpy cash flows from project completions. Prefers bonds and FDs; equity only via balanced advantage.",
+    "revenue_ytd": 1360400.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-15T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-12T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-09T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Mahesh, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-12T18:40",
+        "title": "Internal note",
+        "body": "Mahesh asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-05T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-10T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-08",
+        "kind": "Coupon",
+        "product_id": "PD-404",
+        "amount": 375600.0
+      },
+      {
+        "date": "2026-11-09",
+        "kind": "SIP debit",
+        "product_id": "PD-112",
+        "amount": -15000
+      },
+      {
+        "date": "2026-11-12",
+        "kind": "SIP debit",
+        "product_id": "PD-111",
+        "amount": -50000
+      },
+      {
+        "date": "2026-11-12",
+        "kind": "SIP debit",
+        "product_id": "PD-104",
+        "amount": -15000
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      }
+    ]
+  },
+  {
+    "id": "CL-1013",
+    "name": "Nitin Patil",
+    "first_name": "Nitin",
+    "gender": "M",
+    "age": 35,
+    "dob": "1991-06-21",
+    "family_id": "FM-07",
+    "family_role": "Son",
+    "city": "Mumbai",
+    "locality": "Goregaon",
+    "occupation": "Joined family business",
+    "segment": "engaged",
+    "risk_profile": "Aggressive",
+    "risk_profile_date": "2026-04-04",
+    "client_since": "2020-11-26",
+    "phone": "+91 9819161 31747",
+    "email": "nitin.patil@outlook.com",
+    "pan_masked": "XXXXX5728X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-04-25",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-07-18",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 17999000.0,
+    "invested": 13754000.0,
+    "xirr": 16.5,
+    "allocation": {
+      "Equity": 80.0,
+      "Debt": 15.0,
+      "Gold": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 4148000.0,
+        "value": 6047000.0,
+        "since": "2023-10-13",
+        "mode": "SIP",
+        "sip_amount": 10000,
+        "sip_date": 10
+      },
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 2311000.0,
+        "value": 3003000.0,
+        "since": "2025-04-14",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-106",
+        "asset_class": "Equity",
+        "invested": 4516000.0,
+        "value": 5349000.0,
+        "since": "2025-08-11",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-404",
+        "asset_class": "Debt",
+        "invested": 906000.0,
+        "value": 1087000.0,
+        "since": "2023-06-25",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 1371000.0,
+        "value": 1613000.0,
+        "since": "2024-06-13",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 502000.0,
+        "value": 900000.0,
+        "since": "2023-02-24",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-09-11",
+    "last_transaction": "2025-07-05",
+    "photo": null,
+    "tags": [
+      "Warm, not transacting"
+    ],
+    "goals": [],
+    "interests": [
+      "Theatre",
+      "Cricket"
+    ],
+    "notes_summary": "Son in the Patil family. Joined family business.",
+    "revenue_ytd": 138100.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-21T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-08T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Nitin, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-27T18:40",
+        "title": "Internal note",
+        "body": "Nitin asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-06T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-02",
+        "kind": "SIP debit",
+        "product_id": "PD-106",
+        "amount": -100000
+      },
+      {
+        "date": "2026-11-22",
+        "kind": "SIP debit",
+        "product_id": "PD-111",
+        "amount": -10000
+      },
+      {
+        "date": "2026-12-19",
+        "kind": "Coupon",
+        "product_id": "PD-404",
+        "amount": 20000.0
+      }
+    ],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1014",
+    "name": "Suresh Bhatt",
+    "first_name": "Suresh",
+    "gender": "M",
+    "age": 72,
+    "dob": "1954-04-21",
+    "family_id": "FM-08",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Vile Parle",
+    "occupation": "Retired banker",
+    "segment": "active",
+    "risk_profile": "Conservative",
+    "risk_profile_date": "2025-03-19",
+    "client_since": "2025-05-07",
+    "phone": "+91 9810773 81118",
+    "email": "suresh.bhatt@outlook.com",
+    "pan_masked": "XXXXX7770X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2026-05-24",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-11-06",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 46001000.0,
+    "invested": 38352000.0,
+    "xirr": 12.4,
+    "allocation": {
+      "Equity": 15.0,
+      "Debt": 75.0,
+      "Gold": 5.0,
+      "Cash": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 1176000.0,
+        "value": 1683000.0,
+        "since": "2023-12-07",
+        "mode": "SIP",
+        "sip_amount": 25000,
+        "sip_date": 5
+      },
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 1331000.0,
+        "value": 2449000.0,
+        "since": "2023-03-31",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-105",
+        "asset_class": "Equity",
+        "invested": 1700000.0,
+        "value": 2769000.0,
+        "since": "2022-08-25",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-402",
+        "asset_class": "Debt",
+        "invested": 15112000.0,
+        "value": 17697000.0,
+        "since": "2024-12-19",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 15681000.0,
+        "value": 16803000.0,
+        "since": "2025-10-24",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 1361000.0,
+        "value": 2300000.0,
+        "since": "2023-07-08",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 1991000.0,
+        "value": 2300000.0,
+        "since": "2024-08-28",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-09-30",
+    "last_transaction": "2026-09-29",
+    "photo": null,
+    "tags": [
+      "Senior citizen",
+      "Income focus"
+    ],
+    "goals": [
+      {
+        "name": "Monthly income",
+        "target": 150000,
+        "year": 2026,
+        "kind": "monthly income"
+      }
+    ],
+    "interests": [
+      "Gardening",
+      "Grandchildren in Pune"
+    ],
+    "notes_summary": "Former banker; reads every document. Prefers phone calls to WhatsApp.",
+    "revenue_ytd": 344600.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-14T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-14T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-07T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Suresh, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-27T18:40",
+        "title": "Internal note",
+        "body": "Suresh asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-10T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-09T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-10-31",
+        "kind": "SIP debit",
+        "product_id": "PD-101",
+        "amount": -100000
+      },
+      {
+        "date": "2026-11-14",
+        "kind": "Coupon",
+        "product_id": "PD-402",
+        "amount": 391500.0
+      },
+      {
+        "date": "2026-11-15",
+        "kind": "SIP debit",
+        "product_id": "PD-111",
+        "amount": -25000
+      },
+      {
+        "date": "2026-11-23",
+        "kind": "SIP debit",
+        "product_id": "PD-105",
+        "amount": -100000
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      },
+      {
+        "severity": "medium",
+        "text": "Risk profile older than 18 months"
+      }
+    ]
+  },
+  {
+    "id": "CL-1015",
+    "name": "Leena Bhatt",
+    "first_name": "Leena",
+    "gender": "F",
+    "age": 68,
+    "dob": "1958-02-26",
+    "family_id": "FM-08",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Vile Parle",
+    "occupation": "Homemaker / co-owner",
+    "segment": "active",
+    "risk_profile": "Conservative",
+    "risk_profile_date": "2025-11-27",
+    "client_since": "2024-02-03",
+    "phone": "+91 9810389 49132",
+    "email": "leena.bhatt@yahoo.co.in",
+    "pan_masked": "XXXXX9022X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2026-02-16",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-12-26",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 24000000.0,
+    "invested": 18859000.0,
+    "xirr": 13.6,
+    "allocation": {
+      "Equity": 15.0,
+      "Debt": 75.0,
+      "Gold": 5.0,
+      "Cash": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 1045000.0,
+        "value": 1502000.0,
+        "since": "2024-01-27",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 928000.0,
+        "value": 1094000.0,
+        "since": "2025-11-09",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 506000.0,
+        "value": 1004000.0,
+        "since": "2022-08-30",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-108",
+        "asset_class": "Debt",
+        "invested": 8022000.0,
+        "value": 10061000.0,
+        "since": "2023-06-05",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 6546000.0,
+        "value": 7939000.0,
+        "since": "2024-03-27",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 813000.0,
+        "value": 1200000.0,
+        "since": "2024-05-04",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 999000.0,
+        "value": 1200000.0,
+        "since": "2024-01-27",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-12",
+    "last_transaction": "2026-10-04",
+    "photo": null,
+    "tags": [
+      "Regular investor"
+    ],
+    "goals": [],
+    "interests": [
+      "Badminton",
+      "Travel"
+    ],
+    "notes_summary": "Spouse in the Bhatt family. Homemaker / co-owner.",
+    "revenue_ytd": 124000.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-24T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-14T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Leena, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-04T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-11T18:40",
+        "title": "Internal note",
+        "body": "Leena asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-06T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-06T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-06",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 7939000.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      }
+    ]
+  },
+  {
+    "id": "CL-1016",
+    "name": "Zubin Wadia",
+    "first_name": "Zubin",
+    "gender": "M",
+    "age": 50,
+    "dob": "1976-08-14",
+    "family_id": "FM-09",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Bandra West",
+    "occupation": "Hospitality family",
+    "segment": "active",
+    "risk_profile": "Moderately aggressive",
+    "risk_profile_date": "2025-10-25",
+    "client_since": "2023-07-06",
+    "phone": "+91 9813147 52516",
+    "email": "zubin.wadia@gmail.com",
+    "pan_masked": "XXXXX5806X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-07-16",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-12-24",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 197999000.0,
+    "invested": 147998000.0,
+    "xirr": 13.0,
+    "allocation": {
+      "Equity": 65.0,
+      "Debt": 27.0,
+      "Gold": 5.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-113",
+        "asset_class": "Equity",
+        "invested": 15521000.0,
+        "value": 26241000.0,
+        "since": "2022-05-25",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 24798000.0,
+        "value": 28156000.0,
+        "since": "2026-01-28",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 10771000.0,
+        "value": 20486000.0,
+        "since": "2023-12-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 13173000.0,
+        "value": 25492000.0,
+        "since": "2022-10-24",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-202",
+        "asset_class": "Equity",
+        "invested": 25141000.0,
+        "value": 28324000.0,
+        "since": "2026-02-28",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-401",
+        "asset_class": "Debt",
+        "invested": 14351000.0,
+        "value": 18060000.0,
+        "since": "2023-10-16",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-403",
+        "asset_class": "Debt",
+        "invested": 7491000.0,
+        "value": 8661000.0,
+        "since": "2024-09-02",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 15021000.0,
+        "value": 16081000.0,
+        "since": "2025-11-27",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-301",
+        "asset_class": "Debt",
+        "invested": 9939000.0,
+        "value": 10658000.0,
+        "since": "2025-11-29",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 6138000.0,
+        "value": 9900000.0,
+        "since": "2023-10-11",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 5654000.0,
+        "value": 5940000.0,
+        "since": "2026-01-29",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-22",
+    "last_transaction": "2026-09-28",
+    "photo": null,
+    "tags": [
+      "Liquidity events",
+      "PMS client"
+    ],
+    "goals": [
+      {
+        "name": "Hotel renovation reserve",
+        "target": 60000000,
+        "year": 2027
+      }
+    ],
+    "interests": [
+      "Vintage cars",
+      "Parsi gymkhana cricket"
+    ],
+    "notes_summary": "Expects a large property sale proceeds in Q1. Wants a parking strategy ready before then.",
+    "revenue_ytd": 1369300.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-20T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-06T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Zubin, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-03T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-01T18:40",
+        "title": "Internal note",
+        "body": "Zubin asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-01T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-18T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-16",
+        "kind": "SIP debit",
+        "product_id": "PD-112",
+        "amount": -100000
+      },
+      {
+        "date": "2026-11-28",
+        "kind": "Coupon",
+        "product_id": "PD-401",
+        "amount": 358900.0
+      },
+      {
+        "date": "2026-12-17",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 16081000.0
+      },
+      {
+        "date": "2026-12-23",
+        "kind": "Coupon",
+        "product_id": "PD-403",
+        "amount": 155500.0
+      }
+    ],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1017",
+    "name": "Zarine Wadia",
+    "first_name": "Zarine",
+    "gender": "F",
+    "age": 46,
+    "dob": "1979-12-05",
+    "family_id": "FM-09",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Bandra West",
+    "occupation": "Homemaker / co-owner",
+    "segment": "engaged",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2026-04-09",
+    "client_since": "2022-03-13",
+    "phone": "+91 9890199 92242",
+    "email": "zarine.wadia@yahoo.co.in",
+    "pan_masked": "XXXXX1645X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-09-05",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-03-01",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 52000000.0,
+    "invested": 36727000.0,
+    "xirr": 10.3,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 3785000.0,
+        "value": 5728000.0,
+        "since": "2025-02-05",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-105",
+        "asset_class": "Equity",
+        "invested": 6047000.0,
+        "value": 6709000.0,
+        "since": "2025-12-06",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 3751000.0,
+        "value": 7808000.0,
+        "since": "2022-05-16",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 3395000.0,
+        "value": 5755000.0,
+        "since": "2024-06-09",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-108",
+        "asset_class": "Debt",
+        "invested": 5573000.0,
+        "value": 6264000.0,
+        "since": "2025-01-25",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-402",
+        "asset_class": "Debt",
+        "invested": 4309000.0,
+        "value": 6278000.0,
+        "since": "2022-05-29",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-403",
+        "asset_class": "Debt",
+        "invested": 6669000.0,
+        "value": 8258000.0,
+        "since": "2023-08-28",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 1951000.0,
+        "value": 3640000.0,
+        "since": "2022-11-06",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 1247000.0,
+        "value": 1560000.0,
+        "since": "2023-04-26",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-09-30",
+    "last_transaction": "2026-01-02",
+    "photo": null,
+    "tags": [
+      "Warm, not transacting"
+    ],
+    "goals": [],
+    "interests": [
+      "Badminton",
+      "Yoga"
+    ],
+    "notes_summary": "Spouse in the Wadia family. Homemaker / co-owner.",
+    "revenue_ytd": 412500.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-01T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-28T18:40",
+        "title": "Internal note",
+        "body": "Zarine asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-09-27T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Zarine, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-01T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-10-30",
+        "kind": "SIP debit",
+        "product_id": "PD-103",
+        "amount": -50000
+      },
+      {
+        "date": "2026-11-13",
+        "kind": "SIP debit",
+        "product_id": "PD-112",
+        "amount": -50000
+      },
+      {
+        "date": "2026-12-13",
+        "kind": "Coupon",
+        "product_id": "PD-402",
+        "amount": 138900.0
+      },
+      {
+        "date": "2026-12-22",
+        "kind": "Coupon",
+        "product_id": "PD-403",
+        "amount": 148200.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      }
+    ]
+  },
+  {
+    "id": "CL-1018",
+    "name": "Deepak Nair",
+    "first_name": "Deepak",
+    "gender": "M",
+    "age": 49,
+    "dob": "1977-04-12",
+    "family_id": "FM-10",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Malad",
+    "occupation": "Doctor couple",
+    "segment": "active",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2026-04-30",
+    "client_since": "2022-05-11",
+    "phone": "+91 9827146 14877",
+    "email": "deepak.nair@outlook.com",
+    "pan_masked": "XXXXX9071X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2026-03-22",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": true
+    },
+    "nominee": "Missing",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-06-24",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 38001000.0,
+    "invested": 27028000.0,
+    "xirr": 13.8,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 1980000.0,
+        "value": 4067000.0,
+        "since": "2022-06-13",
+        "mode": "SIP",
+        "sip_amount": 25000,
+        "sip_date": 5
+      },
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 5477000.0,
+        "value": 7400000.0,
+        "since": "2024-05-24",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-113",
+        "asset_class": "Equity",
+        "invested": 4484000.0,
+        "value": 7534000.0,
+        "since": "2022-06-14",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 8312000.0,
+        "value": 10162000.0,
+        "since": "2024-02-17",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 4281000.0,
+        "value": 5038000.0,
+        "since": "2024-06-12",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 1463000.0,
+        "value": 2660000.0,
+        "since": "2023-01-06",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 1031000.0,
+        "value": 1140000.0,
+        "since": "2025-04-23",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-24",
+    "last_transaction": "2026-10-05",
+    "photo": null,
+    "tags": [
+      "Regular investor"
+    ],
+    "goals": [],
+    "interests": [
+      "Photography",
+      "Reading"
+    ],
+    "notes_summary": "Head in the Nair family. Doctor couple.",
+    "revenue_ytd": 290100.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-19T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-16T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Deepak, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-03T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-09T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-03T18:40",
+        "title": "Internal note",
+        "body": "Deepak asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-01T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-12",
+        "kind": "SIP debit",
+        "product_id": "PD-112",
+        "amount": -25000
+      },
+      {
+        "date": "2026-11-15",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 10162000.0
+      },
+      {
+        "date": "2026-11-23",
+        "kind": "SIP debit",
+        "product_id": "PD-111",
+        "amount": -15000
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "high",
+        "text": "No nominee registered on the folios"
+      }
+    ]
+  },
+  {
+    "id": "CL-1019",
+    "name": "Radhika Nair",
+    "first_name": "Radhika",
+    "gender": "F",
+    "age": 47,
+    "dob": "1979-07-11",
+    "family_id": "FM-10",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Malad",
+    "occupation": "Homemaker / co-owner",
+    "segment": "active",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2025-09-25",
+    "client_since": "2021-06-09",
+    "phone": "+91 9828907 88116",
+    "email": "radhika.nair@gmail.com",
+    "pan_masked": "XXXXX5542X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2026-02-20",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-12-27",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 26000000.0,
+    "invested": 21390000.0,
+    "xirr": 13.8,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-113",
+        "asset_class": "Equity",
+        "invested": 3606000.0,
+        "value": 3931000.0,
+        "since": "2026-02-03",
+        "mode": "SIP",
+        "sip_amount": 50000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 2081000.0,
+        "value": 3673000.0,
+        "since": "2022-07-07",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-106",
+        "asset_class": "Equity",
+        "invested": 4700000.0,
+        "value": 5396000.0,
+        "since": "2025-10-31",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-501",
+        "asset_class": "Debt",
+        "invested": 5277000.0,
+        "value": 5719000.0,
+        "since": "2025-09-29",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 3580000.0,
+        "value": 4681000.0,
+        "since": "2022-11-30",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 1455000.0,
+        "value": 1820000.0,
+        "since": "2025-05-24",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-109",
+        "asset_class": "Cash",
+        "invested": 691000.0,
+        "value": 780000.0,
+        "since": "2024-12-02",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-20",
+    "last_transaction": "2026-06-02",
+    "photo": null,
+    "tags": [
+      "Regular investor"
+    ],
+    "goals": [],
+    "interests": [
+      "Photography",
+      "Badminton"
+    ],
+    "notes_summary": "Spouse in the Nair family. Homemaker / co-owner.",
+    "revenue_ytd": 106100.0,
+    "timeline": [
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-23T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-18T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Radhika, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-12T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-10-02T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-13T18:40",
+        "title": "Internal note",
+        "body": "Radhika asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-11T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-05",
+        "kind": "SIP debit",
+        "product_id": "PD-113",
+        "amount": -50000
+      },
+      {
+        "date": "2026-11-10",
+        "kind": "Maturity",
+        "product_id": "PD-501",
+        "amount": 5719000.0
+      }
+    ],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1020",
+    "name": "Gautam Agarwal",
+    "first_name": "Gautam",
+    "gender": "M",
+    "age": 45,
+    "dob": "1981-03-22",
+    "family_id": "FM-11",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Andheri East",
+    "occupation": "Logistics business",
+    "segment": "lost",
+    "risk_profile": "Moderately aggressive",
+    "risk_profile_date": "2025-08-22",
+    "client_since": "2023-04-30",
+    "phone": "+91 9875707 24293",
+    "email": "gautam.agarwal@outlook.com",
+    "pan_masked": "XXXXX9254X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-12-04",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2025-04-24",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 0,
+    "invested": 0,
+    "xirr": 0,
+    "allocation": {},
+    "holdings": [],
+    "last_contact": "2026-03-13",
+    "last_transaction": "2026-06-12",
+    "photo": null,
+    "tags": [
+      "Lost: moved to competitor"
+    ],
+    "goals": [],
+    "interests": [
+      "Travel",
+      "Cooking"
+    ],
+    "notes_summary": "Moved the full book to a bank wealth desk after a fee disagreement in April. Wife Nisha still holds a small SIP.",
+    "revenue_ytd": 0.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-08T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-08T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Gautam, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-23T18:40",
+        "title": "Internal note",
+        "body": "Gautam asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-07-28T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      },
+      {
+        "id": "e5",
+        "kind": "system",
+        "at": "2026-05-29T09:00",
+        "title": "Full redemption processed",
+        "body": "All holdings redeemed and transferred out."
+      }
+    ],
+    "cash_flows": [],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1021",
+    "name": "Nisha Agarwal",
+    "first_name": "Nisha",
+    "gender": "F",
+    "age": 43,
+    "dob": "1983-03-09",
+    "family_id": "FM-11",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Andheri East",
+    "occupation": "Homemaker / co-owner",
+    "segment": "dormant",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2026-06-20",
+    "client_since": "2022-02-23",
+    "phone": "+91 9821951 21188",
+    "email": "nisha.agarwal@gmail.com",
+    "pan_masked": "XXXXX8075X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2026-04-11",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": true,
+      "ddpi": true
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-04-24",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 3499000.0,
+    "invested": 2401000.0,
+    "xirr": 12.2,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-113",
+        "asset_class": "Equity",
+        "invested": 477000.0,
+        "value": 594000.0,
+        "since": "2024-12-18",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-102",
+        "asset_class": "Equity",
+        "invested": 325000.0,
+        "value": 485000.0,
+        "since": "2023-10-15",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-104",
+        "asset_class": "Equity",
+        "invested": 297000.0,
+        "value": 670000.0,
+        "since": "2023-06-12",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-402",
+        "asset_class": "Debt",
+        "invested": 648000.0,
+        "value": 861000.0,
+        "since": "2023-06-27",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-404",
+        "asset_class": "Debt",
+        "invested": 435000.0,
+        "value": 539000.0,
+        "since": "2022-11-24",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-114",
+        "asset_class": "Gold",
+        "invested": 129000.0,
+        "value": 245000.0,
+        "since": "2022-10-04",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 90000.0,
+        "value": 105000.0,
+        "since": "2024-06-14",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-01-29",
+    "last_transaction": "2025-09-30",
+    "photo": null,
+    "tags": [
+      "Needs re-engagement"
+    ],
+    "goals": [],
+    "interests": [
+      "Cricket",
+      "Cooking"
+    ],
+    "notes_summary": "Spouse in the Agarwal family. Homemaker / co-owner.",
+    "revenue_ytd": 29300.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-19T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-14T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Nisha, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "system",
+        "at": "2026-09-26T09:00",
+        "title": "No contact in 6 months",
+        "body": "Flagged as dormant by the re-engagement rule."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-22T18:40",
+        "title": "Internal note",
+        "body": "Nisha asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-21T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-01",
+        "kind": "SIP debit",
+        "product_id": "PD-104",
+        "amount": -100000
+      },
+      {
+        "date": "2026-11-15",
+        "kind": "Coupon",
+        "product_id": "PD-402",
+        "amount": 19000.0
+      },
+      {
+        "date": "2026-11-20",
+        "kind": "SIP debit",
+        "product_id": "PD-113",
+        "amount": -15000
+      },
+      {
+        "date": "2026-11-26",
+        "kind": "Coupon",
+        "product_id": "PD-404",
+        "amount": 9900.0
+      }
+    ],
+    "red_flags": [
+      {
+        "severity": "medium",
+        "text": "No contact in over 6 months"
+      },
+      {
+        "severity": "low",
+        "text": "Holds a fund under CIO review (Indus Peak Small Cap)"
+      }
+    ]
+  },
+  {
+    "id": "CL-1022",
+    "name": "Farhan Fernandes",
+    "first_name": "Farhan",
+    "gender": "M",
+    "age": 41,
+    "dob": "1985-04-27",
+    "family_id": "FM-12",
+    "family_role": "Head",
+    "city": "Mumbai",
+    "locality": "Bandra West",
+    "occupation": "Advertising agency founder",
+    "segment": "engaged",
+    "risk_profile": "Aggressive",
+    "risk_profile_date": "2025-06-24",
+    "client_since": "2024-10-16",
+    "phone": "+91 9868449 30631",
+    "email": "farhan.fernandes@outlook.com",
+    "pan_masked": "XXXXX6105X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2024-07-10",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": false,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-06-05",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 28999000.0,
+    "invested": 23743000.0,
+    "xirr": 10.9,
+    "allocation": {
+      "Equity": 80.0,
+      "Debt": 15.0,
+      "Gold": 5.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-113",
+        "asset_class": "Equity",
+        "invested": 6995000.0,
+        "value": 8288000.0,
+        "since": "2025-05-23",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 5257000.0,
+        "value": 6761000.0,
+        "since": "2025-05-06",
+        "mode": "SIP",
+        "sip_amount": 100000,
+        "sip_date": 15
+      },
+      {
+        "product_id": "PD-103",
+        "asset_class": "Equity",
+        "invested": 6461000.0,
+        "value": 8150000.0,
+        "since": "2025-10-09",
+        "mode": "SIP",
+        "sip_amount": 15000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 2002000.0,
+        "value": 2241000.0,
+        "since": "2025-03-06",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-404",
+        "asset_class": "Debt",
+        "invested": 1964000.0,
+        "value": 2109000.0,
+        "since": "2025-07-08",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 1064000.0,
+        "value": 1450000.0,
+        "since": "2024-11-07",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-09",
+    "last_transaction": "2026-03-25",
+    "photo": null,
+    "tags": [
+      "Warm, not transacting"
+    ],
+    "goals": [],
+    "interests": [
+      "Badminton",
+      "Yoga"
+    ],
+    "notes_summary": "Head in the Fernandes family. Advertising agency founder.",
+    "revenue_ytd": 212000.0,
+    "timeline": [
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-15T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Farhan, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-07T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-18T18:40",
+        "title": "Internal note",
+        "body": "Farhan asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-25T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-10-31",
+        "kind": "SIP debit",
+        "product_id": "PD-103",
+        "amount": -15000
+      },
+      {
+        "date": "2026-11-12",
+        "kind": "SIP debit",
+        "product_id": "PD-101",
+        "amount": -100000
+      },
+      {
+        "date": "2026-12-21",
+        "kind": "Coupon",
+        "product_id": "PD-404",
+        "amount": 38800.0
+      }
+    ],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1023",
+    "name": "Shalini Fernandes",
+    "first_name": "Shalini",
+    "gender": "F",
+    "age": 40,
+    "dob": "1986-05-13",
+    "family_id": "FM-12",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Bandra West",
+    "occupation": "Homemaker / co-owner",
+    "segment": "lost",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2025-06-13",
+    "client_since": "2025-05-11",
+    "phone": "+91 9824390 98895",
+    "email": "shalini.fernandes@yahoo.co.in",
+    "pan_masked": "XXXXX8972X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2025-01-25",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": false,
+      "trading": true,
+      "ddpi": false
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": true,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": true,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-04-09",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 0,
+    "invested": 0,
+    "xirr": 0,
+    "allocation": {},
+    "holdings": [],
+    "last_contact": "2026-03-14",
+    "last_transaction": "2026-02-17",
+    "photo": null,
+    "tags": [
+      "Lost"
+    ],
+    "goals": [],
+    "interests": [
+      "Travel",
+      "Badminton"
+    ],
+    "notes_summary": "Spouse in the Fernandes family. Homemaker / co-owner.",
+    "revenue_ytd": 0.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-22T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "WhatsApp",
+        "at": "2026-10-02T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Shalini, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-02T18:40",
+        "title": "Internal note",
+        "body": "Shalini asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-03T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      },
+      {
+        "id": "e5",
+        "kind": "system",
+        "at": "2026-05-29T09:00",
+        "title": "Full redemption processed",
+        "body": "All holdings redeemed and transferred out."
+      }
+    ],
+    "cash_flows": [],
+    "red_flags": []
+  },
+  {
+    "id": "CL-1024",
+    "name": "Anjali Kapadia",
+    "first_name": "Anjali",
+    "gender": "F",
+    "age": 45,
+    "dob": "1981-09-27",
+    "family_id": "FM-03",
+    "family_role": "Spouse",
+    "city": "Mumbai",
+    "locality": "Bandra West",
+    "occupation": "Homemaker / co-owner",
+    "segment": "active",
+    "risk_profile": "Moderate",
+    "risk_profile_date": "2025-07-18",
+    "client_since": "2023-01-22",
+    "phone": "+91 9849863 54500",
+    "email": "anjali.kapadia@gmail.com",
+    "pan_masked": "XXXXX6456X",
+    "kyc": {
+      "status": "Verified",
+      "validated_on": "2024-05-12",
+      "registration_agency": "CVL KRA"
+    },
+    "accounts": {
+      "investing": true,
+      "demat": true,
+      "trading": false,
+      "ddpi": true
+    },
+    "nominee": "Registered",
+    "consent": {
+      "whatsapp": false,
+      "email": true,
+      "profile_enrichment": true,
+      "marketing": false,
+      "data_sharing_with_partners": false,
+      "captured_on": "2026-03-29",
+      "version": "DPDP consent v1.2"
+    },
+    "aum": 15000000.0,
+    "invested": 10881000.0,
+    "xirr": 10.6,
+    "allocation": {
+      "Equity": 50.0,
+      "Debt": 40.0,
+      "Gold": 7.0,
+      "Cash": 3.0
+    },
+    "holdings": [
+      {
+        "product_id": "PD-111",
+        "asset_class": "Equity",
+        "invested": 1380000.0,
+        "value": 1787000.0,
+        "since": "2024-09-26",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-112",
+        "asset_class": "Equity",
+        "invested": 2319000.0,
+        "value": 3530000.0,
+        "since": "2024-04-08",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-101",
+        "asset_class": "Equity",
+        "invested": 1153000.0,
+        "value": 2183000.0,
+        "since": "2023-01-29",
+        "mode": "SIP",
+        "sip_amount": 10000,
+        "sip_date": 25
+      },
+      {
+        "product_id": "PD-107",
+        "asset_class": "Debt",
+        "invested": 2512000.0,
+        "value": 3054000.0,
+        "since": "2023-12-23",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-403",
+        "asset_class": "Debt",
+        "invested": 2433000.0,
+        "value": 2946000.0,
+        "since": "2023-12-26",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-601",
+        "asset_class": "Gold",
+        "invested": 746000.0,
+        "value": 1050000.0,
+        "since": "2024-08-22",
+        "mode": "Lumpsum"
+      },
+      {
+        "product_id": "PD-110",
+        "asset_class": "Cash",
+        "invested": 338000.0,
+        "value": 450000.0,
+        "since": "2022-07-12",
+        "mode": "Lumpsum"
+      }
+    ],
+    "last_contact": "2026-10-10",
+    "last_transaction": "2026-09-24",
+    "photo": null,
+    "tags": [
+      "Regular investor"
+    ],
+    "goals": [],
+    "interests": [
+      "Theatre",
+      "Reading"
+    ],
+    "notes_summary": "Spouse in the Kapadia family. Homemaker / co-owner.",
+    "revenue_ytd": 71000.0,
+    "timeline": [
+      {
+        "id": "e4",
+        "kind": "client",
+        "at": "2026-10-19T20:12",
+        "title": "Viewed portfolio in Kova Client",
+        "body": "Opened holdings and the Debt allocation view."
+      },
+      {
+        "id": "e6",
+        "kind": "agent",
+        "at": "2026-10-19T17:50",
+        "title": "MoM drafted by agent, approved by RM",
+        "body": "Review meeting: agreed to move FD maturities into the corporate bond fund. Client to share updated ITR."
+      },
+      {
+        "id": "e3",
+        "kind": "comm",
+        "channel": "Email",
+        "at": "2026-09-29T11:05",
+        "title": "Diwali greetings and review invite",
+        "body": "Hi Anjali, wishing you and the family a very happy Diwali. Could we set up a short review next week?",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e2",
+        "kind": "note",
+        "at": "2026-09-15T18:40",
+        "title": "Internal note",
+        "body": "Anjali asked about rebalancing after the market rally. Wants to discuss at next review.",
+        "by": "Priya Sharma"
+      },
+      {
+        "id": "e5",
+        "kind": "client",
+        "at": "2026-09-13T14:30",
+        "title": "Approved transaction",
+        "body": "Approved Rs 5,00,000 into Sahyadri Corporate Bond Fund via OTP."
+      },
+      {
+        "id": "e1",
+        "kind": "system",
+        "at": "2026-08-06T09:15",
+        "title": "Quarterly statement sent",
+        "body": "Consolidated statement for Jul-Sep emailed automatically."
+      }
+    ],
+    "cash_flows": [
+      {
+        "date": "2026-11-03",
+        "kind": "Coupon",
+        "product_id": "PD-403",
+        "amount": 52900.0
+      },
+      {
+        "date": "2026-11-09",
+        "kind": "SIP debit",
+        "product_id": "PD-101",
+        "amount": -10000
+      }
+    ],
+    "red_flags": []
+  }
+]

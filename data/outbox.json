@@ -1,0 +1,23 @@
+[
+  {
+    "id": "OB-9001",
+    "at": "2026-10-14T19:05",
+    "action": "send_mom",
+    "channel": "Email",
+    "to": {
+      "name": "Rajesh Mehta",
+      "address": "rajesh.mehta@gmail.com"
+    },
+    "subject": "Notes from our call on PMS fees",
+    "body": "Hi Rajesh,\n\nThank you for your time today. Summary:\n- You feel the 1.75% fixed fee on the Coastline PMS is high.\n- I'll send a fee-versus-return comparison against Banyan Flexi Cap by Friday.\n- No change to the portfolio for now.\n\nRegards,\nPriya",
+    "source": {
+      "session_id": null,
+      "card_id": null,
+      "kind": "client",
+      "id": "CL-1001",
+      "said": "Log the MoM for the Mehta call about PMS fees and email it to him."
+    },
+    "review": "correct",
+    "edited": false
+  }
+]

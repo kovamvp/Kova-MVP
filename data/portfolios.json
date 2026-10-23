@@ -1,0 +1,251 @@
+[
+  {
+    "id": "PF-2026-000118",
+    "name": "Malhotra liquidity plan",
+    "amount": 25000000,
+    "status": "draft",
+    "tag": {
+      "kind": "prospect",
+      "id": "PR-2001"
+    },
+    "lines": [
+      {
+        "product_id": "PD-110",
+        "amount": 7500000.0
+      },
+      {
+        "product_id": "PD-108",
+        "amount": 5000000.0
+      },
+      {
+        "product_id": "PD-202",
+        "amount": 5000000.0
+      },
+      {
+        "product_id": "PD-301",
+        "amount": 5000000.0
+      },
+      {
+        "product_id": "PD-101",
+        "amount": 2500000.0
+      }
+    ],
+    "created": "2026-10-17T11:00",
+    "updated": "2026-10-24T16:00",
+    "source": "recommended",
+    "note": "Stake sale closes in Feb; stagger equity.",
+    "history": [
+      {
+        "at": "2026-10-17T11:00",
+        "event": "Created"
+      }
+    ]
+  },
+  {
+    "id": "PF-2026-000121",
+    "name": "Desai retirement income",
+    "amount": 12600000,
+    "status": "awaiting_approval",
+    "tag": {
+      "kind": "client",
+      "id": "CL-1004"
+    },
+    "lines": [
+      {
+        "product_id": "PD-401",
+        "amount": 3150000.0
+      },
+      {
+        "product_id": "PD-404",
+        "amount": 2520000.0
+      },
+      {
+        "product_id": "PD-107",
+        "amount": 3150000.0
+      },
+      {
+        "product_id": "PD-105",
+        "amount": 2520000.0
+      },
+      {
+        "product_id": "PD-601",
+        "amount": 1260000.0
+      }
+    ],
+    "created": "2026-10-20T11:00",
+    "updated": "2026-10-22T16:00",
+    "source": "recommended",
+    "note": "",
+    "history": [
+      {
+        "at": "2026-10-20T11:00",
+        "event": "Created"
+      }
+    ]
+  },
+  {
+    "id": "PF-2026-000109",
+    "name": "Iyer growth rebalance",
+    "amount": 5400000,
+    "status": "approved",
+    "tag": {
+      "kind": "client",
+      "id": "CL-1007"
+    },
+    "lines": [
+      {
+        "product_id": "PD-101",
+        "amount": 1350000.0
+      },
+      {
+        "product_id": "PD-103",
+        "amount": 1080000.0
+      },
+      {
+        "product_id": "PD-113",
+        "amount": 540000.0
+      },
+      {
+        "product_id": "PD-111",
+        "amount": 1080000.0
+      },
+      {
+        "product_id": "PD-107",
+        "amount": 810000.0
+      },
+      {
+        "product_id": "PD-114",
+        "amount": 540000.0
+      }
+    ],
+    "created": "2026-09-26T11:00",
+    "updated": "2026-10-05T16:00",
+    "source": "recommended",
+    "note": "",
+    "history": [
+      {
+        "at": "2026-09-26T11:00",
+        "event": "Created"
+      }
+    ]
+  },
+  {
+    "id": "PF-2026-000124",
+    "name": "Bond ladder template",
+    "amount": 10000000,
+    "status": "practice",
+    "tag": null,
+    "lines": [
+      {
+        "product_id": "PD-403",
+        "amount": 2500000.0
+      },
+      {
+        "product_id": "PD-401",
+        "amount": 2500000.0
+      },
+      {
+        "product_id": "PD-404",
+        "amount": 2000000.0
+      },
+      {
+        "product_id": "PD-402",
+        "amount": 1000000.0
+      },
+      {
+        "product_id": "PD-107",
+        "amount": 2000000.0
+      }
+    ],
+    "created": "2026-10-23T11:00",
+    "updated": "2026-10-25T16:00",
+    "source": "scratch",
+    "note": "",
+    "history": [
+      {
+        "at": "2026-10-23T11:00",
+        "event": "Created"
+      }
+    ]
+  },
+  {
+    "id": "PF-2026-000125",
+    "name": "Venkatesh simple income",
+    "amount": 9000000,
+    "status": "draft",
+    "tag": {
+      "kind": "prospect",
+      "id": "PR-2009"
+    },
+    "lines": [
+      {
+        "product_id": "PD-401",
+        "amount": 2700000.0
+      },
+      {
+        "product_id": "PD-501",
+        "amount": 1800000.0
+      },
+      {
+        "product_id": "PD-107",
+        "amount": 2700000.0
+      },
+      {
+        "product_id": "PD-105",
+        "amount": 1800000.0
+      }
+    ],
+    "created": "2026-10-24T11:00",
+    "updated": "2026-10-25T16:00",
+    "source": "recommended",
+    "note": "",
+    "history": [
+      {
+        "at": "2026-10-24T11:00",
+        "event": "Created"
+      }
+    ]
+  },
+  {
+    "id": "PF-2026-000102",
+    "name": "Shah SGB switch",
+    "amount": 23500000,
+    "status": "changes_requested",
+    "tag": {
+      "kind": "client",
+      "id": "CL-1009"
+    },
+    "lines": [
+      {
+        "product_id": "PD-601",
+        "amount": 4700000.0
+      },
+      {
+        "product_id": "PD-101",
+        "amount": 4700000.0
+      },
+      {
+        "product_id": "PD-202",
+        "amount": 4700000.0
+      },
+      {
+        "product_id": "PD-107",
+        "amount": 5875000.0
+      },
+      {
+        "product_id": "PD-401",
+        "amount": 3525000.0
+      }
+    ],
+    "created": "2026-10-08T11:00",
+    "updated": "2026-10-19T16:00",
+    "source": "recommended",
+    "note": "CIO asked to cap PMS at 15%.",
+    "history": [
+      {
+        "at": "2026-10-08T11:00",
+        "event": "Created"
+      }
+    ]
+  }
+]

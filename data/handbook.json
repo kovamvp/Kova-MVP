@@ -1,0 +1,27 @@
+[
+  {
+    "id": "HB-1",
+    "title": "Your day in Kova Work",
+    "minutes": 4
+  },
+  {
+    "id": "HB-2",
+    "title": "Talking to the client agent",
+    "minutes": 6
+  },
+  {
+    "id": "HB-3",
+    "title": "Building a portfolio in the Studio",
+    "minutes": 8
+  },
+  {
+    "id": "HB-4",
+    "title": "What every status means",
+    "minutes": 3
+  },
+  {
+    "id": "HB-5",
+    "title": "Consent and what it allows",
+    "minutes": 5
+  }
+]

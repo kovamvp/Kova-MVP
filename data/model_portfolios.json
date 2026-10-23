@@ -1,0 +1,240 @@
+[
+  {
+    "id": "MP-01",
+    "name": "Capital Shield",
+    "risk": "Conservative",
+    "horizon": "1-3 years",
+    "description": "Protect capital and earn above-FD returns with high liquidity.",
+    "expected_return": "7-8%",
+    "allocations": [
+      {
+        "product_id": "PD-107",
+        "weight": 30
+      },
+      {
+        "product_id": "PD-108",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-403",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-401",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-110",
+        "weight": 10
+      },
+      {
+        "product_id": "PD-105",
+        "weight": 10
+      }
+    ],
+    "cio_note": "Reviewed quarterly by the investment committee.",
+    "updated": "2026-09-23",
+    "kind": "model"
+  },
+  {
+    "id": "MP-02",
+    "name": "Steady Income",
+    "risk": "Moderately conservative",
+    "horizon": "3+ years",
+    "description": "Regular income from high-grade debt with a small equity kicker.",
+    "expected_return": "8-9%",
+    "allocations": [
+      {
+        "product_id": "PD-401",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-404",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-107",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-105",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-106",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-601",
+        "weight": 10
+      }
+    ],
+    "cio_note": "Reviewed quarterly by the investment committee.",
+    "updated": "2026-09-27",
+    "kind": "model"
+  },
+  {
+    "id": "MP-03",
+    "name": "Balanced Compounder",
+    "risk": "Moderate",
+    "horizon": "5+ years",
+    "description": "Even split of growth and stability; the default for most families.",
+    "expected_return": "10-11%",
+    "allocations": [
+      {
+        "product_id": "PD-101",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-111",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-103",
+        "weight": 10
+      },
+      {
+        "product_id": "PD-106",
+        "weight": 10
+      },
+      {
+        "product_id": "PD-107",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-403",
+        "weight": 10
+      },
+      {
+        "product_id": "PD-114",
+        "weight": 7
+      },
+      {
+        "product_id": "PD-110",
+        "weight": 8
+      }
+    ],
+    "cio_note": "Reviewed quarterly by the investment committee.",
+    "updated": "2026-09-30",
+    "kind": "model"
+  },
+  {
+    "id": "MP-04",
+    "name": "Growth Builder",
+    "risk": "Moderately aggressive",
+    "horizon": "7+ years",
+    "description": "Equity-led with mid caps and a PMS satellite for larger tickets.",
+    "expected_return": "12-13%",
+    "allocations": [
+      {
+        "product_id": "PD-101",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-111",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-103",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-202",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-113",
+        "weight": 5
+      },
+      {
+        "product_id": "PD-107",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-601",
+        "weight": 8
+      },
+      {
+        "product_id": "PD-110",
+        "weight": 7
+      }
+    ],
+    "cio_note": "Reviewed quarterly by the investment committee.",
+    "updated": "2026-10-10",
+    "kind": "model"
+  },
+  {
+    "id": "MP-05",
+    "name": "Long Horizon Equity",
+    "risk": "Aggressive",
+    "horizon": "10+ years",
+    "description": "Maximum growth for clients who won't need the money for a decade.",
+    "expected_return": "13-15%",
+    "allocations": [
+      {
+        "product_id": "PD-101",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-103",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-104",
+        "weight": 10
+      },
+      {
+        "product_id": "PD-201",
+        "weight": 20
+      },
+      {
+        "product_id": "PD-113",
+        "weight": 10
+      },
+      {
+        "product_id": "PD-107",
+        "weight": 10
+      },
+      {
+        "product_id": "PD-114",
+        "weight": 10
+      }
+    ],
+    "cio_note": "Reviewed quarterly by the investment committee.",
+    "updated": "2026-09-20",
+    "kind": "model"
+  },
+  {
+    "id": "MP-06",
+    "name": "Liquidity Event Parking",
+    "risk": "Moderately conservative",
+    "horizon": "6-18 months",
+    "description": "Park sale proceeds safely, then move into equity in tranches through STP.",
+    "expected_return": "7-8%",
+    "allocations": [
+      {
+        "product_id": "PD-110",
+        "weight": 35
+      },
+      {
+        "product_id": "PD-109",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-108",
+        "weight": 25
+      },
+      {
+        "product_id": "PD-107",
+        "weight": 15
+      },
+      {
+        "product_id": "PD-105",
+        "weight": 10
+      }
+    ],
+    "cio_note": "Reviewed quarterly by the investment committee.",
+    "updated": "2026-09-20",
+    "kind": "model"
+  }
+]
