@@ -71,3 +71,13 @@ export function ldStats(products: any[] = [], ld: any[] = []) {
 }
 
 export function portfolioName(pf: any) { return pf?.name || pf?.id }
+
+/* Suitability rule used everywhere: diversified products may sit up to two risk
+   levels above the profile (the asset-mix band controls how much); concentrated
+   PMS/AIF need a moderately aggressive profile or higher. */
+export function fitsProfile(p: any, profile: string) {
+  const cr = RISK_ORDER.indexOf(profile)
+  if (cr < 0 || !p) return true
+  if (['PMS', 'AIF'].includes(p.category)) return cr >= 3
+  return (PRODUCT_RISK[p.risk] ?? 2) <= cr + 2
+}

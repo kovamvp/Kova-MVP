@@ -90,8 +90,10 @@ def calendar_window(days: int = 10) -> list[dict]:
 def suitable(client: dict, product: dict) -> tuple[bool, str]:
     cr = RISK_ORDER.index(client["risk_profile"]) if client["risk_profile"] in RISK_ORDER else 2
     pr = PRODUCT_RISK.get(product["risk"], 2)
-    if pr > cr:
-        return False, f"product risk {product['risk']} is above the client's {client['risk_profile']} profile"
+    if product["category"] in ("PMS", "AIF") and cr < 3:
+        return False, f"{product['category']} needs a moderately aggressive profile or higher; client is {client['risk_profile']}"
+    if pr > cr + 2:
+        return False, f"product risk {product['risk']} is too far above the client's {client['risk_profile']} profile"
     if product["min_investment"] > 0.25 * max(client.get("aum", 0), 1):
         return False, f"minimum {inr(product['min_investment'])} is over 25% of the client's assets with Kova"
     return True, "fits risk profile and ticket size"
@@ -214,10 +216,20 @@ def run_read(name: str, a: dict, scope: dict) -> Any:
     return {"error": "unknown tool"}
 
 
-def validate_proposal(name: str, a: dict, scope: dict) -> str | None:
+WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+
+def validate_proposal(name: str, a: dict, scope: dict, said: str = "") -> str | None:
     st = store()
     now = now_ist()
     if name == "propose_schedule_meeting":
+        days = [d for d in WEEKDAYS if re.search(rf"\b{d}\b", said.lower())]
+        try:
+            wd = WEEKDAYS[dt.datetime.fromisoformat(a["start"][:16]).weekday()]
+        except Exception:
+            wd = ""
+        if len(days) == 1 and wd and wd != days[0]:
+            return f"{a['start'][:10]} is a {wd.capitalize()}, but the RM said {days[0].capitalize()}. Use the dates list in your instructions."
         if not st.get("clients" if a.get("with_kind") == "client" else "prospects", a.get("with_id", "")):
             return "Unknown client/prospect id."
         try:
@@ -277,22 +289,25 @@ def system_prompt(scope: dict) -> str:
     st = store()
     base = f"""You are the {scope['kind']} agent inside Kova Work, the workspace of {rm.get('name')} ({rm.get('title')}, {rm.get('branch')}) at KOVA, an Indian wealth management firm (SEBI investment adviser and mutual fund distributor).
 Now: {now.strftime('%A %d %B %Y, %H:%M')} IST. Business hours 09:30-19:30 Mon-Sat.
+Dates ahead: {', '.join((now + dt.timedelta(days=i)).strftime('%a %d %b') for i in range(0, 15))}. "Next <weekday>" means the first such day after today.
 
 How you work:
 - The RM speaks or types short instructions, often from voice, so expect informal phrasing and transcription slips (e.g. "MOM" = minutes of meeting).
 - Use read tools to check facts before acting. Never invent holdings, numbers, ids, emails or times.
 - To DO anything (schedule, message, MoM, feedback, reimbursement, service request, note, prospect update) call the matching propose_* tool. Each creates an approval card the RM approves, edits or rejects. Never claim something was sent or booked; say you've prepared it for approval.
-- One request can need several cards (e.g. log a MoM, schedule the follow-up, send feedback to the product team). Propose them all.
+- One request can need several cards (e.g. log a MoM, schedule the follow-up, send feedback to the product team). Propose them all, calling the tools together in one step where you can.
+- Meeting attendees are Kova colleagues only (a head or specialist joining); never list the client.
+- MoMs: fill summary, feedback, portfolio_reaction, changes_asked, promises from what the RM said. RMs tend to say little, so after preparing the card ask one or two short, specific questions about what's missing (e.g. did the proposal land, any changes asked, anything personal worth noting) so the RM can add it.
 - If a detail is genuinely missing (time, amount), ask one short question instead of guessing. Resolve relative dates ("next Tuesday 4pm") yourself from today's date.
 - Respect consent: no WhatsApp without WhatsApp consent; personal details go into MoMs only if profile-enrichment consent is given, otherwise mention they were left out.
 - Suitability first: never push a product because it earns more points. Flag when a product's risk is above the client's profile.
 - Write client-facing text in a warm, professional Indian-English tone, short, signed "{rm.get('name')}". Internal notes are crisp.
-- Reply to the RM in 1-4 short sentences or a few bullets. Amounts in Indian format (Rs 12,34,567; Rs 1.2 Cr; Rs 45 L).
+- Reply to the RM in 1-4 short sentences or a few bullets; don't sign replies to the RM or repeat card ids. Amounts in Indian format (Rs 12,34,567; Rs 1.2 Cr; Rs 45 L).
 """
     if scope["kind"] == "client":
         c = st.get("clients", scope["id"])
         base += "\nThis session is about the client below (JSON). Use their id for tools.\n" + json.dumps(client_brief(c, True), ensure_ascii=False)
-        base += "\nHoldings: " + json.dumps(holdings_view(c), ensure_ascii=False)
+        base += "\nHoldings (product: value, CIO stance): " + "; ".join(f"{h['name']} ({h['product_id']}): {h['value']}, {h['cio_stance']}" for h in holdings_view(c))
     elif scope["kind"] == "prospect":
         p = st.get("prospects", scope["id"])
         base += "\nThis session is about the prospect below (JSON). A prospect has no holdings; everything known was entered by the RM.\n" + json.dumps(prospect_brief(p), ensure_ascii=False)
@@ -406,7 +421,7 @@ def send(sid: str, body: dict = Body(...)):
                     result = run_read(name, args, scope)
                     reads.append(name)
                 elif name in PROPOSE_TOOLS and name in tool_names:
-                    err = validate_proposal(name, args, scope)
+                    err = validate_proposal(name, args, scope, text)
                     if err:
                         result = {"error": err}
                     else:

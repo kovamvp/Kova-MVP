@@ -25,7 +25,8 @@ export default function ProspectDetail() {
   if (!p) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
 
   const ask = params.get('ask')
-  const initial = prompt ?? (ask === 'nudge' ? `Draft a short WhatsApp nudge to ${p.name.split(' ')[0]} about what they looked at in the app.` : ask === 'kyc' ? `Draft a friendly reminder to ${p.name.split(' ')[0]} about the pending KYC steps.` : null)
+  const momFor = params.get('mom') ? meetings.find((m) => m.id === params.get('mom')) : null
+  const initial = prompt ?? (momFor ? `Log the MoM for "${momFor.title}" (${momFor.id}): ` : null) ?? (ask === 'nudge' ? `Draft a short WhatsApp nudge to ${p.name.split(' ')[0]} about what they looked at in the app.` : ask === 'kyc' ? `Draft a friendly reminder to ${p.name.split(' ')[0]} about the pending KYC steps.` : null)
   const mine = meetings.filter((m) => m.with.id === p.id).sort((a, b) => b.start.localeCompare(a.start))
   const pfs = portfolios.filter((x) => x.tag?.id === p.id)
   const stageIdx = STAGES.indexOf(p.stage)

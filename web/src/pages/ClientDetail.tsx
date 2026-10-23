@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, CalendarPlus, Check, ChevronRight, LayoutGrid, ListChecks, MessageSquareText, Phone, Receipt, Send, ShieldCheck, X } from 'lucide-react'
 import { useApi } from '../lib/api'
-import { assetClassOf, EQUITY_BAND, PRODUCT_RISK, RISK_ORDER, useClients, useMeetings, useProducts } from '../lib/data'
+import { EQUITY_BAND, fitsProfile, useClients, useMeetings, useProducts } from '../lib/data'
 import { ago, date, inr, label, when } from '../lib/format'
 import { AllocBar, Donut } from '../charts'
 import { ASSET_COLORS, Avatar, Delta, Drawer, Empty, Num, Panel, Stat, Status, useToast } from '../ui'
@@ -31,6 +31,8 @@ export default function ClientDetail() {
   if (error) return <main className="page"><Empty title="Client not found" action={<Link className="btn btn-quiet" to="/clients">Back to clients</Link>} /></main>
   if (!c) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
 
+  const momFor = params.get('mom') ? meetings.find((m) => m.id === params.get('mom')) : null
+  const agentInitial = agentPrompt ?? (momFor ? `Log the MoM for "${momFor.title}" (${momFor.id}): ` : null)
   const family = clients.filter((x) => x.family_id === c.family_id && x.id !== c.id)
   const mine = meetings.filter((m) => m.with.id === c.id)
   const upcoming = mine.filter((m) => m.status === 'scheduled').sort((a, b) => a.start.localeCompare(b.start))
@@ -166,7 +168,7 @@ export default function ClientDetail() {
           <ActionsPanel kind="client" id={c.id} name={c.name} initial={params.get('do')} onAskAgent={(p) => { setAgentPrompt(p); setPanel('agent') }} />
         </Drawer>
       )}
-      {panel === 'agent' && <AgentPanel key={agentPrompt || 'a'} scope={{ kind: 'client', id: c.id }} name={c.name} allowBill names={names} onClose={() => setPanel(null)} initialText={agentPrompt} />}
+      {panel === 'agent' && <AgentPanel key={agentInitial || 'a'} scope={{ kind: 'client', id: c.id }} name={c.name} allowBill names={names} onClose={() => setPanel(null)} initialText={agentInitial} />}
     </main>
   )
 }
@@ -175,8 +177,7 @@ function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string,
   const groups: Record<string, any[]> = {}
   c.holdings.forEach((h: any) => (groups[h.asset_class] ||= []).push(h))
   const held = new Set(c.holdings.map((h: any) => h.product_id))
-  const cr = RISK_ORDER.indexOf(c.risk_profile)
-  const fits = products.filter((p) => !held.has(p.id) && p.cio_view.stance === 'Preferred' && (PRODUCT_RISK[p.risk] ?? 2) <= cr + (cr >= 3 ? 1 : 0) && p.min_investment <= c.aum * 0.25).slice(0, 4)
+  const fits = products.filter((p) => !held.has(p.id) && p.cio_view.stance === 'Preferred' && fitsProfile(p, c.risk_profile) && p.min_investment <= c.aum * 0.25).slice(0, 4)
   const review = c.holdings.filter((h: any) => P[h.product_id]?.cio_view.stance === 'Under review')
   const band = EQUITY_BAND[c.risk_profile]
   const eq = c.allocation?.Equity || 0

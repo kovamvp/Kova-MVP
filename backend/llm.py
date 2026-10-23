@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import re
 import time
 
 import httpx
@@ -36,6 +37,24 @@ def chat(messages: list[dict], tools: list[dict] | None = None, models: list[str
     if not keys:
         raise LLMError("No Groq API key is configured on the server.")
     last = ""
+    rate_limited: list = []
+    for attempt in range(2):
+        out = _try_all(messages, tools, models, temperature, max_tokens, keys, rate_limited)
+        if isinstance(out, dict):
+            return out
+        last = out
+        # every key was rate-limited: wait for the shortest suggested window once, then retry
+        waits = [float(m.group(1)) for _, t in rate_limited for m in [re.search(r"try again in ([0-9.]+)s", t)] if m]
+        if attempt == 0 and rate_limited and waits and min(waits) <= 12:
+            time.sleep(min(waits) + 0.3)
+            rate_limited.clear()
+            continue
+        break
+    raise LLMError(f"All Groq keys and models failed. Last error {last}")
+
+
+def _try_all(messages, tools, models, temperature, max_tokens, keys, rate_limited):
+    last = ""
     for model in models or AGENT_MODELS:
         for name, key in keys:
             body: dict = {"model": model, "messages": messages, "temperature": temperature, "max_tokens": max_tokens}
@@ -59,9 +78,11 @@ def chat(messages: list[dict], tools: list[dict] | None = None, models: list[str
                 return data
             _log("chat", name, model, r.status_code, ms, r.text[:120])
             last = f"{r.status_code}: {r.text[:200]}"
+            if r.status_code == 429:
+                rate_limited.append((name, r.text))
             if r.status_code == 400 and "tool" in r.text.lower():
                 break  # malformed tool call from this model: try the next model
-    raise LLMError(f"All Groq keys and models failed. Last error {last}")
+    return last
 
 
 def transcribe(audio: bytes, filename: str, content_type: str) -> dict:

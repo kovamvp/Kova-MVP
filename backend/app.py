@@ -158,7 +158,7 @@ def outbox_patch(id_: str, patch: dict = Body(...)):
 def portfolio_create(body: dict = Body(...)):
     from datetime import date
     pid = new_id(f"PF-{date.today().year}-", "seq_portfolio", 130, 6)
-    pf = {"id": pid, "name": body.get("name") or "Untitled portfolio", "amount": body.get("amount", 0), "status": "draft",
+    pf = {"id": pid, "name": body.get("name") or "Untitled portfolio", "amount": body.get("amount", 0), "status": "draft" if body.get("tag") else "practice",
           "tag": body.get("tag"), "lines": body.get("lines", []), "created": now_ist(), "updated": now_ist(),
           "source": body.get("source", "scratch"), "model_id": body.get("model_id"), "note": body.get("note", ""),
           "history": [{"at": now_ist(), "event": f"Created ({body.get('source', 'scratch')})"}]}
@@ -173,6 +173,10 @@ def portfolio_save(id_: str, body: dict = Body(...)):
             pf[k] = body[k]
     if pf.get("status") == "changes_requested" and body.get("lines") is not None:
         pf["status"] = "draft"
+    if pf.get("status") == "practice" and pf.get("tag"):
+        pf["status"] = "draft"
+    elif pf.get("status") == "draft" and not pf.get("tag"):
+        pf["status"] = "practice"
     pf["updated"] = now_ist()
     return store().put("portfolios", id_, pf)
 
