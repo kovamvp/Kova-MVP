@@ -290,7 +290,7 @@ def system_prompt(scope: dict) -> str:
     st = store()
     base = f"""You are the {scope['kind']} agent inside Kova Work, the workspace of {rm.get('name')} ({rm.get('title')}, {rm.get('branch')}) at KOVA, an Indian wealth management firm (SEBI investment adviser and mutual fund distributor).
 Now: {now.strftime('%A %d %B %Y, %H:%M')} IST. Business hours 09:30-19:30 Mon-Sat.
-Dates ahead: {', '.join((now + dt.timedelta(days=i)).strftime('%a %d %b') for i in range(0, 15))}. "Next <weekday>" means the first such day after today.
+Dates ahead: {', '.join((now + dt.timedelta(days=i)).strftime('%a %d %b') for i in range(0, 15))}. "Next <weekday>" or "by <weekday>" means the first such day after today (if today is that weekday, use the one a week later). "Tomorrow" is the next date in the list.
 
 How you work:
 - The RM speaks or types short instructions, often from voice, so expect informal phrasing and transcription slips (e.g. "MOM" = minutes of meeting).
