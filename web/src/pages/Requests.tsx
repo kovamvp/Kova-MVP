@@ -105,7 +105,7 @@ function RequestDrawer({ r, onClose }: { r: any; onClose: () => void }) {
         )}
         {pay.length > 0 && (
           <dl className="kv small" style={{ gridTemplateColumns: '120px 1fr' }}>
-            {pay.map(([k, v]) => <Fragment key={k}><dt>{label(k)}</dt><dd className="pre">{k === 'amount' ? inr(v as number, { compact: false }) : typeof v === 'object' ? JSON.stringify(v) : String(v)}</dd></Fragment>)}
+            {pay.map(([k, v]) => <Fragment key={k}><dt>{k === 'bill_image' ? 'Bill' : label(k)}</dt><dd className="pre">{k === 'bill_image' ? <img src={String(v)} alt="Bill" style={{ width: 160, borderRadius: 8, border: '1px solid var(--line)' }} /> : k === 'amount' ? inr(v as number, { compact: false }) : typeof v === 'object' ? JSON.stringify(v) : String(v)}</dd></Fragment>)}
           </dl>
         )}
         {r.payload?.flags?.length > 0 && <div><h3 style={{ marginBottom: 6 }}>Flags sent with it</h3>{r.payload.flags.map((f: any, i: number) => <div key={i} className={`sev ${f.severity} small`}>{f.text}</div>)}</div>}

@@ -71,9 +71,10 @@ export default function StudioCanvas() {
       const p = P[l.product_id]
       if (!p) return
       if (l.amount > 0 && l.amount < p.min_investment) flags.push({ severity: 'high', text: `${p.name} needs at least ${inr(p.min_investment)}.` })
-      if (used && l.amount / used > 0.3) flags.push({ severity: 'medium', text: `${p.name} is ${Math.round((l.amount / used) * 100)}% of the portfolio. Keep single products under 30%.` })
+      const base = Math.max(used, pf.amount)
+      if (base && l.amount / base > 0.3) flags.push({ severity: 'medium', text: `${p.name} is ${Math.round((l.amount / base) * 100)}% of the portfolio. Keep single products under 30%.` })
       if (p.cio_view.stance === 'Under review') flags.push({ severity: 'medium', text: `${p.name} is under CIO review.` })
-      if (['PMS', 'AIF'].includes(p.category) && used && l.amount / used > 0.15 && profile && RISK_ORDER.indexOf(profile) <= 2) flags.push({ severity: 'high', text: `${p.name} above 15% for a ${profile.toLowerCase()} profile.` })
+      if (['PMS', 'AIF'].includes(p.category) && l.amount / Math.max(used, pf.amount, 1) > 0.15 && profile && RISK_ORDER.indexOf(profile) <= 2) flags.push({ severity: 'high', text: `${p.name} above 15% for a ${profile.toLowerCase()} profile.` })
     })
     const w = (fn: (p: any) => number | null) => { let s = 0, n = 0; pf.lines.forEach((l: any) => { const v = fn(P[l.product_id]); if (v != null) { s += v * l.amount; n += l.amount } }); return n ? s / n : null }
     const ret = w((p) => p?.returns?.['3y'] ?? p?.ytm ?? p?.rate ?? p?.coupon ?? (p?.target_irr ? parseFloat(p.target_irr) : null))

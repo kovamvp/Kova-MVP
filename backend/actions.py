@@ -220,12 +220,12 @@ def log_mom(args: dict, source: dict | None = None) -> dict:
 
 def reimbursement(args: dict, source: dict | None = None) -> dict:
     link = {"kind": "client", "id": args["client_id"]} if args.get("client_id") else None
-    payload = {k: args.get(k) for k in ("category", "amount", "merchant", "bill_date", "gst", "bill_url", "purpose")}
+    payload = {k: args.get(k) for k in ("category", "amount", "merchant", "bill_date", "gst", "bill_image", "purpose")}
     title = f"{args.get('category', 'Expense')}: {entity_name(link) or args.get('merchant', '')}"
     req = new_request("reimbursement", title, "Accounts", payload, link)
     ob = add_outbox("reimbursement", "Kova Work", {"name": "Accounts team", "address": "accounts@kova.in"}, title,
                     f"Reimbursement claim of Rs {args.get('amount')} at {args.get('merchant')} on {args.get('bill_date')} ({args.get('category')}). Purpose: {args.get('purpose', '')}",
-                    source, {"request_id": req["id"], **payload})
+                    source, {"request_id": req["id"], **{k: v for k, v in payload.items() if k != "bill_image"}, "bill_attached": bool(payload.get("bill_image"))})
     return {"request": req, "outbox": ob}
 
 

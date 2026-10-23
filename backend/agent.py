@@ -392,6 +392,8 @@ def send(sid: str, body: dict = Body(...)):
               "via": body.get("via", "text"), "transcript": body.get("transcript")}
     if bill:
         rm_msg["bill"] = bill
+        if bill.get("thumb"):
+            s["last_bill"] = bill["thumb"]
     s["messages"].append(rm_msg)
     if s["title"] == "New session":
         s["title"] = (text or "Reimbursement from a bill")[:60]
@@ -468,6 +470,8 @@ def decide(sid: str, cid: str, body: dict = Body(...)):
             elif decision == "approve":
                 args = body.get("args") or c["args"]
                 edited = args != c["args"]
+                if c["action"] == "reimbursement" and s.get("last_bill"):
+                    args = {**args, "bill_image": s["last_bill"]}
                 try:
                     result = actions.run(c["action"], args, {"session_id": sid, "card_id": cid, "said": said, "kind": s["scope"]["kind"], "id": s["scope"]["id"]})
                 except (ValueError, KeyError) as e:
