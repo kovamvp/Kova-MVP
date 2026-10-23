@@ -25,6 +25,8 @@ const FIELD_LABEL: Record<string, string> = {
   next_step_date: 'Next step date', estimated_investable: 'Estimated investable', interest_product_id: 'Interested in', meeting_id: 'Meeting',
 }
 const HIDE = new Set(['with_kind', 'to_kind', 'about_kind'])
+const ORDER = ['with_id', 'to_id', 'about_id', 'client_id', 'prospect_id', 'product_id', 'channel', 'title', 'type', 'start', 'duration_minutes', 'location', 'attendees', 'agenda', 'subject', 'body', 'summary', 'feedback', 'portfolio_reaction', 'changes_asked', 'promises', 'promise_due', 'personal', 'send_to_client', 'category', 'merchant', 'amount', 'bill_date', 'gst', 'details', 'text', 'priority']
+const rank = (k: string) => { const i = ORDER.indexOf(k); return i < 0 ? 99 : i }
 const LONG = new Set(['body', 'summary', 'feedback', 'text', 'details', 'personal'])
 
 const SUGGEST: Record<string, string[]> = {
@@ -36,9 +38,16 @@ const SUGGEST: Record<string, string[]> = {
 function md(text: string): ReactNode {
   // minimal: paragraphs, bullets, **bold**
   const inline = (s: string) => s.split(/(\*\*[^*]+\*\*)/g).map((p, i) => (p.startsWith('**') ? <strong key={i}>{p.slice(2, -2)}</strong> : <Fragment key={i}>{p}</Fragment>))
-  const blocks = text.split(/\n{2,}/)
+  const blocks = text.replace(/<br\s*\/?>/gi, '\n').split(/\n{2,}/)
   return blocks.map((b, i) => {
     const lines = b.split('\n')
+    if (lines.length >= 2 && lines.every((l) => l.trim().startsWith('|'))) {
+      const rows = lines.filter((l) => !/^\s*\|[\s:|-]+\|\s*$/.test(l)).map((l) => l.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim()))
+      return (
+        <div key={i} className="md-table"><table className="table"><thead><tr>{rows[0].map((c, j) => <th key={j}>{inline(c)}</th>)}</tr></thead>
+          <tbody>{rows.slice(1).map((r, k) => <tr key={k}>{r.map((c, j) => <td key={j}>{inline(c)}</td>)}</tr>)}</tbody></table></div>
+      )
+    }
     if (lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l))) return <ul key={i}>{lines.map((l, j) => <li key={j}>{inline(l.replace(/^\s*([-*•]|\d+\.)\s+/, ''))}</li>)}</ul>
     if (/^#{1,4}\s/.test(lines[0])) return <div key={i}><h4>{inline(lines[0].replace(/^#+\s/, ''))}</h4>{lines.slice(1).map((l, j) => <p key={j}>{inline(l.replace(/^\s*[-*•]\s+/, '· '))}</p>)}</div>
     return <p key={i}>{lines.map((l, j) => <Fragment key={j}>{j > 0 && <br />}{inline(l)}</Fragment>)}</p>
@@ -249,7 +258,7 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
   const [working, setWorking] = useState(false)
   const pending = card.status === 'pending'
   const go = async (d: 'approve' | 'reject') => { setWorking(true); await onDecide(card, d, d === 'approve' ? args : undefined); setWorking(false) }
-  const fields = Object.entries(args).filter(([k]) => !HIDE.has(k))
+  const fields = Object.entries(args).filter(([k, v]) => !HIDE.has(k) && !(Array.isArray(v) && v.length === 0 && !edit) && !(v === '' && !edit)).sort((a, b) => rank(a[0]) - rank(b[0]))
   const show = (k: string, v: any) => {
     if (v === null || v === undefined || v === '') return '—'
     if (k === 'start') return when(String(v))

@@ -690,3 +690,6 @@ ul.clean.risk li::before { border-color: var(--loss); }
 .review { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
 .photo-edit { position: absolute; right: 2px; bottom: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--paper); border: 1px solid var(--line); display: grid; place-items: center; }
 .handbook-card { opacity: .85; }
+.md-table { overflow-x: auto; margin: 0 0 10px; border: 1px solid var(--line); border-radius: var(--r-m); }
+.md-table .table { font-size: 12.5px; }
+.md-table .table td, .md-table .table th { padding: 7px 10px; vertical-align: top; }

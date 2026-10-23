@@ -109,7 +109,7 @@ export function useSpeech(onFinal: (text: string, meta: { live: string; whisper:
         const fd = new FormData()
         fd.append('audio', blob, blob.type.includes('mp4') ? 'speech.mp4' : 'speech.webm')
         const r = await fetch('/api/agent/transcribe', { method: 'POST', body: fd })
-        if (r.ok) whisper = (await r.json()).text || null
+        if (r.ok) { const t = ((await r.json()).text || '').trim(); whisper = /[a-z0-9]/i.test(t) ? t : null }
       } catch {}
     }
     const text = (whisper || liveText || '').trim()

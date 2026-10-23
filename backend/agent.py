@@ -278,7 +278,8 @@ def card_summary(action: str, a: dict) -> str:
     if action == "add_note":
         return f"Add internal note on {who}"
     if action == "update_prospect":
-        return f"Update prospect {who}"
+        bits = [f"stage to {a['stage']}" if a.get("stage") else "", f"next step: {a['next_step']}" if a.get("next_step") else ""]
+        return f"Update {who}: " + ", ".join(b for b in bits if b) if any(bits) else f"Update prospect {who}"
     return action
 
 
@@ -302,7 +303,8 @@ How you work:
 - Respect consent: no WhatsApp without WhatsApp consent; personal details go into MoMs only if profile-enrichment consent is given, otherwise mention they were left out.
 - Suitability first: never push a product because it earns more points. Flag when a product's risk is above the client's profile.
 - Write client-facing text in a warm, professional Indian-English tone, short, signed "{rm.get('name')}". Internal notes are crisp.
-- Reply to the RM in 1-4 short sentences or a few bullets; don't sign replies to the RM or repeat card ids. Amounts in Indian format (Rs 12,34,567; Rs 1.2 Cr; Rs 45 L).
+- Before you reply, check: if you prepared a MoM card and the RM didn't mention feedback, changes asked, how the proposal landed, or anything personal, end your reply with one or two short questions about exactly those.
+- Reply to the RM in 1-4 short sentences or a few bullets (a product brief can be longer, with short headings and bullets; avoid tables); don't sign replies to the RM or repeat card ids. Amounts in Indian format (Rs 12,34,567; Rs 1.2 Cr; Rs 45 L).
 """
     if scope["kind"] == "client":
         c = st.get("clients", scope["id"])
@@ -526,9 +528,12 @@ def gateway_log():
 
 # ------------------------------------------------------------------ developer checks (GET, for testing a protected deployment)
 @router.get("/dev/run")
-def dev_run(kind: str, id: str, q: str, session: str | None = None):
+def dev_run(kind: str, id: str, q: str, session: str | None = None, bill: bool = False):
     sid = session or create_session({"kind": kind, "id": id})["id"]
-    return send(sid, {"text": q, "via": "text"})
+    body = {"text": q, "via": "text"}
+    if bill:
+        body["bill"] = {"fields": dev_bill()["fields"]}
+    return send(sid, body)
 
 
 @router.get("/dev/decide")
