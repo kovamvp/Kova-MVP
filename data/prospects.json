@@ -11,14 +11,14 @@
     "need": "Selling a stake in his SaaS company; wants a plan for the proceeds",
     "last_contact": "2026-10-12",
     "meetings_held": 3,
-    "created": "2026-09-04",
-    "phone": "+91 9967457 13495",
+    "created": "2026-08-04",
+    "phone": "+91 9946896 60052",
     "email": "vivek.malhotra@example.com",
     "city": "Mumbai",
     "risk_indication": "Not assessed",
     "probability": 30,
-    "next_step": "First meeting",
-    "next_step_date": "2026-11-04",
+    "next_step": "Send proposal",
+    "next_step_date": "2026-10-29",
     "app_access": false,
     "kyc_steps": [
       {
@@ -109,14 +109,14 @@
     "need": "Moving from bank FDs to a bond ladder",
     "last_contact": "2026-10-20",
     "meetings_held": 1,
-    "created": "2026-08-07",
-    "phone": "+91 9957341 60615",
+    "created": "2026-06-30",
+    "phone": "+91 9987241 42768",
     "email": "ritu.sabharwal@example.com",
     "city": "Mumbai",
     "risk_indication": "Moderate",
     "probability": 65,
-    "next_step": "Follow up on KYC documents",
-    "next_step_date": "2026-10-30",
+    "next_step": "Intro call",
+    "next_step_date": "2026-11-07",
     "app_access": true,
     "kyc_steps": [
       {
@@ -125,11 +125,11 @@
       },
       {
         "step": "PAN and KYC (KRA)",
-        "done": true
+        "done": false
       },
       {
         "step": "Bank account",
-        "done": false
+        "done": true
       },
       {
         "step": "FATCA declaration",
@@ -168,7 +168,7 @@
           "name": "Anand Iyer",
           "title": "Chief Investment Officer"
         },
-        "date": "2026-10-17",
+        "date": "2026-10-20",
         "product_id": "PD-401",
         "text": "Fits the stated need (moving from bank fds to a bond ladder). Lead with liquidity and tax treatment."
       }
@@ -207,14 +207,14 @@
     "need": "Surplus from clinic; no time to manage it",
     "last_contact": "2026-10-22",
     "meetings_held": 0,
-    "created": "2026-06-27",
-    "phone": "+91 9993443 29142",
+    "created": "2026-09-29",
+    "phone": "+91 9976971 26341",
     "email": "imran.qureshi@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderately aggressive",
+    "risk_indication": "Moderately conservative",
     "probability": 45,
     "next_step": "First meeting",
-    "next_step_date": "2026-11-01",
+    "next_step_date": "2026-10-28",
     "app_access": true,
     "kyc_steps": [
       {
@@ -274,7 +274,7 @@
           "name": "Meera Joshi",
           "title": "Product Manager, Mutual Funds"
         },
-        "date": "2026-10-17",
+        "date": "2026-10-15",
         "product_id": "PD-106",
         "text": "Fits the stated need (surplus from clinic; no time to manage it). Lead with liquidity and tax treatment."
       }
@@ -313,14 +313,14 @@
     "need": "Downloaded the Kova Client app; asked about SIPs",
     "last_contact": "2026-09-23",
     "meetings_held": 0,
-    "created": "2026-05-30",
-    "phone": "+91 9970812 28191",
+    "created": "2026-08-10",
+    "phone": "+91 9967625 29313",
     "email": "neeraj.choksi@example.com",
     "city": "Mumbai",
     "risk_indication": "Not assessed",
     "probability": 10,
-    "next_step": "Portfolio review meeting",
-    "next_step_date": "2026-10-23",
+    "next_step": "First meeting",
+    "next_step_date": "2026-10-30",
     "app_access": false,
     "kyc_steps": [
       {
@@ -397,14 +397,14 @@
     "need": "Recently promoted; RSUs vesting",
     "last_contact": "2026-09-15",
     "meetings_held": 0,
-    "created": "2026-08-26",
-    "phone": "+91 9912362 38266",
+    "created": "2026-05-24",
+    "phone": "+91 9967457 13495",
     "email": "sneha.kulkarni@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderately aggressive",
+    "risk_indication": "Not assessed",
     "probability": 30,
-    "next_step": "Share bond ladder note",
-    "next_step_date": "2026-11-08",
+    "next_step": "First meeting",
+    "next_step_date": "2026-11-04",
     "app_access": false,
     "kyc_steps": [
       {
@@ -481,14 +481,14 @@
     "need": "Wants monthly income; KYC done, first bond purchase next",
     "last_contact": "2026-10-24",
     "meetings_held": 5,
-    "created": "2026-08-21",
-    "phone": "+91 9924894 47762",
+    "created": "2026-08-11",
+    "phone": "+91 9957341 60615",
     "email": "pervez.engineer@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderately aggressive",
+    "risk_indication": "Moderate",
     "probability": 85,
     "next_step": "Follow up on KYC documents",
-    "next_step_date": "2026-10-26",
+    "next_step_date": "2026-10-30",
     "app_access": true,
     "kyc_steps": [
       {
@@ -536,10 +536,10 @@
     "suggestions": [
       {
         "from": {
-          "name": "Meera Joshi",
-          "title": "Product Manager, Mutual Funds"
+          "name": "Anand Iyer",
+          "title": "Chief Investment Officer"
         },
-        "date": "2026-10-25",
+        "date": "2026-10-16",
         "product_id": "PD-401",
         "text": "Fits the stated need (wants monthly income; kyc done, first bond purchase next). Lead with liquidity and tax treatment."
       }
@@ -578,14 +578,14 @@
     "need": "Asked about international funds",
     "last_contact": "2026-10-14",
     "meetings_held": 0,
-    "created": "2026-09-28",
-    "phone": "+91 9940529 93748",
+    "created": "2026-10-01",
+    "phone": "+91 9950201 95191",
     "email": "ananya.rao@example.com",
     "city": "Mumbai",
-    "risk_indication": "Not assessed",
+    "risk_indication": "Moderately conservative",
     "probability": 10,
-    "next_step": "First meeting",
-    "next_step_date": "2026-10-26",
+    "next_step": "Send proposal",
+    "next_step_date": "2026-10-27",
     "app_access": false,
     "kyc_steps": [
       {
@@ -662,14 +662,14 @@
     "need": "Family business; three brothers splitting assets",
     "last_contact": "2026-10-04",
     "meetings_held": 2,
-    "created": "2026-06-09",
-    "phone": "+91 9973711 80261",
+    "created": "2026-09-20",
+    "phone": "+91 9946949 71925",
     "email": "hitesh.gala@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderate",
+    "risk_indication": "Moderately aggressive",
     "probability": 30,
     "next_step": "Intro call",
-    "next_step_date": "2026-11-08",
+    "next_step_date": "2026-11-07",
     "app_access": false,
     "kyc_steps": [
       {
@@ -720,7 +720,7 @@
           "name": "Anand Iyer",
           "title": "Chief Investment Officer"
         },
-        "date": "2026-10-22",
+        "date": "2026-10-20",
         "product_id": "PD-202",
         "text": "Fits the stated need (family business; three brothers splitting assets). Lead with liquidity and tax treatment."
       }
@@ -759,14 +759,14 @@
     "need": "Widowed recently; son in US wants her money managed simply",
     "last_contact": "2026-10-17",
     "meetings_held": 1,
-    "created": "2026-07-26",
-    "phone": "+91 9940835 28818",
+    "created": "2026-08-11",
+    "phone": "+91 9988105 20384",
     "email": "lata.venkatesh@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderately conservative",
+    "risk_indication": "Moderate",
     "probability": 45,
-    "next_step": "Portfolio review meeting",
-    "next_step_date": "2026-10-23",
+    "next_step": "Follow up on KYC documents",
+    "next_step_date": "2026-10-29",
     "app_access": true,
     "kyc_steps": [
       {
@@ -822,7 +822,7 @@
           "name": "Meera Joshi",
           "title": "Product Manager, Mutual Funds"
         },
-        "date": "2026-10-25",
+        "date": "2026-10-20",
         "product_id": "PD-401",
         "text": "Fits the stated need (widowed recently; son in us wants her money managed simply). Lead with liquidity and tax treatment."
       }
@@ -861,14 +861,14 @@
     "need": "Startup founder; liquidity event possible next year",
     "last_contact": "2026-08-29",
     "meetings_held": 0,
-    "created": "2026-06-02",
-    "phone": "+91 9955346 84798",
+    "created": "2026-05-05",
+    "phone": "+91 9929661 89807",
     "email": "kunal.bajaj@example.com",
     "city": "Mumbai",
     "risk_indication": "Not assessed",
     "probability": 10,
-    "next_step": "Send proposal",
-    "next_step_date": "2026-10-25",
+    "next_step": "First meeting",
+    "next_step_date": "2026-11-01",
     "app_access": false,
     "kyc_steps": [
       {
@@ -945,14 +945,14 @@
     "need": "Want PMS once demat is live",
     "last_contact": "2026-10-21",
     "meetings_held": 4,
-    "created": "2026-08-05",
-    "phone": "+91 9956169 78951",
+    "created": "2026-09-11",
+    "phone": "+91 9948224 16258",
     "email": "sahil.priyanka.arora@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderate",
+    "risk_indication": "Moderately aggressive",
     "probability": 90,
     "next_step": "Portfolio review meeting",
-    "next_step_date": "2026-11-07",
+    "next_step_date": "2026-11-06",
     "app_access": true,
     "kyc_steps": [
       {
@@ -1002,7 +1002,7 @@
           "name": "Anand Iyer",
           "title": "Chief Investment Officer"
         },
-        "date": "2026-10-20",
+        "date": "2026-10-15",
         "product_id": "PD-202",
         "text": "Fits the stated need (want pms once demat is live). Lead with liquidity and tax treatment."
       }
@@ -1041,14 +1041,14 @@
     "need": "Retiring from shipping company next year",
     "last_contact": "2026-09-25",
     "meetings_held": 1,
-    "created": "2026-09-10",
-    "phone": "+91 9991496 58929",
+    "created": "2026-09-07",
+    "phone": "+91 9924956 75513",
     "email": "joseph.dsouza@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderately conservative",
+    "risk_indication": "Moderate",
     "probability": 30,
     "next_step": "Intro call",
-    "next_step_date": "2026-10-23",
+    "next_step_date": "2026-11-08",
     "app_access": false,
     "kyc_steps": [
       {
@@ -1100,7 +1100,7 @@
           "name": "Meera Joshi",
           "title": "Product Manager, Mutual Funds"
         },
-        "date": "2026-10-20",
+        "date": "2026-10-15",
         "product_id": "PD-107",
         "text": "Fits the stated need (retiring from shipping company next year). Lead with liquidity and tax treatment."
       }
@@ -1139,14 +1139,14 @@
     "need": "Doctor; FATCA declaration pending",
     "last_contact": "2026-10-11",
     "meetings_held": 2,
-    "created": "2026-08-17",
-    "phone": "+91 9918453 41604",
+    "created": "2026-07-20",
+    "phone": "+91 9940835 28818",
     "email": "nandini.hegde@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderate",
+    "risk_indication": "Moderately conservative",
     "probability": 65,
-    "next_step": "Share bond ladder note",
-    "next_step_date": "2026-11-02",
+    "next_step": "Portfolio review meeting",
+    "next_step_date": "2026-10-23",
     "app_access": true,
     "kyc_steps": [
       {
@@ -1223,11 +1223,11 @@
     "need": "Chose a robo-advisor",
     "last_contact": "2026-06-28",
     "meetings_held": 1,
-    "created": "2026-05-06",
-    "phone": "+91 9992279 99742",
+    "created": "2026-04-26",
+    "phone": "+91 9933780 97584",
     "email": "rohan.thakkar@example.com",
     "city": "Mumbai",
-    "risk_indication": "Not assessed",
+    "risk_indication": "Moderate",
     "probability": 0,
     "next_step": null,
     "next_step_date": null,
@@ -1311,11 +1311,11 @@
     "need": "Paused: family property dispute; revisit next year",
     "last_contact": "2026-07-23",
     "meetings_held": 2,
-    "created": "2026-04-15",
-    "phone": "+91 9971746 33891",
+    "created": "2026-05-07",
+    "phone": "+91 9956169 78951",
     "email": "meher.batliwala@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderately aggressive",
+    "risk_indication": "Moderate",
     "probability": 0,
     "next_step": null,
     "next_step_date": null,
@@ -1399,14 +1399,14 @@
     "need": "Considering a family office; comparing three firms",
     "last_contact": "2026-10-18",
     "meetings_held": 2,
-    "created": "2026-09-30",
-    "phone": "+91 9968137 48462",
+    "created": "2026-08-20",
+    "phone": "+91 9970144 93318",
     "email": "aditya.saraf@example.com",
     "city": "Mumbai",
-    "risk_indication": "Moderately aggressive",
+    "risk_indication": "Not assessed",
     "probability": 30,
-    "next_step": "First meeting",
-    "next_step_date": "2026-10-29",
+    "next_step": "Follow up on KYC documents",
+    "next_step_date": "2026-10-31",
     "app_access": false,
     "kyc_steps": [
       {
@@ -1458,7 +1458,7 @@
           "name": "Meera Joshi",
           "title": "Product Manager, Mutual Funds"
         },
-        "date": "2026-10-19",
+        "date": "2026-10-14",
         "product_id": "PD-202",
         "text": "Fits the stated need (considering a family office; comparing three firms). Lead with liquidity and tax treatment."
       }

@@ -1,0 +1,308 @@
+import { Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Archive, ArrowLeft, ArrowUp, CalendarPlus, Check, FileText, HandCoins, Headset, Loader2, Mail, MessageSquare, Mic, NotebookPen, Paperclip, Pencil, Plus, Receipt, Send, Square, UserCog, X } from 'lucide-react'
+import { api, invalidate } from '../lib/api'
+import { ago, inr, time, when } from '../lib/format'
+import { resizeImage } from '../shell/ProfileMenu'
+import { Drawer, Status, useToast } from '../ui'
+import { useSpeech } from './useSpeech'
+
+export type Scope = { kind: 'client' | 'prospect' | 'product'; id: string }
+
+const ACTION_META: Record<string, { icon: any; label: string }> = {
+  schedule_meeting: { icon: CalendarPlus, label: 'Schedule meeting' },
+  send_message: { icon: MessageSquare, label: 'Message' },
+  log_mom: { icon: NotebookPen, label: 'Minutes of meeting' },
+  product_feedback: { icon: Send, label: 'Feedback to product team' },
+  reimbursement: { icon: Receipt, label: 'Reimbursement' },
+  service_request: { icon: Headset, label: 'Service request' },
+  add_note: { icon: FileText, label: 'Internal note' },
+  update_prospect: { icon: UserCog, label: 'Update prospect' },
+}
+const FIELD_LABEL: Record<string, string> = {
+  with_id: 'With', to_id: 'To', about_id: 'About', client_id: 'Client', product_id: 'Product', prospect_id: 'Prospect', start: 'When', duration_minutes: 'Minutes',
+  send_to_client: 'Send to client', promise_due: 'Promises due', changes_asked: 'Changes asked', portfolio_reaction: 'Portfolio reaction', bill_date: 'Bill date',
+  next_step_date: 'Next step date', estimated_investable: 'Estimated investable', interest_product_id: 'Interested in', meeting_id: 'Meeting',
+}
+const HIDE = new Set(['with_kind', 'to_kind', 'about_kind'])
+const LONG = new Set(['body', 'summary', 'feedback', 'text', 'details', 'personal'])
+
+const SUGGEST: Record<string, string[]> = {
+  client: ['Log the MoM from today’s meeting and send it to them', 'Schedule a review next Tuesday at 4 pm at their office', 'Tell the product team they found the PMS fee too high', 'What’s maturing for them in the next two months?'],
+  prospect: ['Draft a WhatsApp nudge about the fund they viewed', 'Book a first meeting on Thursday at 11', 'Move them to KYC in progress; next step is the FATCA form', 'Prepare me for the first meeting'],
+  product: ['Give me the 10-minute brief', 'Which of my clients does this suit?', 'Tell the product manager clients want a monthly payout option', 'What should I say if a client asks about fees?'],
+}
+
+function md(text: string): ReactNode {
+  // minimal: paragraphs, bullets, **bold**
+  const inline = (s: string) => s.split(/(\*\*[^*]+\*\*)/g).map((p, i) => (p.startsWith('**') ? <strong key={i}>{p.slice(2, -2)}</strong> : <Fragment key={i}>{p}</Fragment>))
+  const blocks = text.split(/\n{2,}/)
+  return blocks.map((b, i) => {
+    const lines = b.split('\n')
+    if (lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l))) return <ul key={i}>{lines.map((l, j) => <li key={j}>{inline(l.replace(/^\s*([-*•]|\d+\.)\s+/, ''))}</li>)}</ul>
+    if (/^#{1,4}\s/.test(lines[0])) return <div key={i}><h4>{inline(lines[0].replace(/^#+\s/, ''))}</h4>{lines.slice(1).map((l, j) => <p key={j}>{inline(l.replace(/^\s*[-*•]\s+/, '· '))}</p>)}</div>
+    return <p key={i}>{lines.map((l, j) => <Fragment key={j}>{j > 0 && <br />}{inline(l)}</Fragment>)}</p>
+  })
+}
+
+export default function AgentPanel({ scope, name, onClose, allowBill, names = {}, initialText }: { scope: Scope; name: string; onClose: () => void; allowBill?: boolean; names?: Record<string, string>; initialText?: string | null }) {
+  const [sessions, setSessions] = useState<any[] | null>(null)
+  const [archived, setArchived] = useState(false)
+  const [sess, setSess] = useState<any>(null)
+  const toast = useToast()
+  const loadList = useCallback(() => api(`/agent/sessions?kind=${scope.kind}&id=${scope.id}&archived=${archived}`).then(setSessions), [scope, archived])
+  useEffect(() => { loadList() }, [loadList])
+  const started = useRef(false)
+  useEffect(() => {
+    if (initialText && !started.current) { started.current = true; api('/agent/sessions', { body: scope }).then(setSess) }
+  }, [initialText, scope])
+  const open = async (id: string) => setSess(await api(`/agent/sessions/${id}`))
+  const create = async () => setSess(await api('/agent/sessions', { body: scope }))
+
+  return (
+    <Drawer wide scrim={false} onClose={onClose}
+      title={<div className="row" style={{ gap: 12 }}><span className="orb sm" aria-hidden /><div><h2>{sess ? sess.title : 'Agent'}</h2><div className="tiny muted">{name} · {scope.kind} agent</div></div></div>}>
+      {!sess ? (
+        <div>
+          <button className="new-session" onClick={create}>
+            <span className="orb" aria-hidden />
+            <span className="grow" style={{ textAlign: 'left' }}><span className="strong" style={{ display: 'block' }}>New session</span><span className="small muted">Speak or type. Anything the agent wants to do comes to you as a card to approve.</span></span>
+            <Plus size={18} />
+          </button>
+          <div className="spread" style={{ margin: '22px 0 8px' }}>
+            <h3>{archived ? 'Archived sessions' : 'Past sessions'}</h3>
+            <button className="linkbtn small" onClick={() => setArchived((a) => !a)}>{archived ? 'Show current' : 'Show archived'}</button>
+          </div>
+          {sessions === null && <div className="small muted">Loading…</div>}
+          {sessions?.length === 0 && <div className="empty small">{archived ? 'Nothing archived.' : `No sessions yet for ${name}.`}</div>}
+          <div className="col" style={{ gap: 0 }}>
+            {sessions?.map((s) => (
+              <button key={s.id} className="session-row" onClick={() => open(s.id)}>
+                <span className="grow" style={{ minWidth: 0, textAlign: 'left' }}>
+                  <span className="strong ellipsis" style={{ display: 'block' }}>{s.title}</span>
+                  <span className="tiny muted">{ago(s.updated)} · {s.card_count} card{s.card_count === 1 ? '' : 's'}</span>
+                </span>
+                <span className="tiny faint">{s.id}</span>
+              </button>
+            ))}
+          </div>
+          <p className="tiny faint" style={{ marginTop: 18 }}>Sessions are kept for the audit trail. You can archive them but not delete them.</p>
+        </div>
+      ) : (
+        <Chat sess={sess} setSess={setSess} scope={scope} allowBill={allowBill} names={names} initialText={initialText}
+          onBack={() => { setSess(null); loadList() }}
+          onArchive={async () => { await api(`/agent/sessions/${sess.id}/archive`, { method: 'POST' }); toast(sess.archived ? 'Session restored' : 'Session archived'); setSess(null); loadList() }} />
+      )}
+    </Drawer>
+  )
+}
+
+function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initialText }: { sess: any; setSess: (s: any) => void; scope: Scope; allowBill?: boolean; onBack: () => void; onArchive: () => void; names: Record<string, string>; initialText?: string | null }) {
+  const [text, setText] = useState(sess.messages.length === 0 && initialText ? initialText : '')
+  const [via, setVia] = useState<'text' | 'voice'>('text')
+  const [transcript, setTranscript] = useState<any>(null)
+  const [busy, setBusy] = useState(false)
+  const [bill, setBill] = useState<any>(null)
+  const [billBusy, setBillBusy] = useState(false)
+  const end = useRef<HTMLDivElement>(null)
+  const file = useRef<HTMLInputElement>(null)
+  const ta = useRef<HTMLTextAreaElement>(null)
+  const toast = useToast()
+  const speech = useSpeech(useCallback((t: string, meta: any) => {
+    setText((prev) => (prev ? prev + ' ' : '') + t)
+    setVia('voice')
+    setTranscript(meta)
+    setTimeout(() => ta.current?.focus(), 50)
+  }, []))
+
+  useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }) }, [sess.messages.length, busy])
+
+  const send = async (override?: string) => {
+    const t = (override ?? text).trim()
+    if ((!t && !bill) || busy) return
+    setBusy(true)
+    const optimistic = { ...sess, messages: [...sess.messages, { id: 'tmp', role: 'rm', text: t || 'Here’s a bill for reimbursement.', at: new Date().toISOString(), via, bill: bill ? { thumb: bill.thumb, fields: bill.fields } : undefined }] }
+    setSess(optimistic)
+    setText(''); setTranscript(null)
+    try {
+      const s = await api(`/agent/sessions/${sess.id}/message`, { body: { text: t, via, transcript, bill: bill ? { thumb: bill.thumb, fields: bill.fields } : undefined } })
+      setSess(s)
+      setBill(null); setVia('text')
+    } catch (e: any) {
+      toast(e.message)
+      setSess(sess); setText(t)
+    } finally { setBusy(false) }
+  }
+
+  const attach = async (f?: File) => {
+    if (!f) return
+    setBillBusy(true)
+    try {
+      const image = await resizeImage(f, 1400, 0.85)
+      const thumb = await resizeImage(f, 480, 0.7)
+      const r = await api('/agent/read-bill', { body: { image } })
+      setBill({ thumb, fields: r.fields || {} })
+      if (r.fields?.confidence === 'low') toast('The bill was hard to read. Check the amounts on the card before approving.')
+    } catch (e: any) { toast(`Couldn’t read the bill: ${e.message}`) }
+    finally { setBillBusy(false); if (file.current) file.current.value = '' }
+  }
+
+  const decide = async (card: any, decision: 'approve' | 'reject', args?: any) => {
+    try {
+      const s = await api(`/agent/sessions/${sess.id}/cards/${card.id}`, { body: { decision, args } })
+      setSess(s)
+      invalidate('/c/')
+      toast(decision === 'approve' ? <>Done. <Link to={`/requests?tab=outbox`}>See it in the outbox</Link></> : 'Card rejected; nothing was sent')
+    } catch (e: any) { toast(e.message) }
+  }
+
+  const listening = speech.state === 'listening'
+  const refining = speech.state === 'refining'
+  return (
+    <div className="chat">
+      <div className="spread chat-top">
+        <button className="linkbtn small" onClick={onBack}><ArrowLeft />All sessions</button>
+        <button className="linkbtn small" onClick={onArchive}><Archive />{sess.archived ? 'Restore' : 'Archive'}</button>
+      </div>
+      <div className="chat-scroll">
+        {sess.messages.length === 0 && (
+          <div className="chat-empty">
+            <p className="small muted">Try one of these, or tap the mic and talk the way you would to an assistant.</p>
+            <div className="col" style={{ gap: 6, marginTop: 10 }}>
+              {SUGGEST[scope.kind].map((s) => <button key={s} className="suggest-chip" onClick={() => send(s)}>{s}</button>)}
+            </div>
+          </div>
+        )}
+        {sess.messages.map((m: any) => {
+          if (m.role === 'event') return <div key={m.id} className="chat-event tiny">{m.text}</div>
+          if (m.role === 'rm') return (
+            <div key={m.id} className="msg rm">
+              {m.bill?.thumb && <img src={m.bill.thumb} alt="Attached bill" className="bill-thumb" />}
+              <div className="bubble">{m.text}</div>
+              <div className="tiny faint">{m.via === 'voice' ? 'Spoken · ' : ''}{time(m.at.slice(0, 16))}</div>
+            </div>
+          )
+          return (
+            <div key={m.id} className="msg agent">
+              <span className="orb sm" aria-hidden />
+              <div className="grow" style={{ minWidth: 0 }}>
+                {m.text && <div className="agent-text">{md(m.text)}</div>}
+                {m.cards?.map((c: any) => <Card key={c.id} card={c} names={names} onDecide={decide} />)}
+                {m.reads?.length > 0 && <div className="tiny faint" style={{ marginTop: 4 }}>Checked: {m.reads.map((r: string) => r.replace(/_/g, ' ')).join(', ')}</div>}
+              </div>
+            </div>
+          )
+        })}
+        {busy && <div className="msg agent"><span className="orb sm on" aria-hidden /><div className="typing"><i /><i /><i /></div></div>}
+        <div ref={end} />
+      </div>
+
+      <div className="composer">
+        {speech.error && <div className="composer-note loss">{speech.error} <button className="linkbtn" onClick={speech.clearError}>Dismiss</button></div>}
+        {bill && (
+          <div className="bill-chip">
+            <img src={bill.thumb} alt="" />
+            <div className="grow small">
+              <div className="strong">{bill.fields.merchant || 'Bill'} · {bill.fields.amount ? inr(bill.fields.amount, { compact: false }) : 'amount unclear'}</div>
+              <div className="tiny muted">{bill.fields.bill_date || 'date unclear'} · {bill.fields.category || 'category unclear'}{bill.fields.gst ? ` · GSTIN ${bill.fields.gst}` : ''}</div>
+            </div>
+            <button className="iconbtn" aria-label="Remove bill" onClick={() => setBill(null)}><X /></button>
+          </div>
+        )}
+        {listening || refining ? (
+          <div className="listening">
+            <div className="wave" aria-hidden>{Array.from({ length: 24 }).map((_, i) => <i key={i} style={{ transform: `scaleY(${0.15 + speech.level * (0.4 + 0.6 * Math.abs(Math.sin(i * 1.7 + Date.now() / 180)))})` }} />)}</div>
+            <div className="live-text">{refining ? <span className="muted">Polishing the transcript…</span> : speech.live || <span className="muted">{speech.liveSupported ? 'Listening… speak naturally' : 'Listening… your words appear when you stop'}</span>}</div>
+          </div>
+        ) : (
+          <textarea ref={ta} className="composer-input" rows={2} value={text} placeholder={`Ask or instruct the ${scope.kind} agent`}
+            onChange={(e) => { setText(e.target.value); if (!e.target.value) setVia('text') }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }} />
+        )}
+        <div className="composer-bar">
+          <div className="row" style={{ gap: 4 }}>
+            {allowBill && (
+              <>
+                <button className="iconbtn" title="Attach a bill for reimbursement" aria-label="Attach bill" onClick={() => file.current?.click()} disabled={billBusy}>{billBusy ? <Loader2 className="spin" /> : <Paperclip />}</button>
+                <input ref={file} type="file" accept="image/*" hidden onChange={(e) => attach(e.target.files?.[0])} />
+              </>
+            )}
+            {via === 'voice' && text && <span className="tiny muted"><Pencil size={11} /> Transcript: edit before sending</span>}
+            {billBusy && <span className="tiny muted">Reading the bill…</span>}
+          </div>
+          <div className="row" style={{ gap: 8 }}>
+            <button className={`mic ${listening ? 'on' : ''}`} onClick={listening ? speech.stop : speech.start} disabled={refining || busy} aria-label={listening ? 'Stop listening' : 'Start speaking'} title={listening ? 'Tap to stop' : 'Tap to speak'}>
+              {listening ? <Square size={14} fill="currentColor" /> : refining ? <Loader2 className="spin" size={18} /> : <Mic size={18} />}
+            </button>
+            <button className="btn btn-primary send" onClick={() => send()} disabled={busy || listening || refining || (!text.trim() && !bill)} aria-label="Send"><ArrowUp /></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'approve' | 'reject', args?: any) => void; names: Record<string, string> }) {
+  const meta = ACTION_META[card.action] || { icon: Check, label: card.action }
+  const [edit, setEdit] = useState(false)
+  const [args, setArgs] = useState<any>(card.args)
+  const [working, setWorking] = useState(false)
+  const pending = card.status === 'pending'
+  const go = async (d: 'approve' | 'reject') => { setWorking(true); await onDecide(card, d, d === 'approve' ? args : undefined); setWorking(false) }
+  const fields = Object.entries(args).filter(([k]) => !HIDE.has(k))
+  const show = (k: string, v: any) => {
+    if (v === null || v === undefined || v === '') return '—'
+    if (k === 'start') return when(String(v))
+    if (k === 'amount' || k === 'estimated_investable') return inr(Number(v), { compact: false })
+    if (typeof v === 'boolean') return v ? 'Yes' : 'No'
+    if (Array.isArray(v)) return v.map((x) => (typeof x === 'object' ? x.name : x)).join(', ') || '—'
+    if (typeof v === 'string' && names[v]) return names[v]
+    return String(v)
+  }
+  return (
+    <div className={`acard ${card.status}`}>
+      <div className="acard-head">
+        <span className="acard-icon"><meta.icon size={15} /></span>
+        <div className="grow" style={{ minWidth: 0 }}>
+          <div className="tiny muted">{meta.label}</div>
+          <div className="strong small">{card.summary}</div>
+        </div>
+        {!pending && <Status s={card.status}>{card.status === 'approved' ? (card.edited ? 'Approved with edits' : 'Approved') : 'Rejected'}</Status>}
+      </div>
+      <dl className="acard-fields">
+        {fields.map(([k, v]) => (
+          <Fragment key={k}>
+            <dt>{FIELD_LABEL[k] || k.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())}</dt>
+            <dd>
+              {edit && pending ? (
+                LONG.has(k) ? <textarea className="textarea" rows={k === 'body' || k === 'summary' ? 6 : 3} value={String(v ?? '')} onChange={(e) => setArgs({ ...args, [k]: e.target.value })} />
+                  : k === 'start' ? <input className="input sm" type="datetime-local" value={String(v).slice(0, 16)} onChange={(e) => setArgs({ ...args, start: e.target.value })} />
+                  : typeof v === 'boolean' ? <input type="checkbox" checked={v} onChange={(e) => setArgs({ ...args, [k]: e.target.checked })} />
+                  : typeof v === 'number' ? <input className="input sm" type="number" value={v} onChange={(e) => setArgs({ ...args, [k]: Number(e.target.value) })} />
+                  : Array.isArray(v) ? <textarea className="textarea" rows={3} value={v.map((x) => (typeof x === 'object' ? x.name : x)).join('\n')} onChange={(e) => setArgs({ ...args, [k]: e.target.value.split('\n').filter(Boolean).map((x) => (typeof v[0] === 'object' ? { name: x } : x)) })} />
+                  : k.endsWith('_id') ? <span className="muted">{show(k, v)}</span>
+                  : <input className="input sm" value={String(v ?? '')} onChange={(e) => setArgs({ ...args, [k]: e.target.value })} />
+              ) : (
+                <span className={LONG.has(k) ? 'pre' : ''}>{show(k, v)}</span>
+              )}
+            </dd>
+          </Fragment>
+        ))}
+      </dl>
+      {pending ? (
+        <div className="acard-actions">
+          <button className="btn btn-primary btn-sm" disabled={working} onClick={() => go('approve')}><Check />{edit ? 'Approve edited' : 'Approve'}</button>
+          <button className="btn btn-quiet btn-sm" disabled={working} onClick={() => setEdit((e) => !e)}><Pencil />{edit ? 'Stop editing' : 'Edit'}</button>
+          <button className="btn btn-ghost btn-sm" disabled={working} onClick={() => go('reject')} style={{ color: 'var(--loss)' }}><X />Reject</button>
+        </div>
+      ) : card.status === 'approved' && (
+        <div className="acard-result tiny">
+          {card.result?.outbox && <Link to={`/requests?tab=outbox&o=${card.result.outbox}`} className="linkbtn"><Mail />Outbox {card.result.outbox}</Link>}
+          {card.result?.request && <Link to={`/requests?r=${card.result.request}`} className="linkbtn"><HandCoins />Request {card.result.request}</Link>}
+          {card.result?.meeting && <Link to={`/meetings?m=${card.result.meeting}`} className="linkbtn"><CalendarPlus />Meeting {card.result.meeting}</Link>}
+          {card.result?.warning && <span className="muted">{card.result.warning}</span>}
+        </div>
+      )}
+    </div>
+  )
+}

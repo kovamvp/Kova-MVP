@@ -359,7 +359,7 @@ for spec in client_specs:
         "pan_masked": f"XXXXX{random.randint(1000, 9999)}X",
         "kyc": {"status": "Verified" if seg != "lost" else "Verified", "validated_on": d(-random.randint(100, 900)), "registration_agency": "CVL KRA"},
         "accounts": {"investing": True, "demat": random.random() < 0.6, "trading": random.random() < 0.4, "ddpi": random.random() < 0.3},
-        "nominee": random.choice(["Registered", "Registered", "Registered", "Missing"]),
+        "nominee": "Missing" if first in ("Sunita", "Karan", "Leena") else "Registered",
         "consent": {
             "whatsapp": random.random() < 0.8,
             "email": True,
@@ -488,6 +488,8 @@ for c in clients:
     c["red_flags"] = flags
 
 # a deliberate drift
+C["CL-1001"]["consent"].update(whatsapp=True, profile_enrichment=True)
+C["CL-1004"]["consent"].update(whatsapp=True)
 C["CL-1002"]["red_flags"].append({"severity": "high", "text": "Equity above the risk-profile band after the rally"})
 w("clients", clients)
 

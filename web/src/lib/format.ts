@@ -59,7 +59,7 @@ export function ago(s?: string | null) {
   if (n <= 0) return 'today'
   if (n === 1) return 'yesterday'
   if (n < 30) return `${n} days ago`
-  if (n < 365) return `${Math.round(n / 30)} months ago`
+  if (n < 365) { const m = Math.round(n / 30); return m === 1 ? 'a month ago' : `${m} months ago` }
   return `${(n / 365).toFixed(1).replace(/\.0$/, '')} years ago`
 }
 export const initials = (name: string) => name.replace(/^(Dr\.|Mrs\.|Mr\.)\s+/, '').split(/\s+|&/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase()

@@ -507,3 +507,15 @@ def read_bill(body: dict = Body(...)):
 @router.get("/gateway")
 def gateway_log():
     return {"calls": list(reversed(llm.LOG))}
+
+
+# ------------------------------------------------------------------ developer checks (GET, for testing a protected deployment)
+@router.get("/dev/run")
+def dev_run(kind: str, id: str, q: str, session: str | None = None):
+    sid = session or create_session({"kind": kind, "id": id})["id"]
+    return send(sid, {"text": q, "via": "text"})
+
+
+@router.get("/dev/decide")
+def dev_decide(session: str, card: str, decision: str = "approve"):
+    return decide(session, card, {"decision": decision})
