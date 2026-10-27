@@ -124,7 +124,7 @@ export default function Home() {
             </div>
           ) : (
             <Grid
-              className="layout"
+              className={`layout ${edit ? 'is-editing' : ''}`}
               layout={items.map(({ i, x, y, w, h, type }) => ({ i, x, y, w, h, minW: WIDGET[type]?.minW ?? 3, minH: WIDGET[type]?.minH ?? 2 }))}
               cols={12}
               rowHeight={52}
