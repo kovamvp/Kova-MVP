@@ -8,9 +8,8 @@ script of future steps that are applied lazily when requests are read.
 from __future__ import annotations
 
 import datetime as dt
-from typing import Any
 
-from .store import new_id, now_ist, put_singleton, singleton, store
+from .store import new_id, now_ist, store
 
 RM_NAME = "Priya Sharma"
 
@@ -143,7 +142,7 @@ def schedule_meeting(args: dict, source: dict | None = None) -> dict:
     store().put("meetings", m["id"], m)
     when = dt.datetime.fromisoformat(start).strftime("%a %d %b, %I:%M %p")
     body = (f"Hi {who.get('first_name') or who.get('name', '').split(' ')[0]},\n\nConfirming our meeting on {when} at {m['location']}."
-            + (f"\n\nAgenda:\n" + "\n".join(f"- {a}" for a in m["agenda"]) if m["agenda"] else "") + f"\n\nRegards,\n{RM_NAME}")
+            + ("\n\nAgenda:\n" + "\n".join(f"- {a}" for a in m["agenda"]) if m["agenda"] else "") + f"\n\nRegards,\n{RM_NAME}")
     channel = args.get("channel") or "Calendar invite"
     ob = add_outbox("schedule_meeting", channel, {"name": who.get("name"), "address": who.get("email")}, m["title"], body, {**(source or {}), "kind": link["kind"], "id": link["id"]},
                     {"meeting_id": m["id"], "start": start, "end": end, "location": m["location"], "attendees": m["attendees"]})

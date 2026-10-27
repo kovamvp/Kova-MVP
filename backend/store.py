@@ -32,6 +32,22 @@ _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _DATETIME = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$")
 
 
+def table_prefix() -> str:
+    """Production and local use `kova_*` tables. Vercel preview deployments get their own
+    `kova_preview_*` tables in the same database, so a branch can never touch live data."""
+    explicit = os.environ.get("KOVA_TABLE_PREFIX")
+    if explicit:
+        if not re.fullmatch(r"[a-z][a-z0-9_]{0,30}", explicit):
+            raise ValueError("KOVA_TABLE_PREFIX must be lowercase letters, digits or _")
+        return explicit
+    return "kova_preview" if os.environ.get("VERCEL_ENV") == "preview" else "kova"
+
+
+def needs_reseed(stored: str | None, code: str) -> bool:
+    """Reseed only when the stored seed is missing or older than the code's: never move backwards."""
+    return not stored or str(stored) < code
+
+
 def today_ist() -> dt.date:
     return dt.datetime.now(IST).date()
 
@@ -76,9 +92,30 @@ class MemoryStore:
         for s in SINGLETONS:
             self.docs.setdefault("_single", {})[s] = seed[s]
         self.meta: dict[str, Any] = {}
+        self.snapshots: dict[str, Any] = getattr(self, "snapshots", {})
+        from .migrations import apply_pending
+        apply_pending(self)
 
     def list(self, coll: str) -> list[dict]:
         return [copy.deepcopy(d) for d in self.docs.get(coll, {}).values()]
+
+    # -- migrations support
+    def get_meta(self, key: str) -> Any:
+        return copy.deepcopy(self.meta.get(key))
+
+    def set_meta(self, key: str, value: Any) -> None:
+        self.meta[key] = copy.deepcopy(value)
+
+    def snapshot(self, tag: str) -> str:
+        self.snapshots[tag] = copy.deepcopy({"docs": self.docs, "meta": self.meta})
+        return tag
+
+    def restore(self, tag: str) -> None:
+        snap = copy.deepcopy(self.snapshots[tag])
+        self.docs, self.meta = snap["docs"], snap["meta"]
+
+    def all_docs(self) -> list[tuple[str, str, dict]]:
+        return [(c, i, copy.deepcopy(d)) for c, docs in self.docs.items() for i, d in docs.items()]
 
     def get(self, coll: str, id_: str) -> dict | None:
         d = self.docs.get(coll, {}).get(id_)
@@ -104,6 +141,8 @@ class PgStore:
         import psycopg  # noqa: F401
         self.url = url
         self._conn = None
+        p = table_prefix()
+        self.docs_t, self.meta_t = f"{p}_docs", f"{p}_meta"
         self._ensure()
 
     def conn(self):
@@ -129,22 +168,31 @@ class PgStore:
                     raise
 
     def _ensure(self) -> None:
-        self._exec("""
-            create table if not exists kova_docs (
+        from .migrations import apply_pending
+        self._exec(f"""
+            create table if not exists {self.docs_t} (
               collection text not null,
               id text not null,
               doc jsonb not null,
               updated_at timestamptz not null default now(),
               primary key (collection, id)
             )""")
-        self._exec("create table if not exists kova_meta (key text primary key, value jsonb not null)")
-        row = self._exec("select value from kova_meta where key = 'seed_version'", fetch="one")
-        # only move forward: an older deployment must never wipe data seeded by a newer one
-        if not row or str(row[0]) < SEED_VERSION:
-            self.reset()
+        self._exec(f"create table if not exists {self.meta_t} (key text primary key, value jsonb not null)")
+        # one cold start at a time may seed or migrate (other instances wait on the lock)
+        self._exec("select pg_advisory_lock(hashtext(%s))", (self.docs_t,))
+        try:
+            row = self._exec(f"select value from {self.meta_t} where key = 'seed_version'", fetch="one")
+            if needs_reseed(row[0] if row else None, SEED_VERSION):
+                self.reset()
+            else:
+                apply_pending(self)
+        finally:
+            self._exec("select pg_advisory_unlock(hashtext(%s))", (self.docs_t,))
 
     def reset(self) -> None:
         from psycopg.types.json import Jsonb
+
+        from .migrations import apply_pending
         seed = load_seed()
         rows = []
         for c in LIST_COLLECTIONS:
@@ -153,36 +201,67 @@ class PgStore:
             rows.append(("_single", s, Jsonb(seed[s])))
         with self.conn().transaction():
             with self.conn().cursor() as cur:
-                cur.execute("delete from kova_docs")
-                cur.execute("delete from kova_meta where key <> 'seed_version'")
-                cur.executemany("insert into kova_docs (collection, id, doc) values (%s, %s, %s)", rows)
-                cur.execute("insert into kova_meta (key, value) values ('seed_version', %s) on conflict (key) do update set value = excluded.value",
+                cur.execute(f"delete from {self.docs_t}")
+                cur.execute(f"delete from {self.meta_t} where key <> 'seed_version'")
+                cur.executemany(f"insert into {self.docs_t} (collection, id, doc) values (%s, %s, %s)", rows)
+                cur.execute(f"insert into {self.meta_t} (key, value) values ('seed_version', %s) on conflict (key) do update set value = excluded.value",
                             (Jsonb(SEED_VERSION),))
+        apply_pending(self)
 
     def list(self, coll: str) -> list[dict]:
-        rows = self._exec("select doc from kova_docs where collection = %s order by id", (coll,), fetch="all") or []
+        rows = self._exec(f"select doc from {self.docs_t} where collection = %s order by id", (coll,), fetch="all") or []
         return [r[0] for r in rows]
 
     def get(self, coll: str, id_: str) -> dict | None:
-        row = self._exec("select doc from kova_docs where collection = %s and id = %s", (coll, id_), fetch="one")
+        row = self._exec(f"select doc from {self.docs_t} where collection = %s and id = %s", (coll, id_), fetch="one")
         return row[0] if row else None
 
     def put(self, coll: str, id_: str, doc: dict) -> dict:
         from psycopg.types.json import Jsonb
-        self._exec("""insert into kova_docs (collection, id, doc, updated_at) values (%s, %s, %s, now())
+        self._exec(f"""insert into {self.docs_t} (collection, id, doc, updated_at) values (%s, %s, %s, now())
                       on conflict (collection, id) do update set doc = excluded.doc, updated_at = now()""",
                    (coll, id_, Jsonb(doc)))
         return doc
 
     def delete(self, coll: str, id_: str) -> None:
-        self._exec("delete from kova_docs where collection = %s and id = %s", (coll, id_))
+        self._exec(f"delete from {self.docs_t} where collection = %s and id = %s", (coll, id_))
 
     def next_seq(self, key: str, start: int) -> int:
         from psycopg.types.json import Jsonb
-        row = self._exec("""insert into kova_meta (key, value) values (%s, %s)
-                            on conflict (key) do update set value = to_jsonb((kova_meta.value::text)::int + 1)
+        row = self._exec(f"""insert into {self.meta_t} (key, value) values (%s, %s)
+                            on conflict (key) do update set value = to_jsonb(({self.meta_t}.value::text)::int + 1)
                             returning value""", (key, Jsonb(start + 1)), fetch="one")
         return int(row[0])
+
+    # -- migrations support
+    def get_meta(self, key: str) -> Any:
+        row = self._exec(f"select value from {self.meta_t} where key = %s", (key,), fetch="one")
+        return row[0] if row else None
+
+    def set_meta(self, key: str, value: Any) -> None:
+        from psycopg.types.json import Jsonb
+        self._exec(f"insert into {self.meta_t} (key, value) values (%s, %s) on conflict (key) do update set value = excluded.value",
+                   (key, Jsonb(value)))
+
+    def snapshot(self, tag: str) -> str:
+        """Copy every document and meta row into side tables before a migration, so data can be put back."""
+        safe = re.sub(r"[^a-z0-9_]", "_", tag.lower())[:40]
+        for src in (self.docs_t, self.meta_t):
+            self._exec(f"drop table if exists {src}_snap_{safe}")
+            self._exec(f"create table {src}_snap_{safe} as table {src}")
+        return safe
+
+    def restore(self, tag: str) -> None:
+        safe = re.sub(r"[^a-z0-9_]", "_", tag.lower())[:40]
+        with self.conn().transaction():
+            with self.conn().cursor() as cur:
+                for src in (self.docs_t, self.meta_t):
+                    cur.execute(f"delete from {src}")
+                    cur.execute(f"insert into {src} select * from {src}_snap_{safe}")
+
+    def all_docs(self) -> list[tuple[str, str, dict]]:
+        rows = self._exec(f"select collection, id, doc from {self.docs_t}", fetch="all") or []
+        return [(r[0], r[1], r[2]) for r in rows]
 
 
 _store = None

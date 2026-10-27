@@ -5,3 +5,9 @@ __pycache__/
 *.pyc
 .env*
 .vercel
+e2e/node_modules/
+e2e/test-results/
+e2e/playwright-report/
+.pytest_cache/
+.ruff_cache/
+web/tsconfig.tsbuildinfo

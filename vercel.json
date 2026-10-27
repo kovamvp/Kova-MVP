@@ -8,11 +8,17 @@
     "api/index.py": {
       "maxDuration": 60,
       "includeFiles": "{backend/**,data/**}",
-      "excludeFiles": "{web/**,scripts/**,docs/**,.venv/**}"
+      "excludeFiles": "{web/**,scripts/**,docs/**,.venv/**,tests/**,e2e/**,.github/**}"
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
   ]
 }

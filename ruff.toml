@@ -1,0 +1,7 @@
+line-length = 160
+target-version = "py312"
+extend-exclude = ["web", "e2e", ".venv", "data"]
+
+[lint]
+select = ["E", "F", "W", "B", "UP", "I"]
+ignore = ["E501", "B008", "B905"]

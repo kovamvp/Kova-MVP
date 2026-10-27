@@ -12,7 +12,7 @@ import json
 import re
 from typing import Any
 
-from fastapi import APIRouter, Body, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Body, File, HTTPException, UploadFile
 
 from . import actions, llm
 from .store import new_id, now_ist, singleton, store
@@ -475,7 +475,7 @@ def decide(sid: str, cid: str, body: dict = Body(...)):
                 try:
                     result = actions.run(c["action"], args, {"session_id": sid, "card_id": cid, "said": said, "kind": s["scope"]["kind"], "id": s["scope"]["id"]})
                 except (ValueError, KeyError) as e:
-                    raise HTTPException(400, str(e))
+                    raise HTTPException(400, str(e)) from e
                 c.update(status="approved", args=args, edited=edited, decided_at=now_ist(),
                          result={k: (v.get("id") if isinstance(v, dict) else v) for k, v in result.items()})
                 note = f"RM approved card {cid} ({c['summary']})" + (" with edits" if edited else "")
@@ -497,7 +497,7 @@ async def transcribe(audio: UploadFile = File(...)):
     try:
         return llm.transcribe(data, audio.filename or "speech.webm", audio.content_type or "audio/webm")
     except llm.LLMError as e:
-        raise HTTPException(502, str(e))
+        raise HTTPException(502, str(e)) from e
 
 
 @router.post("/read-bill")
@@ -514,7 +514,7 @@ def read_bill(body: dict = Body(...)):
         resp = llm.chat([{"role": "user", "content": [{"type": "text", "text": prompt}, {"type": "image_url", "image_url": {"url": img}}]}],
                         models=[llm.VISION_MODEL], temperature=0, max_tokens=700, primary="agent")
     except llm.LLMError as e:
-        raise HTTPException(502, str(e))
+        raise HTTPException(502, str(e)) from e
     txt = resp["choices"][0]["message"].get("content") or ""
     txt = re.sub(r"<think>.*?</think>", "", txt, flags=re.S)
     m = re.search(r"\{.*\}", txt, re.S)
@@ -554,10 +554,15 @@ def dev_bill():
 
 @router.get("/dev/speech")
 def dev_speech():
-    import io, math, struct, wave
+    import io
+    import math
+    import struct
+    import wave
     buf = io.BytesIO()
     with wave.open(buf, "wb") as w:
-        w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000)
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(16000)
         w.writeframes(b"".join(struct.pack("<h", int(3000 * math.sin(2 * math.pi * 440 * i / 16000))) for i in range(16000)))
     try:
         return llm.transcribe(buf.getvalue(), "tone.wav", "audio/wav") | {"note": "A pure tone: an empty or nonsense transcript with status 200 means the speech path works."}
