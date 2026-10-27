@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowRight, Check, ChevronRight, Search, UserPlus, Users } from 'lucide-react'
+import { ArrowRight, Check, ChevronRight, UserPlus, Users } from 'lucide-react'
 import { useClients, useFamilies, useMeetings, useProducts, useProspects } from '../lib/data'
 import { SEGMENTS, RISK_ORDER, EQUITY_BAND } from '../lib/data'
 import { ago, inr, label, when } from '../lib/format'
 import { Donut, HBars, AllocBar } from '../charts'
-import { ASSET_COLORS, Avatar, Modal, Num, Panel, Status, Stat } from '../ui'
+import { ASSET_COLORS, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Status, Stat, SearchField } from '../ui'
 
 export default function Clients() {
-  const { data: clients = [] } = useClients()
+  const { data: clients = [], loading, error, reload } = useClients()
   const { data: families = [] } = useFamilies()
   const { data: meetings = [] } = useMeetings()
   const { data: products = [] } = useProducts()
@@ -117,14 +117,14 @@ export default function Clients() {
 
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="list-toolbar">
-          <div className="seg" role="tablist">
-            <button className={view === 'people' ? 'on' : ''} onClick={() => setView('people')}>Individuals</button>
-            <button className={view === 'families' ? 'on' : ''} onClick={() => setView('families')}>Families</button>
+          <div className="seg" role="group" aria-label="View">
+            <button className={view === 'people' ? 'on' : ''} aria-pressed={view === 'people'} onClick={() => setView('people')}>Individuals</button>
+            <button className={view === 'families' ? 'on' : ''} aria-pressed={view === 'families'} onClick={() => setView('families')}>Families</button>
           </div>
-          <label className="searchbox" style={{ height: 34, maxWidth: 280 }}><Search size={14} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, area or occupation" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>
+          <SearchField value={q} onChange={setQ} placeholder="Name, area or occupation…" label="Search clients" width={280} />
           <div className="row wrap" style={{ gap: 6 }}>
-            <button className={`chip ${!seg ? 'on' : ''}`} onClick={() => setParams({})}>All</button>
-            {SEGMENTS.map((s) => <button key={s.key} className={`chip ${seg === s.key ? 'on' : ''}`} onClick={() => setParams({ segment: s.key })}>{s.label}</button>)}
+            <button className={`chip ${!seg ? 'on' : ''}`} aria-pressed={!seg} onClick={() => setParams({})}>All</button>
+            {SEGMENTS.map((s) => <button key={s.key} className={`chip ${seg === s.key ? 'on' : ''}`} aria-pressed={seg === s.key} onClick={() => setParams({ segment: s.key })}>{s.label}</button>)}
           </div>
           <div className="row" style={{ marginLeft: 'auto', gap: 8 }}>
             <select className="select sm" value={risk} onChange={(e) => setRisk(e.target.value)} aria-label="Risk profile" style={{ width: 190 }}>
@@ -141,7 +141,7 @@ export default function Clients() {
           </div>
         </div>
 
-        {view === 'people' ? (
+        {error && !clients.length ? <LoadError what="clients" onRetry={reload} /> : loading && !clients.length ? <SkeletonRows rows={6} height={78} /> : view === 'people' ? (
           <div>
             {list.map((c) => {
               const nm = nextMeeting(c.id)
