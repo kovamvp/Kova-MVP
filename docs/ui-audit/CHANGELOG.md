@@ -124,3 +124,25 @@ What changed and why
 Checked
 - tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
   0 page overflow.
+
+## 6 · `ui/agent` — land on the decision, explain the wait, recover from errors (agent panel, UI parts)
+
+What changed and why
+- A session opens at the first card waiting for approval instead of at the bottom.
+- While the model works, a line under the dots says what is happening and changes with the wait (4 s, 12 s);
+  suggestion chips are disabled.
+- A model failure is an error row with Try again (resends the last message), not a normal reply with server
+  details. Network failures say the words are back in the box.
+- Decisions read as the RM's own ("You approved “…”, with edits"). "Checked: get holdings" reads "Looked at holdings".
+- Reject asks for an optional reason (the server already stores it); rejected cards read "Rejected, nothing sent"
+  in neutral grey and show the reason.
+- No Archive on an empty session; enum values in words; the meeting time echoed in words while editing a card; an
+  Enter / Shift+Enter hint before the first message.
+- Speech: live-text failures (network, blocked service, missing microphone) are reported instead of restarting
+  silently; the recorded transcript still arrives.
+- The regression journey "agent session and archive" now accepts the error row as the reply: locally there is no
+  model key, and from this batch a failed model call is an error row with Try again instead of a normal reply.
+
+Checked
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
+  0 page overflow.
