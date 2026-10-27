@@ -652,7 +652,7 @@ ul.clean.risk li::before { border-color: var(--loss); }
 .video-ph { width: 100%; aspect-ratio: 16 / 8; border-radius: var(--r-m); background: var(--forest); color: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
 .doc-ph { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px dashed var(--line-strong); border-radius: var(--r-m); background: var(--paper); }
 .quiz { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
-.quiz-opt { padding: 6px 10px; border-radius: var(--r-s); background: var(--paper); border: 1px solid var(--line); }
+.quiz-opt { display: flex; width: 100%; padding: 8px 12px; border-radius: var(--r-s); background: var(--paper); border: 1px solid var(--line); }
 .quiz-opt.right { border-color: var(--gain); background: var(--gain-tint); }
 .quiz-opt.wrong { border-color: var(--loss); background: var(--loss-tint); }
 
@@ -838,3 +838,5 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 .cal-ev.short { justify-content: center; padding: 0 7px; }
 .cal-key { width: 10px; height: 10px; border-radius: 2px; background: var(--forest-wash); border-left: 3px solid var(--forest); }
 .cal-key.needs { background: var(--brass-tint); border-left-color: var(--brass); }
+/* Products: a short key-value list sits in two pairs across a wide panel instead of one 900 px column (T3) */
+@media (min-width: 1100px) { .kv.kv-pairs { grid-template-columns: 120px minmax(0, 1fr) 120px minmax(0, 1fr); column-gap: 20px; } }

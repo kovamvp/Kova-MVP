@@ -52,8 +52,8 @@ export default function ProductDetail() {
       <header className="panel profile-head" style={{ paddingBottom: 20 }}>
         <div className="spread" style={{ alignItems: 'flex-start', gap: 24 }}>
           <div className="grow">
-            <div className="small muted">{p.manufacturer} · {p.category}</div>
-            <h1 style={{ marginTop: 4 }}>{p.name}</h1>
+            <h1>{p.name}</h1>
+            <div className="small muted" style={{ marginTop: 4 }}>{p.manufacturer} · {p.category}</div>
             <div className="row wrap" style={{ gap: 6, marginTop: 10 }}>
               <span className="pill outline">{p.sub_category}</span><span className="pill outline">Risk: {p.risk}</span>
               <Status s={p.cio_view.stance}>CIO: {p.cio_view.stance}</Status>
@@ -88,7 +88,7 @@ export default function ProductDetail() {
           </div>
 
           <Panel title="Details">
-            <dl className="kv">
+            <dl className="kv kv-pairs">
               <dt>Liquidity</dt><dd>{p.liquidity}</dd>
               {p.fee && <><dt>Fees</dt><dd>{p.fee}</dd></>}
               {p.benchmark && <><dt>Benchmark</dt><dd>{p.benchmark}</dd></>}
