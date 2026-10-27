@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Check, LayoutGrid, ListChecks, Phone, CalendarPlus, XCircle, RotateCcw } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
+import { pushRecent } from '../lib/session'
 import { useAction } from '../lib/action'
 import { STAGES, STAGE_INFO, useMeetings, usePortfolios, useProducts } from '../lib/data'
-import { ago, date, inr, when, sourceText } from '../lib/format'
+import { ago, date, inr, when, sourceText, label } from '../lib/format'
 import { Avatar, DetailSkeleton, Drawer, Empty, Modal, Num, Panel, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
@@ -13,6 +14,7 @@ export default function ProspectDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: p, error } = useApi<any>(`/c/prospects/${id}`)
+  useEffect(() => { if (p) pushRecent({ kind: 'prospect', id: p.id, title: p.name, sub: `Prospect · ${p.stage}` }) }, [p?.id])
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()
   const { data: portfolios = [] } = usePortfolios()

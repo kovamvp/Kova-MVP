@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, CalendarPlus, Check, ChevronRight, LayoutGrid, ListChecks, MessageSquareText, Phone, Receipt, Send, ShieldCheck, X } from 'lucide-react'
 import { useApi } from '../lib/api'
+import { pushRecent } from '../lib/session'
 import { EQUITY_BAND, fitsProfile, useClients, useMeetings, useProducts } from '../lib/data'
 import { ago, date, inr, label, when } from '../lib/format'
 import { AllocBar, Donut } from '../charts'
@@ -18,6 +19,7 @@ export default function ClientDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: c, error } = useApi<any>(`/c/clients/${id}`)
+  useEffect(() => { if (c) pushRecent({ kind: 'client', id: c.id, title: c.name, sub: `${label(c.segment)} client · ${c.locality}` }) }, [c?.id])
   const { data: clients = [] } = useClients()
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()

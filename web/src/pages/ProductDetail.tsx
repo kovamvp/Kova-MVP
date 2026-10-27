@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, CircleHelp, FileText, GraduationCap, PlayCircle, Send } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
+import { pushRecent } from '../lib/session'
 import { useAction } from '../lib/action'
 import { useClients, useGrowth, useLd } from '../lib/data'
 import { date, inr, label } from '../lib/format'
@@ -16,6 +17,7 @@ export default function ProductDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: p, error } = useApi<any>(`/c/products/${id}`)
+  useEffect(() => { if (p) pushRecent({ kind: 'product', id: p.id, title: p.name, sub: `${p.category} · ${p.sub_category}` }) }, [p?.id])
   const { data: clients = [] } = useClients()
   const { data: ld = [] } = useLd()
   const { data: growth } = useGrowth()
