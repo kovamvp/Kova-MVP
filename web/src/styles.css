@@ -805,6 +805,5 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 /* phones: the board is one column in layout order, cards at their own height */
 .board-list { display: flex; flex-direction: column; gap: 12px; }
 .board-list .widget { min-height: 0; }
-/* The grid measures its width after the first render, so outside Customise it would slide in from a default
-   width on every visit. Widgets only animate while the RM is moving them. */
+/* Widgets only animate while the RM is moving them, never on arrival. */
 .layout:not(.is-editing) > .react-grid-item { transition: none; }
