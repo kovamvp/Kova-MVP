@@ -473,6 +473,13 @@ a.w-line:hover { color: var(--forest); }
 
 .suggest { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 0 24px; }
 .suggest-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--line); }
+/* one column, actions in a fixed trailing column at the same pitch (CL3) */
+.suggest.single { grid-template-columns: 1fr; }
+.suggest.single .suggest-item { display: grid; grid-template-columns: 6px minmax(0, 1fr) 200px; align-items: center; gap: 14px; }
+.suggest.single .suggest-item .bullet { margin-top: 0; }
+.suggest.single .suggest-item .btn { justify-self: end; }
+.suggest.single .suggest-item:first-child { border-top: 0; }
+@media (max-width: 720px) { .suggest.single .suggest-item { grid-template-columns: 6px minmax(0, 1fr); } .suggest.single .suggest-item .btn { grid-column: 2; justify-self: start; } }
 .suggest-item .btn { flex: none; }
 /* a quiet bullet for suggestion lists; the brass ring is kept for the item that is overdue or high priority */
 .bullet { width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); flex: none; margin-top: 7px; }
@@ -556,7 +563,7 @@ a.w-line:hover { color: var(--forest); }
 .consent.no { background: transparent; color: var(--loss-ink); border: 1px dashed #D9B3A4; }
 .tl-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .tl-key { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: var(--r-pill); border: 1px solid var(--line); font-size: 12px; }
-.tl-key i { width: 10px; height: 10px; border-radius: 3px; }
+.tl-key i { width: 14px; height: 10px; border-radius: 3px; border: 1.5px solid var(--muted); background: var(--paper); }
 .tl-key.off { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; }
 .tl-key.off i { visibility: hidden; }
 .timeline { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
@@ -564,15 +571,18 @@ a.w-line:hover { color: var(--forest); }
 .tl-dot { position: absolute; left: -20px; top: 14px; width: 11px; height: 11px; border-radius: 50%; background: var(--paper); border: 2px solid var(--line-strong); }
 .tl-card { padding: 10px 14px; border-radius: var(--r-m); border: 1px solid transparent; }
 .k-note .tl-card, .tl-key.k-note i { background: var(--brass-tint); }
+.tl-key.k-note i { border-color: var(--brass); }
 .k-note .tl-dot { border-color: var(--brass); }
 .k-comm .tl-card, .tl-key.k-comm i { background: var(--forest-tint); }
+.tl-key.k-comm i { border-color: var(--forest); }
 .k-comm .tl-dot { border-color: var(--forest); background: var(--forest); }
 .k-client .tl-card { border-color: var(--line-strong); background: var(--paper); }
-.tl-key.k-client i { border: 1.5px solid var(--line-strong); }
+.tl-key.k-client i { border: 1.5px solid var(--muted); background: var(--paper); }
 .k-system .tl-card, .tl-key.k-system i { background: var(--stone); }
+.tl-key.k-system i { border-color: var(--muted); border-style: dotted; }
 .k-system .tl-card { color: var(--muted); }
 .k-agent .tl-card { background: var(--paper); border-color: var(--brass-tint); border-left: 3px solid var(--brass); }
-.tl-key.k-agent i { border: 2px solid var(--brass); border-radius: 50%; }
+.tl-key.k-agent i { width: 11px; height: 11px; border: 2.5px solid var(--brass); border-radius: 50%; background: var(--paper); }
 .k-agent .tl-dot { border-color: var(--brass); border-width: 3px; }
 .fit-row { display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-m); }
 .fit-row:hover { border-color: var(--line-strong); background: var(--forest-wash); }

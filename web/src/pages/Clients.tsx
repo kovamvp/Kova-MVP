@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Check, ChevronRight, UserPlus, Users } from 'lucide-react'
 import { useClients, useFamilies, useMeetings, useProducts, useProspects } from '../lib/data'
@@ -15,6 +15,7 @@ export default function Clients() {
   const [params, setParams] = useSearchParams()
   const [q, setQ] = useState('')
   const [sort, setSort] = useState('aum')
+  const listRef = useRef<HTMLElement>(null)
   const [risk, setRisk] = useState('')
   const [view, setView] = useState<'people' | 'families'>('people')
   const [onboard, setOnboard] = useState(params.get('onboard') === '1')
@@ -93,18 +94,21 @@ export default function Clients() {
           <HBars data={byRisk.map((r) => ({ label: r.label, value: r.value }))} format={(v) => inr(v)} />
         </Panel>
         <Panel title="Red flags" aside={`${clients.reduce((a, c) => a + c.red_flags.length, 0)} open`}>
-          <div className="col" style={{ gap: 10, maxHeight: 214, overflowY: 'auto' }}>
-            {clients.flatMap((c) => c.red_flags.map((f: any) => ({ c, f }))).sort((a, b) => ['high', 'medium', 'low'].indexOf(a.f.severity) - ['high', 'medium', 'low'].indexOf(b.f.severity)).slice(0, 10).map(({ c, f }, i) => (
+          <div className="col" style={{ gap: 10 }}>
+            {clients.flatMap((c) => c.red_flags.map((f: any) => ({ c, f }))).sort((a, b) => ['high', 'medium', 'low'].indexOf(a.f.severity) - ['high', 'medium', 'low'].indexOf(b.f.severity)).slice(0, 6).map(({ c, f }, i) => (
               <Link key={i} to={`/clients/${c.id}`} className={`sev ${f.severity} small`}>
                 <span className="strong">{c.name}</span> <span className="muted">· {f.text}</span>
               </Link>
             ))}
           </div>
+          {clients.reduce((a, c) => a + c.red_flags.length, 0) > 6 && (
+            <button className="linkbtn small" style={{ marginTop: 12 }} onClick={() => { setSort('flags'); setParams({}); listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}>See all {clients.reduce((a, c) => a + c.red_flags.length, 0)}, most flagged clients first</button>
+          )}
         </Panel>
       </div>
 
       <Panel title="What to do next" aside="From your book today" className="suggest-panel">
-        <div className="suggest">
+        <div className="suggest single">
           {suggestions.map((s, i) => (
             <div key={i} className="suggest-item">
               <span className="bullet" aria-hidden />
@@ -115,7 +119,7 @@ export default function Clients() {
         </div>
       </Panel>
 
-      <section className="panel" style={{ marginTop: 16 }}>
+      <section className="panel" style={{ marginTop: 16 }} ref={listRef}>
         <div className="list-toolbar">
           <div className="seg" role="group" aria-label="View">
             <button className={view === 'people' ? 'on' : ''} aria-pressed={view === 'people'} onClick={() => setView('people')}>Individuals</button>
@@ -164,7 +168,6 @@ export default function Clients() {
                   </div>
                   <div className="cr-flags">
                     {c.red_flags.slice(0, 2).map((f: any, i: number) => <div key={i} className={`sev ${f.severity} tiny`}>{f.text}</div>)}
-                    {c.red_flags.length === 0 && <span className="tiny faint">No flags</span>}
                   </div>
                   <ChevronRight className="cr-go" size={18} />
                 </Link>
