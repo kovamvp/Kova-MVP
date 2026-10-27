@@ -5,8 +5,11 @@ import { api, invalidate } from '../lib/api'
 import { useAction } from '../lib/action'
 import { STAGES, STAGE_INFO, useProducts, useProspects, useMeetings, useModels } from '../lib/data'
 import { ago, date, inr, when, daysFrom, sourceText } from '../lib/format'
-import { Columns, HBars } from '../charts'
+import { HBars } from '../charts'
 import { AmountInput, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Stat, useToast, SearchField } from '../ui'
+
+const lowerFirst = (t: string) => t.charAt(0).toLowerCase() + t.slice(1)
+const STAGE_SHORT: Record<string, string> = { 'Investing and trading client': 'Investing and trading' }
 
 export default function Prospects() {
   const { data: prospects = [], loading, error, reload } = useProspects()
@@ -37,7 +40,7 @@ export default function Prospects() {
 
   const opps = useMemo(() => {
     const o: { text: string; action: string; to: string }[] = []
-    open.filter((p) => p.app_activity?.length).forEach((p) => o.push({ text: `${p.name}: ${p.app_activity[0].text} in Kova Client.`, action: 'Send a nudge', to: `/prospects/${p.id}?panel=agent&ask=nudge` }))
+    open.filter((p) => p.app_activity?.length).forEach((p) => o.push({ text: `${p.name} ${lowerFirst(p.app_activity[0].text)} in Kova Client.`, action: 'Send a nudge', to: `/prospects/${p.id}?panel=agent&ask=nudge` }))
     open.filter((p) => (daysFrom(p.last_contact) ?? 0) <= -30).slice(0, 2).forEach((p) => o.push({ text: `No contact with ${p.name} for ${-daysFrom(p.last_contact)!} days. ${inr(p.estimated_investable)} potential.`, action: 'Schedule a meeting', to: `/prospects/${p.id}?panel=actions&do=schedule` }))
     const close = open.filter((p) => p.probability >= 65)
     if (close.length) o.push({ text: `${close.length} prospects are close to converting: ${close.map((p) => p.name.split(' ')[0]).join(', ')}.`, action: 'See them', to: '/prospects?sort=prob' })
@@ -90,8 +93,8 @@ export default function Prospects() {
           </div>
         </Panel>
         <div className="col" style={{ gap: 16 }}>
-          <Panel title="Pipeline by stage">
-            <Columns height={110} highlightLast={false} data={STAGES.map((s) => ({ label: s.replace('Investing and trading client', 'Inv + trading').replace('Investing client', 'Investing').replace('KYC in progress', 'KYC'), value: open.filter((p) => p.stage === s).length }))} />
+          <Panel title="Pipeline by stage" aside="Open prospects">
+            <HBars data={STAGES.filter((st) => st !== 'Closed').map((st) => ({ label: STAGE_SHORT[st] ?? st, value: open.filter((p) => p.stage === st).length }))} />
           </Panel>
           <Panel title="Where they come from">
             <HBars data={sources.map(([k, v]) => ({ label: k, value: v }))} format={(v) => inr(v)} />
@@ -100,16 +103,21 @@ export default function Prospects() {
       </div>
 
       {suggestions.length > 0 && (
-        <Panel title="From the product and CIO teams" aside={`${suggestions.length} suggestions`} className="mb16">
-          <div className="grid g3">
+        <Panel title="From the product and CIO teams" aside={`${suggestions.length} suggestions`} className="mb16" pad={false}>
+          <ul className="plain-list">
             {suggestions.slice(0, 6).map((s, i) => (
-              <Link key={i} to={`/prospects/${s.p.id}`} className="note-card">
-                <div className="tiny muted">{s.from.name}, {s.from.title} · {date(s.date)}</div>
-                <div className="small" style={{ margin: '4px 0' }}><span className="strong">{P[s.product_id]?.name}</span> <span className="muted">for {s.p.name}</span></div>
-                <div className="small">{s.text}</div>
-              </Link>
+              <li key={i}>
+                <Link to={`/prospects/${s.p.id}`} className="list-row cio-row">
+                  <div className="grow" style={{ minWidth: 0 }}>
+                    <div className="small"><span className="strong">{P[s.product_id]?.name ?? 'A product'}</span> for {s.p.name}</div>
+                    <div className="small" style={{ marginTop: 2 }}>{s.text}</div>
+                    <div className="tiny muted" style={{ marginTop: 4 }}>{s.from.name}, {s.from.title} · {date(s.date)}</div>
+                  </div>
+                  <ChevronRight size={16} className="muted" aria-hidden />
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </Panel>
       )}
 

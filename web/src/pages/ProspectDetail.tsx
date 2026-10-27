@@ -85,12 +85,12 @@ export default function ProspectDetail() {
 
       <div className="grid g-main-wide" style={{ marginTop: 16 }}>
         <div className="col" style={{ gap: 16 }}>
-          <div className="grid g2">
+          <div className="grid g2" style={{ alignItems: 'start' }}>
             <Panel title="Next step">
               {p.next_step ? <><div className="display" style={{ fontSize: 18, color: 'var(--ink-strong)' }}>{p.next_step}</div><div className="small muted">{when(p.next_step_date)}</div></> : <p className="small muted">None set.</p>}
               {mine.filter((m) => m.status === 'scheduled')[0] && <div className="small" style={{ marginTop: 10 }}>Meeting: {mine.filter((m) => m.status === 'scheduled')[0].title}, {when(mine.filter((m) => m.status === 'scheduled')[0].start)}</div>}
             </Panel>
-            <Panel title="Account readiness" aside={STAGE_INFO[p.stage]?.split(';')[0]}>
+            <Panel title="Account readiness" aside={`${p.kyc_steps.filter((s: any) => s.done).length} of ${p.kyc_steps.length} done`}>
               <div className="col" style={{ gap: 5 }}>
                 {p.kyc_steps.map((s: any) => (
                   <div key={s.step} className="row small" style={{ gap: 8 }}>
@@ -136,7 +136,7 @@ export default function ProspectDetail() {
             <dl className="kv" style={{ gridTemplateColumns: '120px 1fr' }}>
               <dt>Mobile</dt><dd>{p.phone || '—'}</dd><dt>Email</dt><dd className="ellipsis">{p.email || '—'}</dd>
               <dt>Risk indication</dt><dd>{p.risk_indication}</dd><dt>Meetings held</dt><dd>{p.meetings_held}</dd><dt>Last contact</dt><dd>{ago(p.last_contact)}</dd>
-              <dt>Kova Client</dt><dd><label className="check toggle-off" title="Not active in this version"><input type="checkbox" checked={p.app_access} disabled readOnly /> {p.app_access ? 'Has access' : 'No access yet'}</label></dd>
+              <dt>Kova Client</dt><dd>{p.app_access ? 'Has access' : <>No access yet <span className="muted">(arrives with Kova Client)</span></>}</dd>
             </dl>
             {p.stage !== 'Closed' && <button className="btn btn-danger btn-sm" style={{ marginTop: 14 }} onClick={() => setClosing(true)}><XCircle />Close prospect</button>}
           </Panel>

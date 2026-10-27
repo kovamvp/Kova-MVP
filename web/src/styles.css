@@ -823,3 +823,12 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 /* shell (SH1, SH4) */
 .palette-group { padding: 10px 16px 4px; }
 .dock a.active { background: rgba(243, 240, 232, .1); }
+
+/* Prospects: suggestions from the product and CIO teams as a list (PR1) */
+.plain-list { list-style: none; margin: 0; padding: 0; }
+.plain-list > li:first-child > .list-row { border-top: 0; }
+.cio-row { align-items: center; color: inherit; text-decoration: none; }
+.cio-row:hover { background: var(--forest-wash); }
+/* Stage track: a hover says a click moves the prospect (PP1) */
+.stage:not(.on) .stage-btn:not([disabled]):hover .stage-name { color: var(--ink-strong); text-decoration: underline; text-underline-offset: 3px; }
+.stage:not(.on):not(.done) .stage-btn:not([disabled]):hover .stage-dot { border-color: var(--forest); }
