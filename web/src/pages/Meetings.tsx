@@ -172,7 +172,7 @@ function PrepPack({ m, who, P, meetings, onOpen }: { m: any; who: any; P: Record
         </div>
         <div className="grid g3" style={{ gap: 12 }}>
           <div className="prep-box"><div className="tiny muted">Agenda</div><ul>{m.agenda.map((a: string) => <li key={a}>{a}</li>)}{!m.agenda.length && <li className="muted">None set</li>}</ul></div>
-          <div className="prep-box"><div className="tiny muted">Last time</div><p className="small">{past?.mom?.summary || 'First recorded meeting.'}</p>{open.length > 0 && <p className="small" style={{ marginTop: 6, color: 'var(--loss)' }}>Open promise: {open[0].text}</p>}</div>
+          <div className="prep-box"><div className="tiny muted">Last time</div><p className="small">{past?.mom?.summary || 'First recorded meeting.'}</p>{open.length > 0 && <p className="small" style={{ marginTop: 6, color: 'var(--loss-ink)' }}>Open promise: {open[0].text}</p>}</div>
           <div className="prep-box"><div className="tiny muted">Talking points</div><ul>{(who?.red_flags || []).slice(0, 1).map((f: any) => <li key={f.text}>{f.text}</li>)}{talk.map((p: any) => <li key={p.id}>{p.name}: CIO {p.cio_view.stance.toLowerCase()}</li>)}{(who?.cash_flows || []).filter((f: any) => f.kind === 'Maturity').slice(0, 1).map((f: any, i: number) => <li key={i}>{inr(f.amount)} maturing {when(f.date)}</li>)}</ul></div>
         </div>
       </div>
