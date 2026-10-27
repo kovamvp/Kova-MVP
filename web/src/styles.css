@@ -832,3 +832,9 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 /* Stage track: a hover says a click moves the prospect (PP1) */
 .stage:not(.on) .stage-btn:not([disabled]):hover .stage-name { color: var(--ink-strong); text-decoration: underline; text-underline-offset: 3px; }
 .stage:not(.on):not(.done) .stage-btn:not([disabled]):hover .stage-dot { border-color: var(--forest); }
+/* Meetings: type is text on the event; brass marks only a meeting that needs a MoM (MT1, MT3) */
+.month-ev { border-left-color: var(--forest); }
+.month-ev.needs_mom, .cal-ev.needs_mom { border-left-color: var(--brass); }
+.cal-ev.short { justify-content: center; padding: 0 7px; }
+.cal-key { width: 10px; height: 10px; border-radius: 2px; background: var(--forest-wash); border-left: 3px solid var(--forest); }
+.cal-key.needs { background: var(--brass-tint); border-left-color: var(--brass); }
