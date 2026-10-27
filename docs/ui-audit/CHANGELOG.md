@@ -65,3 +65,23 @@ Checked
 - Contrast scan of every visible text element on 23 routes: 381 failures at baseline, 6 after; all 6 are on the
   full-brass rewards card, which batch 3 replaces.
 - tsc and build clean; feature regression 18/18; walk of 234 states: 0 console errors, 0 page overflow.
+
+## 3 · `ui/brass-budget` — brass back to the agent, attention and rewards (D2, D4, D5, C1, C2)
+
+What changed and why
+- Brass had spread to hovers, note cards, bullets, progress bars, pills and chart series, so it no longer pointed at
+  anything. It now marks three things only: the agent, something that needs the RM, and rewards.
+- Hovers use the forest wash. Note cards are paper with a forest rule on the left; `note-card attention` keeps the
+  brass wash for things that need a reply.
+- **C1** "Waiting on you" counts carry a brass ring instead of brass digits; High priority is an outline pill;
+  "Changes requested" and "Needs your input" share one attention pill (brass dot, ink text).
+- **C2** The Studio banner for a portfolio sent back says what to do: "Edit the portfolio below and send it again."
+- Rewards cards are paper with the figure in brass, and sit after "Clients it suits" (suitability before rewards).
+- Goal, learning and leaderboard bars are forest. Contest, tag and pick pills are outlines.
+- Chart series: Debt is `#848C70`, a warm grey-green chosen by eye beside Equity, Gold and Cash; the 2 px gaps and
+  the legends separate the segments. Proposal meetings use the same tone; AIF on Products uses `#B0A98E`.
+- Ring bullets became small solid dots; the Me page icons are forest; "Reset demo data" uses the danger button.
+
+Checked
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing text elements on 23 routes; walk of
+  234 states: 0 console errors, 0 page overflow. The panel still covers the context bar (fixed in D1-lite).
