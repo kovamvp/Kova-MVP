@@ -146,3 +146,23 @@ What changed and why
 Checked
 - tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
   0 page overflow.
+
+## 7 · `ui/home` — what needs you today first, a panel that fits the screen (D5)
+
+What changed and why
+- Updates & upcoming always ends above the dock, fades at the bottom with "n open · scroll for more" when there is
+  more, keeps Done and Snooze visible (quieter until hover or focus), and puts each item's due date and source on
+  two lines instead of wrapping into columns.
+- New default board led by **Today** (8 of 12 columns): today's meetings beside the MoMs still to write, each with
+  one-tap Write MoM. "Assets over 12 months" leaves the default (it repeated the book total) and stays in the
+  library. Saved layouts are untouched; Reset to default uses the new one.
+- Requests in flight lists what is waiting on you; the portfolio card shows its asset mix, so neither card has an
+  empty band.
+- The board no longer slides in from a default width on every visit; widgets animate only while customising.
+- Under 720 px the board is one column in layout order at natural heights; Customise is for larger screens.
+- The phone-width walk can no longer open Customise (hidden under 720 px by design), so its two Customise states
+  at 390 px are reported as not reachable; every other state passed.
+
+Checked
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
+  0 page overflow.
