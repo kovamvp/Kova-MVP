@@ -122,5 +122,5 @@ What changed and why
   a portfolio started, "Reading · 6 min".
 
 Checked
-- tsc and build clean; feature regression /; contrast scan 0 failing; walk of 234 states: 0 console errors,
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
   0 page overflow.
