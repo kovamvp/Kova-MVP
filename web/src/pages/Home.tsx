@@ -29,6 +29,14 @@ export default function Home() {
   const [libQuery, setLibQuery] = useState('')
   const toast = useToast()
   const saveT = useRef<number>(0)
+  /* phones get the board as one column in layout order; customising stays on larger screens */
+  const [narrow, setNarrow] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 719px)').matches)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 719px)')
+    const h = () => setNarrow(mq.matches)
+    mq.addEventListener('change', h)
+    return () => mq.removeEventListener('change', h)
+  }, [])
 
   useEffect(() => {
     api(`/c/layouts/${LAYOUT_ID}`).then((d: any) => setItems(d.items)).catch(() => setItems(DEFAULT_LAYOUT))
@@ -74,7 +82,7 @@ export default function Home() {
               <button className="btn btn-ghost" onClick={() => { const prev = items; update(DEFAULT_LAYOUT); toast(<>Back to the default layout. <button className="toast-undo" onClick={() => prev && update(prev)}>Undo</button></>) }}><RotateCcw />Reset to default</button>
               <button className="btn btn-primary" onClick={() => setEdit(false)}>Done</button>
             </>
-          ) : (
+          ) : !narrow && (
             <button className="btn btn-quiet" onClick={() => setEdit(true)}><SlidersHorizontal />Customise</button>
           )}
         </div>
@@ -108,6 +116,12 @@ export default function Home() {
         <div className="board">
           {!ready || !items ? (
             <div className="grid g3">{[0, 1, 2, 3, 4, 5].map((i) => <div key={i} className="panel skeleton" style={{ height: 230 }} />)}</div>
+          ) : narrow && !edit ? (
+            <div className="board-list">
+              {[...items].filter((it) => WIDGET[it.type]).sort((a, b) => a.y - b.y || a.x - b.x).map((it) => (
+                <div key={it.i} className="widget panel"><div className="w-body">{WIDGET[it.type].render(ctx, it.ref)}</div></div>
+              ))}
+            </div>
           ) : (
             <Grid
               className="layout"

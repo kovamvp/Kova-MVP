@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AlarmClock, Building2, CalendarDays, Check, CircleDollarSign, Clock3, Flag, Gift, Inbox, ListTodo, Sparkles, Undo2, UserRound } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
@@ -58,15 +58,41 @@ export default function Updates() {
       toast(`Snoozed until ${l.toLowerCase()}`)
     }, 'Couldn’t snooze it')
   }
+  /* The panel always ends above the dock, whether the page is scrolled or not, and says when there is more below */
+  const box = useRef<HTMLElement>(null)
+  const body = useRef<HTMLDivElement>(null)
+  const [more, setMore] = useState(false)
+  useLayoutEffect(() => {
+    const fit = () => {
+      const el = box.current
+      if (!el) return
+      const dock = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dock-space')) || 104
+      const top = Math.max(el.getBoundingClientRect().top, 76)
+      el.style.maxHeight = `${Math.max(320, window.innerHeight - top - dock - 8)}px`
+    }
+    fit()
+    window.addEventListener('scroll', fit, { passive: true })
+    window.addEventListener('resize', fit)
+    return () => { window.removeEventListener('scroll', fit); window.removeEventListener('resize', fit) }
+  }, [])
+  useEffect(() => {
+    const b = body.current
+    if (!b) return
+    const check = () => setMore(b.scrollHeight - b.scrollTop - b.clientHeight > 8)
+    check()
+    b.addEventListener('scroll', check, { passive: true })
+    const ro = new ResizeObserver(check); ro.observe(b)
+    return () => { b.removeEventListener('scroll', check); ro.disconnect() }
+  }, [updates.length])
   return (
-    <aside className="updates" aria-label="Updates and upcoming">
+    <aside className="updates" ref={box} aria-label="Updates and upcoming">
       <div className="updates-head">
         <div>
           <h2>Updates &amp; upcoming</h2>
           <div className="tiny muted">{live.length} open · ranked by priority and deadline</div>
         </div>
       </div>
-      <div className="updates-body">
+      <div className={`updates-body ${more ? 'has-more' : ''}`} ref={body}>
         {groups.map((g) => g.items.length > 0 && (
           <div key={g.name} className="u-group">
             <div className="u-group-name">{g.name}</div>
@@ -80,8 +106,8 @@ export default function Updates() {
                     <div className="u-title">{u.title}</div>
                     <div className="tiny muted">{u.body}</div>
                     <div className="tiny u-meta">
-                      {u.due && <span className={overdue ? 'u-overdue' : ''}><Clock3 size={11} /> {overdue ? 'Overdue · ' : ''}{when(u.due)}</span>}
-                      <span>{u.source}</span>
+                      {u.due && <span className={overdue ? 'u-overdue' : ''}><Clock3 size={11} aria-hidden /> {overdue ? 'Overdue · ' : ''}{when(u.due)}</span>}
+                      <span className="u-source">{u.source}</span>
                     </div>
                   </Link>
                   <div className="u-actions">
@@ -111,6 +137,7 @@ export default function Updates() {
           </div>
         )}
       </div>
+      {more && <div className="u-more tiny" aria-hidden>{live.length} open · scroll for more</div>}
     </aside>
   )
 }
