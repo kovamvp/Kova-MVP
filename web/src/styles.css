@@ -840,3 +840,20 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 .cal-key.needs { background: var(--brass-tint); border-left-color: var(--brass); }
 /* Products: a short key-value list sits in two pairs across a wide panel instead of one 900 px column (T3) */
 @media (min-width: 1100px) { .kv.kv-pairs { grid-template-columns: 120px minmax(0, 1fr) 120px minmax(0, 1fr); column-gap: 20px; } }
+/* Growth: Achieved stays visible but quiet; edit and remove behind a menu (GR2) */
+.goal-achieve { color: var(--ink); }
+.goal-menu { position: relative; }
+.goal-menu-list { position: absolute; right: 0; bottom: calc(100% + 4px); min-width: 140px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-m); box-shadow: var(--shadow-float); padding: 4px; z-index: 20; }
+.goal-menu-list .mi { display: flex; align-items: center; gap: 8px; width: 100%; padding: 7px 10px; border-radius: var(--r-s); color: var(--ink-strong); font-size: 13px; text-align: left; }
+.goal-menu-list .mi:hover, .goal-menu-list .mi:focus-visible { background: var(--stone); }
+.goal-menu-list svg { width: 15px; height: 15px; color: var(--muted); }
+/* Goals: 3 + 2 between tablet and small laptop, 2 then 1 on phones (R3) */
+@media (max-width: 1100px) { .goal-row { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .goal-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .goal-row { grid-template-columns: 1fr; } }
+/* Growth: slab names under the track, projection as a solid lighter forest segment labelled at its end (GR1) */
+.slab-track { margin-top: 30px; }
+.slab { top: 20px; height: auto; flex-direction: column; gap: 1px; padding: 0 0 0 6px; line-height: 1.25; }
+.slab::before { content: ''; position: absolute; left: -1px; top: -6px; height: 6px; border-left: 1px solid var(--line-strong); }
+.slab-proj { background: color-mix(in srgb, var(--forest) 38%, var(--stone)); border-radius: 0 var(--r-pill) var(--r-pill) 0; }
+.slab-proj-label { position: absolute; bottom: calc(100% + 5px); transform: translateX(-100%); white-space: nowrap; color: var(--ink); }
