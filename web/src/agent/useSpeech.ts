@@ -14,6 +14,9 @@ export function useSpeech(onFinal: (text: string, meta: { live: string; whisper:
   const [live, setLive] = useState('')
   const [level, setLevel] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  /* live text failed this time (Brave, a blocked speech service, no network): Whisper still gives the transcript */
+  const [liveFailed, setLiveFailed] = useState(false)
+  const liveDead = useRef(false)
   const rec = useRef<any>(null)
   const media = useRef<MediaRecorder | null>(null)
   const chunks = useRef<Blob[]>([])
@@ -33,6 +36,8 @@ export function useSpeech(onFinal: (text: string, meta: { live: string; whisper:
 
   const start = useCallback(async () => {
     setError(null)
+    setLiveFailed(false)
+    liveDead.current = false
     finalText.current = ''
     setLive('')
     try {
@@ -84,8 +89,13 @@ export function useSpeech(onFinal: (text: string, meta: { live: string; whisper:
         }
         setLive((finalText.current + ' ' + interim).trim())
       }
-      r.onerror = (e: any) => { if (e.error === 'not-allowed') setError('Speech recognition was blocked by the browser.') }
-      r.onend = () => { if (on.current) { try { r.start() } catch {} } } // Chrome stops after pauses: restart silently
+      r.onerror = (e: any) => {
+        console.info('[Kova speech] live text error:', e.error)
+        if (e.error === 'not-allowed') setError('Speech recognition was blocked by the browser.')
+        else if (e.error === 'audio-capture') setError('No microphone was found. Check that one is connected and allowed for this site.')
+        else if (['network', 'service-not-allowed', 'language-not-supported'].includes(e.error)) { liveDead.current = true; setLiveFailed(true) }
+      }
+      r.onend = () => { if (on.current && !liveDead.current) { try { r.start() } catch {} } } // Chrome stops after pauses: restart, unless live text has failed
       try { r.start() } catch {}
       rec.current = r
     }
@@ -120,5 +130,5 @@ export function useSpeech(onFinal: (text: string, meta: { live: string; whisper:
     else onFinal(text, { live: liveText, whisper, source: whisper ? 'whisper' : 'browser' })
   }, [live, onFinal])
 
-  return { state, live, level, error, start, stop, liveSupported: !!SR && pref('prefs', { agentVoice: true }).agentVoice !== false, clearError: () => setError(null) }
+  return { state, live, level, error, liveFailed, start, stop, liveSupported: !!SR && pref('prefs', { agentVoice: true }).agentVoice !== false, clearError: () => setError(null) }
 }

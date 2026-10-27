@@ -1,8 +1,8 @@
 import { Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Archive, ArrowLeft, ArrowUp, CalendarPlus, Check, FileText, HandCoins, Headset, Loader2, Mail, MessageSquare, Mic, NotebookPen, Paperclip, Pencil, Plus, Receipt, Send, Square, UserCog, X } from 'lucide-react'
+import { Archive, ArrowLeft, ArrowUp, CalendarPlus, Check, FileText, HandCoins, Headset, Loader2, Mail, MessageSquare, Mic, NotebookPen, Paperclip, Pencil, Plus, Receipt, RotateCcw, Send, Square, UserCog, X } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
-import { ago, date, inr, time, when } from '../lib/format'
+import { ago, date, inr, label, time, when } from '../lib/format'
 import { resizeImage } from '../shell/ProfileMenu'
 import { Drawer, Status, useToast } from '../ui'
 import { useSpeech } from './useSpeech'
@@ -34,6 +34,23 @@ const SUGGEST: Record<string, string[]> = {
   prospect: ['Draft a WhatsApp nudge about the fund they viewed', 'Book a first meeting on Thursday at 11', 'Move them to KYC in progress; next step is the FATCA form', 'Prepare me for the first meeting'],
   product: ['Give me the 10-minute brief', 'Which of my clients does this suit?', 'Tell the product manager clients want a monthly payout option', 'What should I say if a client asks about fees?'],
 }
+
+/* what the agent looked at, in words (W11) */
+const READ_WORDS: Record<string, string> = {
+  get_holdings: 'holdings', get_family: 'family', get_meetings: 'meetings', get_calendar: 'calendar', find_products: 'the product shelf',
+  get_product: 'the product', clients_for_product: 'clients who fit', get_open_requests: 'open requests',
+}
+const listWords = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`)
+/* decisions read as the RM's own (W12): structured events when the server sends them, otherwise the older sentence */
+function eventText(m: any): string {
+  const d = m.decision
+  if (d && d.decision) return `You ${d.decision === 'approve' ? 'approved' : 'rejected'} “${d.summary || d.card_id}”${d.edited ? ', with edits' : ''}${d.reason ? `: ${d.reason}` : ''}`
+  const r = /^RM (approved|rejected) card (CD-\d+) \((.*?)\)( with edits)?(?::\s*(.*))?$/.exec(m.text || '')
+  if (r) return `You ${r[1]} “${r[3]}”${r[4] ? ', with edits' : ''}${r[5] ? `: ${r[5]}` : ''}`
+  return m.text
+}
+/* a model failure is an error row with Try again, not a normal reply */
+const isAgentError = (m: any) => m.role === 'agent' && (m.error === true || /^I couldn.t reach the language model/i.test(m.text || ''))
 
 function md(text: string): ReactNode {
   // minimal: paragraphs, bullets, **bold**
@@ -98,7 +115,7 @@ export default function AgentPanel({ scope, name, onClose, allowBill, names = {}
           <p className="tiny faint" style={{ marginTop: 18 }}>Sessions are kept for the audit trail. You can archive them but not delete them.</p>
         </div>
       ) : (
-        <Chat sess={sess} setSess={setSess} scope={scope} allowBill={allowBill} names={names} initialText={initialText}
+        <Chat sess={sess} setSess={setSess} scope={scope} name={name} allowBill={allowBill} names={names} initialText={initialText}
           onBack={() => { setSess(null); loadList() }}
           onArchive={async () => { await api(`/agent/sessions/${sess.id}/archive`, { method: 'POST' }); toast(sess.archived ? 'Session restored' : 'Session archived'); setSess(null); loadList() }} />
       )}
@@ -106,7 +123,7 @@ export default function AgentPanel({ scope, name, onClose, allowBill, names = {}
   )
 }
 
-function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initialText }: { sess: any; setSess: (s: any) => void; scope: Scope; allowBill?: boolean; onBack: () => void; onArchive: () => void; names: Record<string, string>; initialText?: string | null }) {
+function Chat({ sess, setSess, scope, name, allowBill, onBack, onArchive, names, initialText }: { sess: any; setSess: (s: any) => void; scope: Scope; name: string; allowBill?: boolean; onBack: () => void; onArchive: () => void; names: Record<string, string>; initialText?: string | null }) {
   const [text, setText] = useState(sess.messages.length === 0 && initialText ? initialText : '')
   const [via, setVia] = useState<'text' | 'voice'>('text')
   const [transcript, setTranscript] = useState<any>(null)
@@ -124,7 +141,29 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
     setTimeout(() => ta.current?.focus(), 50)
   }, []))
 
-  useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }) }, [sess.messages.length, busy])
+  const scroller = useRef<HTMLDivElement>(null)
+  const seen = useRef(sess.messages.length)
+  useEffect(() => {
+    const box = scroller.current
+    if (!box) return
+    const card = box.querySelector<HTMLElement>('.acard.pending')
+    if (card) box.scrollTop = Math.max(0, card.offsetTop - 16)
+    else box.scrollTop = box.scrollHeight
+  }, [])
+  useEffect(() => {
+    if (sess.messages.length > seen.current || busy) end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    seen.current = sess.messages.length
+  }, [sess.messages.length, busy])
+  /* slow model calls: say what is happening, in words that change with the wait */
+  const [waited, setWaited] = useState(0)
+  useEffect(() => {
+    if (!busy) { setWaited(0); return }
+    const t0 = Date.now()
+    const t = window.setInterval(() => setWaited(Math.floor((Date.now() - t0) / 1000)), 500)
+    return () => window.clearInterval(t)
+  }, [busy])
+  const who = scope.kind === 'product' ? 'the product and your clients' : `${name.split(' ')[0]}’s ${scope.kind === 'client' ? 'holdings, calendar and requests' : 'details, calendar and requests'}`
+  const waitText = waited < 4 ? 'Thinking…' : waited < 12 ? `Looking at ${who}…` : 'The model is busy; this can take up to half a minute. Your message is saved.'
 
   const send = async (override?: string) => {
     const t = (override ?? text).trim()
@@ -138,7 +177,7 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
       setSess(s)
       setBill(null); setVia('text')
     } catch (e: any) {
-      toast(e.message)
+      toast(`Couldn’t send: ${e.message}. Your words are back in the box; try again.`)
       setSess(sess); setText(t)
     } finally { setBusy(false) }
   }
@@ -156,9 +195,9 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
     finally { setBillBusy(false); if (file.current) file.current.value = '' }
   }
 
-  const decide = async (card: any, decision: 'approve' | 'reject', args?: any) => {
+  const decide = async (card: any, decision: 'approve' | 'reject', args?: any, reason?: string) => {
     try {
-      const s = await api(`/agent/sessions/${sess.id}/cards/${card.id}`, { body: { decision, args } })
+      const s = await api(`/agent/sessions/${sess.id}/cards/${card.id}`, { body: { decision, args, ...(reason ? { reason } : {}) } })
       setSess(s)
       invalidate('/c/')
       toast(decision === 'approve' ? <>Done. <Link to={`/requests?tab=outbox`}>See it in the outbox</Link></> : 'Card rejected; nothing was sent')
@@ -171,19 +210,32 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
     <div className="chat">
       <div className="spread chat-top">
         <button className="linkbtn small" onClick={onBack}><ArrowLeft />All sessions</button>
-        <button className="linkbtn small" onClick={onArchive}><Archive />{sess.archived ? 'Restore' : 'Archive'}</button>
+        {(sess.messages.length > 0 || sess.archived) && <button className="linkbtn small" onClick={onArchive}><Archive />{sess.archived ? 'Restore' : 'Archive'}</button>}
       </div>
-      <div className="chat-scroll">
+      <div className="chat-scroll" ref={scroller}>
         {sess.messages.length === 0 && (
           <div className="chat-empty">
             <p className="small muted">Try one of these, or tap the mic and talk the way you would to an assistant.</p>
             <div className="col" style={{ gap: 6, marginTop: 10 }}>
-              {SUGGEST[scope.kind].map((s) => <button key={s} className="suggest-chip" onClick={() => send(s)}>{s}</button>)}
+              {SUGGEST[scope.kind].map((s) => <button key={s} className="suggest-chip" disabled={busy} onClick={() => send(s)}>{s}</button>)}
             </div>
           </div>
         )}
-        {sess.messages.map((m: any) => {
-          if (m.role === 'event') return <div key={m.id} className="chat-event tiny">{m.text}</div>
+        {sess.messages.map((m: any, mi: number) => {
+          if (m.role === 'event') return <div key={m.id} className="chat-event tiny">{eventText(m)}</div>
+          if (isAgentError(m)) {
+            const said = [...sess.messages.slice(0, mi)].reverse().find((x: any) => x.role === 'rm')
+            const last = mi === sess.messages.length - 1
+            return (
+              <div key={m.id} className="msg agent">
+                <span className="orb sm" aria-hidden />
+                <div className="agent-error" role="alert">
+                  <p className="small"><span className="strong">The assistant couldn’t be reached just now.</span> Your message is saved{last ? '; try again in a moment' : ''}.</p>
+                  {last && said?.text && <button className="btn btn-quiet btn-sm" disabled={busy} onClick={() => send(said.text)}><RotateCcw aria-hidden />Try again</button>}
+                </div>
+              </div>
+            )
+          }
           if (m.role === 'rm') return (
             <div key={m.id} className="msg rm">
               {m.bill?.thumb && <img src={m.bill.thumb} alt="Attached bill" className="bill-thumb" />}
@@ -197,12 +249,12 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
               <div className="grow" style={{ minWidth: 0 }}>
                 {m.text && <div className="agent-text">{md(m.text)}</div>}
                 {m.cards?.map((c: any) => <Card key={c.id} card={c} names={names} onDecide={decide} />)}
-                {m.reads?.length > 0 && <div className="tiny faint" style={{ marginTop: 4 }}>Checked: {m.reads.map((r: string) => r.replace(/_/g, ' ')).join(', ')}</div>}
+                {m.reads?.length > 0 && <div className="tiny muted" style={{ marginTop: 4 }}>Looked at {listWords([...new Set<string>(m.reads.map((r: string) => READ_WORDS[r] || r.replace(/_/g, ' ')))])}</div>}
               </div>
             </div>
           )
         })}
-        {busy && <div className="msg agent"><span className="orb sm on" aria-hidden /><div className="typing"><i /><i /><i /></div></div>}
+        {busy && <div className="msg agent"><span className="orb sm on" aria-hidden /><div><div className="typing" aria-hidden><i /><i /><i /></div><div className="tiny muted" role="status" aria-live="polite">{waitText}</div></div></div>}
         <div ref={end} />
       </div>
 
@@ -221,7 +273,7 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
         {listening || refining ? (
           <div className="listening">
             <div className="wave" aria-hidden>{Array.from({ length: 24 }).map((_, i) => <i key={i} style={{ transform: `scaleY(${0.15 + speech.level * (0.4 + 0.6 * Math.abs(Math.sin(i * 1.7 + Date.now() / 180)))})` }} />)}</div>
-            <div className="live-text">{refining ? <span className="muted">Polishing the transcript…</span> : speech.live || <span className="muted">{speech.liveSupported ? 'Listening… speak naturally' : 'Listening… your words appear when you stop'}</span>}</div>
+            <div className="live-text">{refining ? <span className="muted">Polishing the transcript…</span> : speech.live || <span className="muted">{speech.liveSupported && !speech.liveFailed ? 'Listening… speak naturally' : 'Listening… live text isn’t available here, so your words appear when you stop'}</span>}</div>
           </div>
         ) : (
           <textarea ref={ta} className="composer-input" rows={2} value={text} placeholder={`Ask or instruct the ${scope.kind} agent`}
@@ -238,6 +290,7 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
             )}
             {via === 'voice' && text && <span className="tiny muted"><Pencil size={11} /> Transcript: edit before sending</span>}
             {billBusy && <span className="tiny muted">Reading the bill…</span>}
+            {!billBusy && !(via === 'voice' && text) && sess.messages.length === 0 && <span className="tiny muted">Enter sends · Shift+Enter for a new line</span>}
           </div>
           <div className="row" style={{ gap: 8 }}>
             <button className={`mic ${listening ? 'on' : ''}`} onClick={listening ? speech.stop : speech.start} disabled={refining || busy} aria-label={listening ? 'Stop listening' : 'Start speaking'} title={listening ? 'Tap to stop' : 'Tap to speak'}>
@@ -251,13 +304,15 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
   )
 }
 
-function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'approve' | 'reject', args?: any) => void; names: Record<string, string> }) {
+function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'approve' | 'reject', args?: any, reason?: string) => void; names: Record<string, string> }) {
   const meta = ACTION_META[card.action] || { icon: Check, label: card.action }
   const [edit, setEdit] = useState(false)
   const [args, setArgs] = useState<any>(card.args)
   const [working, setWorking] = useState(false)
+  const [rejecting, setRejecting] = useState(false)
+  const [reason, setReason] = useState('')
   const pending = card.status === 'pending'
-  const go = async (d: 'approve' | 'reject') => { setWorking(true); await onDecide(card, d, d === 'approve' ? args : undefined); setWorking(false) }
+  const go = async (d: 'approve' | 'reject') => { setWorking(true); await onDecide(card, d, d === 'approve' ? args : undefined, d === 'reject' ? reason.trim() : undefined); setWorking(false) }
   const fields = Object.entries(args).filter(([k, v]) => !HIDE.has(k) && !(Array.isArray(v) && v.length === 0 && !edit) && !(v === '' && !edit)).sort((a, b) => rank(a[0]) - rank(b[0]))
   const show = (k: string, v: any) => {
     if (v === null || v === undefined || v === '') return '—'
@@ -266,6 +321,7 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
     if (typeof v === 'boolean') return v ? 'Yes' : 'No'
     if (Array.isArray(v)) return v.map((x) => (typeof x === 'object' ? x.name : x)).join(', ') || '—'
     if (typeof v === 'string' && names[v]) return names[v]
+    if (typeof v === 'string' && ['priority', 'channel', 'category', 'type'].includes(k) && /^[a-z_ ]+$/.test(v)) return label(v)
     return String(v)
   }
   return (
@@ -276,7 +332,7 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
           <div className="tiny muted">{meta.label}</div>
           <div className="strong small">{card.summary}</div>
         </div>
-        {!pending && <Status s={card.status}>{card.status === 'approved' ? (card.edited ? 'Approved with edits' : 'Approved') : 'Rejected'}</Status>}
+        {!pending && <Status s={card.status}>{card.status === 'approved' ? (card.edited ? 'Approved with edits' : 'Approved') : 'Rejected, nothing sent'}</Status>}
       </div>
       <dl className="acard-fields">
         {fields.map(([k, v]) => (
@@ -285,7 +341,7 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
             <dd>
               {edit && pending ? (
                 LONG.has(k) ? <textarea className="textarea" rows={k === 'body' || k === 'summary' ? 6 : 3} value={String(v ?? '')} onChange={(e) => setArgs({ ...args, [k]: e.target.value })} />
-                  : k === 'start' ? <input className="input sm" type="datetime-local" value={String(v).slice(0, 16)} onChange={(e) => setArgs({ ...args, start: e.target.value })} />
+                  : k === 'start' ? <span className="col" style={{ gap: 3 }}><input className="input sm" type="datetime-local" aria-label="When" value={String(v).slice(0, 16)} onChange={(e) => setArgs({ ...args, start: e.target.value })} /><span className="tiny muted">{when(String(v))}</span></span>
                   : typeof v === 'boolean' ? <input type="checkbox" checked={v} onChange={(e) => setArgs({ ...args, [k]: e.target.checked })} />
                   : typeof v === 'number' ? <input className="input sm" type="number" value={v} onChange={(e) => setArgs({ ...args, [k]: Number(e.target.value) })} />
                   : Array.isArray(v) ? <textarea className="textarea" rows={3} value={v.map((x) => (typeof x === 'object' ? x.name : x)).join('\n')} onChange={(e) => setArgs({ ...args, [k]: e.target.value.split('\n').filter(Boolean).map((x) => (typeof v[0] === 'object' ? { name: x } : x)) })} />
@@ -298,12 +354,21 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
           </Fragment>
         ))}
       </dl>
-      {pending ? (
+      {pending && rejecting ? (
+        <div className="acard-actions acard-reject">
+          <input className="input sm grow" autoFocus placeholder="What was wrong? (optional)" aria-label="Why you are rejecting this card (optional)" value={reason} onChange={(e) => setReason(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') go('reject'); if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setRejecting(false) } }} />
+          <button className="btn btn-quiet btn-sm" disabled={working} onClick={() => go('reject')}><X aria-hidden />Reject card</button>
+          <button className="btn btn-ghost btn-sm" disabled={working} onClick={() => setRejecting(false)}>Keep it</button>
+        </div>
+      ) : pending ? (
         <div className="acard-actions">
           <button className="btn btn-primary btn-sm" disabled={working} onClick={() => go('approve')}><Check />{edit ? 'Approve edited' : 'Approve'}</button>
           <button className="btn btn-quiet btn-sm" disabled={working} onClick={() => setEdit((e) => !e)}><Pencil />{edit ? 'Stop editing' : 'Edit'}</button>
-          <button className="btn btn-ghost btn-sm" disabled={working} onClick={() => go('reject')} style={{ color: 'var(--loss-ink)' }}><X />Reject</button>
+          <button className="btn btn-ghost btn-sm" disabled={working} onClick={() => setRejecting(true)}><X />Reject</button>
         </div>
+      ) : card.status === 'rejected' ? (
+        card.reason ? <div className="acard-result tiny muted">Your reason: {card.reason}</div> : null
       ) : card.status === 'approved' && (
         <div className="acard-result tiny">
           {card.result?.outbox && <Link to={`/requests?tab=outbox&o=${card.result.outbox}`} className="linkbtn"><Mail />Outbox {card.result.outbox}</Link>}
