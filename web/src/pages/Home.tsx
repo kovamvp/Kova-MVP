@@ -4,7 +4,7 @@ import 'react-grid-layout/css/styles.css'
 import { GripVertical, Plus, RotateCcw, SlidersHorizontal, X } from 'lucide-react'
 import { api } from '../lib/api'
 import { useClients, useGrowth, useLd, useMeetings, usePortfolios, useProducts, useProspects, useRequests, useResearch, useRm } from '../lib/data'
-import { todayISO, when } from '../lib/format'
+import { todayISO, when, label } from '../lib/format'
 import { Avatar, Modal, useToast, SearchField } from '../ui'
 import { Ctx, DEFAULT_LAYOUT, PickKind, WIDGET, WIDGETS } from '../widgets/registry'
 import Updates from './Updates'
@@ -156,7 +156,7 @@ function PickModal({ kind, ctx, onClose, onPick }: { kind: PickKind; ctx: Ctx; o
   const [q, setQ] = useState('')
   const options: { id: string; title: string; sub: string }[] = useMemo(() => {
     switch (kind) {
-      case 'client': return ctx.clients.map((c) => ({ id: c.id, title: c.name, sub: `${c.risk_profile} · ${c.segment}` }))
+      case 'client': return ctx.clients.map((c) => ({ id: c.id, title: c.name, sub: `${c.risk_profile} · ${label(c.segment)}` }))
       case 'prospect': return ctx.prospects.filter((p) => p.stage !== 'Closed').map((p) => ({ id: p.id, title: p.name, sub: p.stage }))
       case 'product': return ctx.products.map((p) => ({ id: p.id, title: p.name, sub: p.sub_category }))
       case 'portfolio': return ctx.portfolios.map((p) => ({ id: p.id, title: p.name, sub: `${p.id} · ${p.status.replace(/_/g, ' ')}` }))

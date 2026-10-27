@@ -2,7 +2,7 @@ import { Component, createContext, CSSProperties, ReactNode, useCallback, useCon
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { RotateCcw, Search, X } from 'lucide-react'
-import { date, initials, inr, label } from '../lib/format'
+import { date, groupIN, initials, inr, label, parseAmount } from '../lib/format'
 
 /* ---------- avatar: photo if present, otherwise a monogram */
 const TINTS = [['#E3E9E3', '#1D3A2E'], ['#F1E9DA', '#7C6136'], ['#E6E4F0', '#43406B'], ['#E7EEF2', '#2C4E63'], ['#F3E5E0', '#7D3F2B'], ['#EAE7DD', '#4D4A3F']]
@@ -19,11 +19,11 @@ export function Avatar({ name, photo, size = 40 }: { name: string; photo?: strin
    Only headline figures (inside <Stat>) are keyboard stops; numbers inside rows and links are not,
    so the RM doesn't have to tab through every figure on a list. */
 const StatCtx = createContext(false)
-export function Num({ v, src = 'Kova holdings', asOf, compact = true, className = '', children }: { v?: number | null; src?: string; asOf?: string; compact?: boolean; className?: string; children?: ReactNode }) {
+export function Num({ v, src = 'Kova holdings', asOf, compact = true, fixed = false, className = '', children }: { v?: number | null; src?: string; asOf?: string; compact?: boolean; fixed?: boolean; className?: string; children?: ReactNode }) {
   const focusable = useContext(StatCtx)
   return (
     <span className={`prov num ${className}`} tabIndex={focusable ? 0 : undefined}>
-      {children ?? inr(v, { compact })}
+      {children ?? inr(v, { compact, fixed })}
       <span className="tip">{src} · as of {asOf ? date(asOf) : 'today'}</span>
     </span>
   )
@@ -296,3 +296,18 @@ export function AssetDot({ cls }: { cls: string }) {
   return <i style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 2, background: ASSET_COLORS[cls] || '#999' }} />
 }
 export const ASSET_COLORS: Record<string, string> = { Equity: '#1D3A2E', Debt: '#848C70', Gold: '#C9A961', Cash: '#A9B8A9', Alternatives: '#5F7D6E' }
+
+/* ---------- amount input: Indian digit grouping (75,00,000) so a missing zero is visible; shows the compact value below */
+export function AmountInput({ value, onChange, disabled, label: name, className = '', echo = true, width }: { value: number; onChange: (v: number) => void; disabled?: boolean; label: string; className?: string; echo?: boolean; width?: number }) {
+  const [draft, setDraft] = useState<string | null>(null)
+  return (
+    <span className="amount-input" style={{ width }}>
+      <input className={`input num ${className}`} inputMode="numeric" autoComplete="off" aria-label={name} disabled={disabled}
+        value={draft ?? groupIN(value)}
+        onFocus={() => setDraft(groupIN(value))}
+        onBlur={() => setDraft(null)}
+        onChange={(e) => { const raw = e.target.value.replace(/[^0-9,]/g, ''); setDraft(raw); onChange(parseAmount(raw)) }} />
+      {echo && <span className="tiny muted amount-echo">{value ? inr(value) : '₹0'}</span>}
+    </span>
+  )
+}

@@ -3,9 +3,9 @@ import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Check, Download, Plus, Send, Sparkles, Trash2 } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { assetClassOf, EQUITY_BAND, fitsProfile, RISK_ORDER, useClients, useModels, useProducts, useProspects } from '../lib/data'
-import { ago, inr } from '../lib/format'
+import { ago, inr, label } from '../lib/format'
 import { AllocBar } from '../charts'
-import { ASSET_COLORS, Bar, DetailSkeleton, Empty, Status, useToast, SearchField } from '../ui'
+import { AmountInput, ASSET_COLORS, Bar, DetailSkeleton, Empty, Status, useToast, SearchField } from '../ui'
 import { allocOf } from './Studio'
 
 const SHELVES = [
@@ -128,7 +128,7 @@ export default function StudioCanvas() {
       <div className="page-head" style={{ marginBottom: 16 }}>
         <div className="grow">
           <input className="title-input" value={pf.name} disabled={locked} onChange={(e) => change({ name: e.target.value })} aria-label="Portfolio name" />
-          <p className="small muted" style={{ marginTop: 4 }}><span className="num">{pf.id}</span> · {pf.source === 'recommended' && calc.model ? `from ${calc.model.name}` : pf.source} · <Status s={pf.status} /> · {saving === 'saving' ? 'Saving…' : saving === 'saved' ? 'Saved' : `Updated ${ago(pf.updated)}`}</p>
+          <p className="small muted" style={{ marginTop: 4 }}><span className="num">{pf.id}</span> · {pf.source === 'recommended' && calc.model ? `From the ${calc.model.name} model` : pf.source === 'scratch' ? 'Started from scratch' : pf.source === 'import' ? 'Imported' : label(pf.source || '')} · <Status s={pf.status} /> · {saving === 'saving' ? 'Saving…' : saving === 'saved' ? 'Saved' : `Updated ${ago(pf.updated)}`}</p>
         </div>
         <button className="btn btn-quiet" onClick={exportJson}><Download />Export JSON</button>
       </div>
@@ -178,7 +178,7 @@ export default function StudioCanvas() {
                         <div className="tiny muted">{p.sub_category} · {p.liquidity}</div>
                         {under && <div className="tiny" style={{ color: 'var(--loss-ink)' }}>Minimum is {inr(p.min_investment)}</div>}
                       </div>
-                      <label className="amt"><span className="tiny muted">₹</span><input className="input sm num" type="number" step={10000} value={l.amount} disabled={locked} onChange={(e) => setLine(l.product_id, +e.target.value)} /></label>
+                      <label className="amt"><span className="tiny muted">₹</span><AmountInput className="sm" echo={false} label={`Amount for ${p.name}`} value={l.amount} disabled={locked} onChange={(v) => setLine(l.product_id, v)} /></label>
                       <label className="amt pct"><input className="input sm num" type="number" step={0.5} value={+share.toFixed(1)} disabled={locked} onChange={(e) => setLine(l.product_id, (pf.amount * +e.target.value) / 100)} /><span className="tiny muted">%</span></label>
                       <button className="iconbtn field-agent" title="Ask the agent about this line (coming soon)" aria-label={`Ask the agent about ${p.name} (coming soon)`} onClick={comingSoon}><Sparkles aria-hidden /></button>
                       {!locked && <button className="iconbtn" aria-label={`Remove ${p.name}`} onClick={() => remove(l.product_id)}><Trash2 /></button>}
@@ -201,7 +201,7 @@ export default function StudioCanvas() {
               </select>
             </label>
             {who && <div className="tiny muted" style={{ marginTop: 6 }}>Risk profile: {profile || 'not assessed'} · {who.aum !== undefined ? `${inr(who.aum)} with Kova` : `${inr(who.estimated_investable)} estimated`}</div>}
-            <label className="field" style={{ marginTop: 10 }}><span>Portfolio amount</span><input className="input sm num" type="number" step={100000} disabled={locked} value={pf.amount} onChange={(e) => change({ amount: +e.target.value })} /></label>
+            <label className="field" style={{ marginTop: 10 }}><span>Portfolio amount</span><AmountInput className="sm" label="Portfolio amount" disabled={locked} value={pf.amount} onChange={(v) => change({ amount: v })} /></label>
           </div>
           <div className="master-sec">
             <div className="spread small"><span>Allocated</span><span className="num strong">{inr(calc.used)} of {inr(pf.amount)}</span></div>

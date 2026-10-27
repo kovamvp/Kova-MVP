@@ -33,7 +33,7 @@ export default function Requests() {
   const [ticket, setTicket] = useState(params.get('ticket') === '1')
   const toast = useToast()
   const open = openId ? requests.find((r) => r.id === openId) : null
-  const counts = Object.fromEntries(TABS.map((t) => [t.key, t.key === 'outbox' ? outbox.filter((o) => !o.review).length : requests.filter(t.f).length]))
+  const counts = Object.fromEntries(TABS.map((t) => [t.key, t.key === 'outbox' ? outbox.length : requests.filter(t.f).length]))
   const list = requests.filter(TABS.find((t) => t.key === tab)!.f).sort((a, b) => (b.priority === 'high' ? 1 : 0) - (a.priority === 'high' ? 1 : 0) || (a.due || '9').localeCompare(b.due || '9') || b.created.localeCompare(a.created))
   const overdue = requests.filter((r) => r.direction !== 'completed' && r.due && (daysFrom(r.due) ?? 0) < 0)
 
@@ -105,7 +105,7 @@ function RequestDrawer({ r, onClose, onResolve }: { r: any; onClose: () => void;
     <Drawer title={r.title} sub={`${T.label} · ${r.id} · ${r.team}`} onClose={onClose}
       foot={r.direction !== 'completed' ? <><button className="btn btn-quiet" disabled={busy} onClick={() => op('nudge', null, `Nudged ${r.team}`)}><Bell />Nudge</button><button className="btn btn-quiet" disabled={busy} onClick={() => op('escalate', null, 'Escalated one level up')}><TriangleAlert />Escalate</button><button className="btn btn-ghost" disabled={busy} onClick={onResolve}><Check />Mark as resolved</button></> : undefined}>
       <div className="col" style={{ gap: 16 }}>
-        <div className="row wrap" style={{ gap: 8 }}><Status s={r.status} />{r.priority === 'high' && <span className="pill outline">High priority</span>}{r.due && <span className="pill outline">Due {when(r.due)}</span>}{r.escalations > 0 && <span className="pill warn">Escalated ×{r.escalations}</span>}</div>
+        <div className="row wrap" style={{ gap: 8 }}><Status s={r.status} />{r.priority === 'high' && <span className="pill outline">High priority</span>}{r.due && <span className="pill outline">{(daysFrom(r.due) ?? 0) < 0 ? `Overdue · due ${when(r.due).toLowerCase()}` : `Due ${when(r.due).toLowerCase()}`}</span>}{r.escalations > 0 && <span className="pill warn">Escalated ×{r.escalations}</span>}</div>
         {r.link && <EntityLink link={r.link} className="linkbtn">Open {r.link.kind} {r.link.id}<ArrowUpRight /></EntityLink>}
         {r.direction === 'waiting_on_me' && (
           <div className="note-card attention">
@@ -175,7 +175,7 @@ function Outbox({ items, focus }: { items: any[]; focus: string | null }) {
     <section className="panel" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 0 }}>
       <div className="list-toolbar">
         <p className="small muted grow">Exactly what each approved action produced, with what you said and the card it came from. Mark each one so we can measure the agent.</p>
-        <div className="row" style={{ gap: 6 }}>{[['', 'All'], ['none', 'Not reviewed'], ['correct', 'Correct'], ['fix', 'Needs fixing']].map(([k, l]) => <button key={k} className={`chip ${filter === k ? 'on' : ''}`} onClick={() => setFilter(k)}>{l}</button>)}</div>
+        <div className="row" style={{ gap: 6 }}>{[['', 'All'], ['none', `To review (${items.filter((o) => !o.review).length})`], ['correct', 'Correct'], ['fix', 'Needs fixing']].map(([k, l]) => <button key={k} className={`chip ${filter === k ? 'on' : ''}`} onClick={() => setFilter(k)}>{l}</button>)}</div>
       </div>
       {shown.length === 0 && <div className="empty">Nothing here yet. Approve a card in any agent session and it lands here.</div>}
       {shown.map((o) => <OutboxItem key={o.id} o={o} open={open === o.id} onToggle={() => setOpen(open === o.id ? null : o.id)} />)}
@@ -200,7 +200,7 @@ function OutboxItem({ o, open, onToggle }: { o: any; open: boolean; onToggle: ()
         <span className="acard-icon"><Icon size={14} /></span>
         <span className="grow" style={{ minWidth: 0, textAlign: 'left' }}>
           <span className="small strong ellipsis" style={{ display: 'block' }}>{o.subject || label(o.action)}</span>
-          <span className="tiny muted">{o.channel} → {o.to?.name}{o.to?.address ? ` (${o.to.address})` : ''} · {when(o.at)} · {o.id}</span>
+          <span className="tiny muted">{o.channel} to {o.to?.name}{o.to?.address ? ` (${o.to.address})` : ''} · {when(o.at)} · {o.id}</span>
         </span>
         {o.source?.card_id && <span className="pill brass"><span className="ring" style={{ width: 8, height: 8 }} />Agent</span>}
         {o.edited && <span className="pill outline">Edited</span>}

@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowRight, ChevronDown, ChevronRight, Plus, RotateCcw } from 'lucide-react'
+import { ChevronDown, ChevronRight, Plus, RotateCcw } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
 import { useAction } from '../lib/action'
 import { STAGES, STAGE_INFO, useProducts, useProspects, useMeetings, useModels } from '../lib/data'
-import { ago, date, inr, when, daysFrom } from '../lib/format'
+import { ago, date, inr, when, daysFrom, sourceText } from '../lib/format'
 import { Columns, HBars } from '../charts'
-import { Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Stat, useToast, SearchField } from '../ui'
+import { AmountInput, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Stat, useToast, SearchField } from '../ui'
 
 export default function Prospects() {
   const { data: prospects = [], loading, error, reload } = useProspects()
@@ -84,7 +84,7 @@ export default function Prospects() {
               <div key={i} className="suggest-item">
                 <span className="bullet" aria-hidden />
                 <p className="grow small">{o.text}</p>
-                <button className="btn btn-quiet btn-sm" onClick={() => nav(o.to)}>{o.action}<ArrowRight /></button>
+                <button className="btn btn-quiet btn-sm" onClick={() => nav(o.to)}>{o.action}</button>
               </div>
             ))}
           </div>
@@ -105,7 +105,7 @@ export default function Prospects() {
             {suggestions.slice(0, 6).map((s, i) => (
               <Link key={i} to={`/prospects/${s.p.id}`} className="note-card">
                 <div className="tiny muted">{s.from.name}, {s.from.title} · {date(s.date)}</div>
-                <div className="small strong" style={{ margin: '4px 0' }}>{s.p.name} → {P[s.product_id]?.name}</div>
+                <div className="small" style={{ margin: '4px 0' }}><span className="strong">{P[s.product_id]?.name}</span> <span className="muted">for {s.p.name}</span></div>
                 <div className="small">{s.text}</div>
               </Link>
             ))}
@@ -137,7 +137,7 @@ export default function Prospects() {
           <div key={p.id} className="client-row closed">
             <Avatar name={p.name} size={40} />
             <div className="cr-name"><Link to={`/prospects/${p.id}`} className="strong">{p.name}</Link><div className="tiny muted">{p.source} · closed {date(p.closed?.date)}</div></div>
-            <div className="cr-aum small num">{inr(p.estimated_investable)}</div>
+            <div className="cr-aum small num">{inr(p.estimated_investable, { fixed: true })}</div>
             <div className="cr-next small">{p.closed?.reason}</div>
             <div className="cr-flags tiny muted">Learning: {p.closed?.learning || '—'}</div>
             <button className="btn btn-quiet btn-sm" disabled={busy} onClick={() => run(async () => { await api(`/prospects/${p.id}/reopen`, { method: 'POST' }); invalidate('/c/prospects'); toast(`${p.name} reopened`) }, `Couldn’t reopen ${p.name}`)}><RotateCcw />Reopen</button>
@@ -157,11 +157,11 @@ function ProspectRow({ p, next }: { p: any; next?: any }) {
       <Avatar name={p.name} size={46} />
       <div className="cr-name">
         <div className="strong">{p.name}</div>
-        <div className="tiny muted">{p.source}{p.source_detail ? `: ${p.source_detail}` : ''}</div>
+        <div className="tiny muted">{sourceText(p.source, p.source_detail)}</div>
         <div className="row" style={{ gap: 6, marginTop: 6 }}><span className="pill forest" title={STAGE_INFO[p.stage]}>{p.stage}</span>{p.app_access && <span className="pill outline">On Kova Client</span>}</div>
       </div>
       <div className="cr-aum">
-        <div className="display strong" style={{ fontSize: 17 }}><Num v={p.estimated_investable} src="RM estimate" /></div>
+        <div className="display strong" style={{ fontSize: 17 }}><Num v={p.estimated_investable} src="RM estimate" fixed /></div>
         <div className="tiny muted">{p.probability}% likely</div>
       </div>
       <div className="cr-next">
@@ -197,11 +197,11 @@ function CreateProspect({ onClose, onCreated }: { onClose: () => void; onCreated
         <label className="field"><span>Email</span><input className="input" type="email" autoComplete="off" spellCheck={false} value={f.email} onChange={(e) => set('email', e.target.value)} /></label>
         <label className="field"><span>Source</span><select className="select" value={f.source} onChange={(e) => set('source', e.target.value)}>{['Referral', 'Event', 'Inbound', 'Cold outreach'].map((s) => <option key={s}>{s}</option>)}</select></label>
         <label className="field"><span>Referred by or where you met</span><input className="input" value={f.source_detail} onChange={(e) => set('source_detail', e.target.value)} /></label>
-        <label className="field"><span>Estimated investable (₹)</span><input className="input" type="number" value={f.estimated_investable} onChange={(e) => set('estimated_investable', +e.target.value)} /></label>
+        <label className="field"><span>Estimated investable (₹)</span><AmountInput label="Estimated investable in rupees" value={f.estimated_investable} onChange={(v) => set('estimated_investable', v)} /></label>
         <label className="field"><span>Stage</span><select className="select" value={f.stage} onChange={(e) => set('stage', e.target.value)}><option>Lead</option><option>Prospect</option></select></label>
         <label className="field" style={{ gridColumn: '1 / -1' }}><span>What they need</span><textarea className="textarea" rows={2} value={f.need} onChange={(e) => set('need', e.target.value)} /></label>
         <label className="field"><span>Next step</span><input className="input" value={f.next_step} onChange={(e) => set('next_step', e.target.value)} /></label>
-        <label className="field"><span>By</span><input className="input" type="date" value={f.next_step_date} onChange={(e) => set('next_step_date', e.target.value)} /></label>
+        <label className="field"><span>By</span><input className="input" type="date" value={f.next_step_date} onChange={(e) => set('next_step_date', e.target.value)} />{f.next_step_date && <span className="tiny muted">{when(f.next_step_date)}</span>}</label>
         <label className="check toggle-off" style={{ gridColumn: '1 / -1' }} title="Arrives with Kova Client onboarding">
           <input type="checkbox" disabled /> <span>Create Kova Client access <span className="tiny muted">(sends a secure set-up link; not active in this version)</span></span>
         </label>

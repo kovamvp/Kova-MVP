@@ -119,7 +119,7 @@ export default function ClientDetail() {
                 <Link key={m.id} to={`/meetings?m=${m.id}`} className="w-line"><CalendarPlus size={15} color="var(--forest)" /><span className="grow small">{m.title}<br /><span className="tiny muted">{when(m.start)} · {m.location}</span></span></Link>
               ))}
               {c.cash_flows.slice(0, 4).map((f: any, i: number) => (
-                <div key={i} className="w-line small"><span className="grow">{f.kind}: {P[f.product_id]?.name}<br /><span className="tiny muted">{when(f.date)}</span></span><span className="num" style={{ color: f.amount < 0 ? 'var(--muted)' : 'var(--ink-strong)' }}>{inr(f.amount)}</span></div>
+                <div key={i} className="w-line small"><span className="grow">{f.kind}: {P[f.product_id]?.name}<br /><span className="tiny muted">{when(f.date)}</span></span><span className="num" style={{ color: f.amount < 0 ? 'var(--muted)' : 'var(--ink-strong)' }}>{inr(f.amount, { fixed: true })}</span></div>
               ))}
             </div>
           </Panel>
@@ -143,7 +143,7 @@ export default function ClientDetail() {
             <Panel title="Family">
               <div className="col" style={{ gap: 4 }}>
                 {family.map((m) => (
-                  <Link key={m.id} to={`/clients/${m.id}`} className="row small fam-member"><Avatar name={m.name} size={28} /><span className="grow">{m.name}<span className="tiny muted"> · {m.family_role}</span></span><span className="num">{inr(m.aum)}</span></Link>
+                  <Link key={m.id} to={`/clients/${m.id}`} className="row small fam-member"><Avatar name={m.name} size={28} /><span className="grow">{m.name}<span className="tiny muted"> · {m.family_role}</span></span><span className="num">{inr(m.aum, { fixed: true })}</span></Link>
                 ))}
               </div>
             </Panel>
@@ -196,7 +196,7 @@ function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string,
       </div>
       {Object.entries(groups).map(([cls, hs]) => (
         <div key={cls} style={{ marginBottom: 16 }}>
-          <div className="spread" style={{ marginBottom: 6 }}><h3 className="row" style={{ gap: 8 }}><i style={{ width: 9, height: 9, borderRadius: 2, background: ASSET_COLORS[cls] }} />{cls}</h3><span className="small num muted">{inr(hs.reduce((a, h) => a + h.value, 0))}</span></div>
+          <div className="spread" style={{ marginBottom: 6 }}><h3 className="row" style={{ gap: 8 }}><i style={{ width: 9, height: 9, borderRadius: 2, background: ASSET_COLORS[cls] }} />{cls}</h3><span className="small num muted">{inr(hs.reduce((a, h) => a + h.value, 0), { fixed: true })}</span></div>
           <table className="table">
             <tbody>
               {hs.map((h) => {
@@ -205,7 +205,7 @@ function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string,
                 return (
                   <tr key={h.product_id}>
                     <td><Link to={`/products/${h.product_id}`} className="strong">{p?.name}</Link><div className="tiny muted">{p?.sub_category} · {h.mode}{h.sip_amount ? ` ${inr(h.sip_amount)}/month` : ''} · since {date(h.since, true)}</div></td>
-                    <td className="r"><Num v={h.value} /><div><Delta v={g} /></div></td>
+                    <td className="r"><Num v={h.value} fixed /><div><Delta v={g} /></div></td>
                     <td className="r"><Status s={p?.cio_view.stance} /></td>
                   </tr>
                 )

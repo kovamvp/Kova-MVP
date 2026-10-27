@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Check, ChevronRight } from 'lucide-react'
 import { fitsProfile, ldStats, useClients, useLd, useProducts, useResearch } from '../lib/data'
-import { date, inr } from '../lib/format'
+import { date, inr, plural } from '../lib/format'
 import { Donut, HBars, Legend } from '../charts'
 import { LoadError, Num, Panel, SkeletonRows, Stat, Status, SearchField } from '../ui'
 
@@ -83,12 +83,12 @@ export default function Products() {
               </div>
             </Panel>
             <Panel title="Most held">
-              <HBars data={top.map((p) => ({ label: <Link to={`/products/${p.id}`}>{p.name}</Link>, value: held[p.id]?.value || 0, sub: `${held[p.id]?.n || 0} clients` }))} format={(v) => inr(v)} />
+              <HBars data={top.map((p) => ({ label: <Link to={`/products/${p.id}`}>{p.name}</Link>, value: held[p.id]?.value || 0, sub: plural(held[p.id]?.n || 0, 'client') }))} format={(v) => inr(v)} />
             </Panel>
             <Panel title="Fits your clients" aside="Suitable, not yet held">
               <div className="col" style={{ gap: 0 }}>
                 {products.filter((p) => p.cio_view.stance === 'Preferred').map((p) => ({ p, n: suitsCount(p, clients).length })).sort((a, b) => b.n - a.n).slice(0, 5).map(({ p, n }) => (
-                  <Link key={p.id} to={`/products/${p.id}?panel=agent&ask=clients`} className="w-line small"><span className="grow ellipsis">{p.name}</span><span className="pill forest">{n} clients</span></Link>
+                  <Link key={p.id} to={`/products/${p.id}?panel=agent&ask=clients`} className="w-line small"><span className="grow ellipsis">{p.name}</span><span className="pill forest">{plural(n, 'client')}</span></Link>
                 ))}
               </div>
             </Panel>
@@ -117,7 +117,7 @@ export default function Products() {
                       <td className="small">{p.risk}</td>
                       <td><Status s={p.cio_view.stance} /></td>
                       <td className="r num small">{ret}</td>
-                      <td className="r small">{held[p.id] ? <><Num v={held[p.id].value} /><div className="tiny muted">{held[p.id].n} clients</div></> : <span className="faint">—</span>}</td>
+                      <td className="r small">{held[p.id] ? <><Num v={held[p.id].value} fixed /><div className="tiny muted">{plural(held[p.id].n, 'client')}</div></> : <span className="faint">—</span>}</td>
                       <td>
                         <Link to={`/products/${p.id}?panel=ld`} className={`ld-btn ${l.pct === 100 ? 'done' : l.pct > 0 ? 'progress' : ''}`}>
                           {l.pct === 100 ? <><Check size={13} aria-hidden />Completed</> : l.pct > 0 ? <><span className="ld-mini" aria-hidden><i style={{ width: `${l.pct}%` }} /></span>Continue, {l.completed} of {l.total}</> : <>Start learning</>}

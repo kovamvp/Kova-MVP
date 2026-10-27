@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowRight, Check, ChevronRight, UserPlus, Users } from 'lucide-react'
+import { Check, ChevronRight, UserPlus, Users } from 'lucide-react'
 import { useClients, useFamilies, useMeetings, useProducts, useProspects } from '../lib/data'
 import { SEGMENTS, RISK_ORDER, EQUITY_BAND } from '../lib/data'
-import { ago, inr, label, when } from '../lib/format'
+import { ago, inr, label, when, sinceText, sourceText } from '../lib/format'
 import { Donut, HBars, AllocBar } from '../charts'
 import { ASSET_COLORS, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Status, Stat, SearchField } from '../ui'
 
@@ -39,7 +39,7 @@ export default function Clients() {
     if (!clients.length) return []
     const s: { text: string; action: string; to: string }[] = []
     const dormant = clients.filter((c) => c.segment === 'dormant').sort((a, b) => b.aum - a.aum)
-    if (dormant[0]) s.push({ text: `${dormant[0].name} hasn’t heard from you since ${ago(dormant[0].last_contact)}. ${inr(dormant[0].aum)} at stake.`, action: 'Schedule a check-in', to: `/clients/${dormant[0].id}?panel=actions&do=schedule` })
+    if (dormant[0]) s.push({ text: `${dormant[0].name} hasn’t heard from you ${sinceText(dormant[0].last_contact)}. ${inr(dormant[0].aum)} at stake.`, action: 'Schedule a check-in', to: `/clients/${dormant[0].id}?panel=actions&do=schedule` })
     const review = clients.filter((c) => c.holdings.some((h: any) => h.product_id === 'PD-104'))
     if (review.length) s.push({ text: `${review.length} clients hold Indus Peak Small Cap, which the CIO has under review.`, action: 'Read the CIO note', to: '/products/PD-104' })
     const drift = clients.filter((c) => c.allocation?.Equity > EQUITY_BAND[c.risk_profile][1])
@@ -109,7 +109,7 @@ export default function Clients() {
             <div key={i} className="suggest-item">
               <span className="bullet" aria-hidden />
               <p className="grow small">{s.text}</p>
-              <button className="btn btn-quiet btn-sm" onClick={() => nav(s.to)}>{s.action}<ArrowRight /></button>
+              <button className="btn btn-quiet btn-sm" onClick={() => nav(s.to)}>{s.action}</button>
             </div>
           ))}
         </div>
@@ -154,7 +154,7 @@ export default function Clients() {
                     <div className="row" style={{ gap: 6, marginTop: 6 }}><Status s={c.segment} /><span className="pill outline">{c.risk_profile}</span></div>
                   </div>
                   <div className="cr-aum">
-                    <div className="display strong" style={{ fontSize: 17 }}><Num v={c.aum} /></div>
+                    <div className="display strong" style={{ fontSize: 17 }}><Num v={c.aum} fixed /></div>
                     <div style={{ width: 120, margin: '6px 0 4px' }}><AllocBar parts={Object.entries(c.allocation as Record<string, number>).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} /></div>
                     <div className="tiny muted">XIRR {c.xirr}%</div>
                   </div>
@@ -185,7 +185,7 @@ export default function Clients() {
                       <Link key={m.id} to={`/clients/${m.id}`} className="row small fam-member">
                         <Avatar name={m.name} size={26} />
                         <span className="grow">{m.name} <span className="muted tiny">· {m.family_role}</span></span>
-                        <span className="num">{inr(m.aum)}</span>
+                        <span className="num">{inr(m.aum, { fixed: true })}</span>
                       </Link>
                     ))}
                   </div>
@@ -244,7 +244,7 @@ function Onboard({ onClose }: { onClose: () => void }) {
           {step === 1 && pick && (
             <dl className="kv">
               <dt>Name</dt><dd>{pick.name}</dd><dt>Mobile</dt><dd>{pick.phone}</dd><dt>Email</dt><dd>{pick.email}</dd>
-              <dt>City</dt><dd>{pick.city}</dd><dt>Source</dt><dd>{pick.source} ({pick.source_detail})</dd>
+              <dt>City</dt><dd>{pick.city}</dd><dt>Source</dt><dd>{sourceText(pick.source, pick.source_detail)}</dd>
               <dt>Investable</dt><dd>{inr(pick.estimated_investable)}</dd><dt>Risk indication</dt><dd>{pick.risk_indication}</dd>
               <dt>Account type</dt><dd><select className="select sm" style={{ width: 280 }} defaultValue="invest"><option value="invest">Investing (mutual funds, bonds, FDs)</option><option>Investing and trading (adds demat)</option></select></dd>
             </dl>

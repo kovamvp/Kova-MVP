@@ -4,7 +4,7 @@ import { ArrowLeft, Check, LayoutGrid, ListChecks, Phone, CalendarPlus, XCircle,
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
 import { STAGES, STAGE_INFO, useMeetings, usePortfolios, useProducts } from '../lib/data'
-import { ago, date, inr, when } from '../lib/format'
+import { ago, date, inr, when, sourceText } from '../lib/format'
 import { Avatar, DetailSkeleton, Drawer, Empty, Modal, Num, Panel, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
@@ -52,7 +52,7 @@ export default function ProspectDetail() {
           <Avatar name={p.name} size={68} />
           <div className="grow">
             <h1>{p.name}</h1>
-            <p className="muted" style={{ marginTop: 4 }}>{p.age ? `${p.age} · ` : ''}{p.city} · {p.source}{p.source_detail ? `: ${p.source_detail}` : ''} · added {date(p.created, true)}</p>
+            <p className="muted" style={{ marginTop: 4 }}>{p.age ? `${p.age} · ` : ''}{p.city} · {sourceText(p.source, p.source_detail)} · added {date(p.created, true)}</p>
             <p style={{ marginTop: 10, maxWidth: 640 }}>{p.need}</p>
           </div>
           <div className="stat" style={{ textAlign: 'right' }}>

@@ -365,7 +365,8 @@ body.panel-open.panel-wide .ctxbar-wrap { right: min(640px, 100vw); }
 .orb.on::before { border-color: #D9B97E; }
 
 .ld-ring { --p: 0; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--forest) calc(var(--p) * 1%), var(--stone) 0); }
-.ld-ring::before { content: attr(data-label); width: 26px; height: 26px; border-radius: 50%; background: var(--paper); display: grid; place-items: center; font-size: 10px; color: var(--ink-strong); font-weight: 600; }
+.ld-ring.lg::before { width: calc(100% - 10px); height: calc(100% - 10px); font-size: 13px; }
+.ld-ring::before { content: attr(data-label); width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 50%; background: var(--paper); display: grid; place-items: center; font-size: 10px; color: var(--ink-strong); font-weight: 600; }
 
 /* login */
 .login { min-height: 100vh; display: grid; grid-template-columns: minmax(320px, 46%) 1fr; }
@@ -770,3 +771,15 @@ ul.clean.risk li::before { border-color: var(--loss); }
 }
 button.month-cell { text-align: left; width: 100%; align-items: stretch; border-radius: 0; }
 .shelf-added { display: inline-flex; align-items: center; gap: 4px; width: 64px; justify-content: flex-end; font-size: 12px; color: var(--forest); font-weight: 500; }
+
+/* amount inputs (N1) */
+.amount-input { display: inline-flex; flex-direction: column; gap: 3px; min-width: 0; }
+.amount-input .input { text-align: right; }
+.amount-echo { text-align: right; }
+/* area chart scale (N5): ticks in a right lane, quarterly month labels */
+.area-chart { padding-right: 50px; }
+.area-tick { position: absolute; right: -50px; transform: translateY(-50%); width: 46px; text-align: right; }
+.area-x { position: relative; height: 16px; margin-top: 4px; }
+.area-x span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.area-x span:last-child { transform: translateX(-100%); }
+.field .amount-input { display: flex; width: 100%; }
