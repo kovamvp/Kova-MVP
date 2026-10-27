@@ -5,7 +5,7 @@ import { useClients, useMeetings, useProducts, useProspects } from '../lib/data'
 import { date, inr, nowISO, parse, time, todayISO, when } from '../lib/format'
 import { Avatar, Drawer, Panel, Stat, Status, SearchField } from '../ui'
 
-const TYPE_COLOR: Record<string, string> = { Review: '#1D3A2E', Proposal: '#9A7A47', 'First meeting': '#5F7D6E', Service: '#77736A', 'Family meeting': '#2C4E63' }
+const TYPE_COLOR: Record<string, string> = { Review: '#1D3A2E', Proposal: '#848C70', 'First meeting': '#5F7D6E', Service: '#77736A', 'Family meeting': '#2C4E63' }
 const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 const HOURS = Array.from({ length: 11 }, (_, i) => 9 + i)
 
@@ -172,7 +172,7 @@ function PrepPack({ m, who, P, meetings, onOpen }: { m: any; who: any; P: Record
         </div>
         <div className="grid g3" style={{ gap: 12 }}>
           <div className="prep-box"><div className="tiny muted">Agenda</div><ul>{m.agenda.map((a: string) => <li key={a}>{a}</li>)}{!m.agenda.length && <li className="muted">None set</li>}</ul></div>
-          <div className="prep-box"><div className="tiny muted">Last time</div><p className="small">{past?.mom?.summary || 'First recorded meeting.'}</p>{open.length > 0 && <p className="small" style={{ marginTop: 6, color: 'var(--loss-ink)' }}>Open promise: {open[0].text}</p>}</div>
+          <div className="prep-box"><div className="tiny muted">Last time</div><p className="small">{past?.mom?.summary || 'First recorded meeting.'}</p>{open.length > 0 && <p className="small row" style={{ marginTop: 6, gap: 6, alignItems: 'baseline' }}><span className="ring" aria-hidden /><span><span className="strong">Open promise:</span> {open[0].text}</span></p>}</div>
           <div className="prep-box"><div className="tiny muted">Talking points</div><ul>{(who?.red_flags || []).slice(0, 1).map((f: any) => <li key={f.text}>{f.text}</li>)}{talk.map((p: any) => <li key={p.id}>{p.name}: CIO {p.cio_view.stance.toLowerCase()}</li>)}{(who?.cash_flows || []).filter((f: any) => f.kind === 'Maturity').slice(0, 1).map((f: any, i: number) => <li key={i}>{inr(f.amount)} maturing {when(f.date)}</li>)}</ul></div>
         </div>
       </div>

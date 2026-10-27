@@ -37,11 +37,11 @@ export function Delta({ v, suffix = '%' }: { v: number; suffix?: string }) {
 /* ---------- status pills */
 const STATUS: Record<string, string> = {
   active: 'gain', engaged: 'forest', dormant: 'warn', lost: 'loss',
-  draft: 'outline', awaiting_approval: 'brass', approved: 'gain', changes_requested: 'loss', practice: '', live: 'forest',
-  sent: 'outline', in_review: 'brass', done: 'gain', rejected: 'loss', needs_info: 'loss', superseded: 'outline', pending: 'brass',
+  draft: 'outline', awaiting_approval: '', approved: 'gain', changes_requested: 'attn', practice: '', live: 'forest',
+  sent: 'outline', in_review: '', done: 'gain', rejected: 'outline', needs_info: 'attn', superseded: 'outline', pending: '',
   scheduled: 'forest', needs_mom: 'brass', completed: 'gain', cancelled: 'outline',
   Preferred: 'gain', Neutral: '', 'Under review': 'warn',
-  high: 'loss', normal: 'outline',
+  high: 'outline', normal: 'outline',
 }
 const STATUS_TEXT: Record<string, string> = { needs_mom: 'Needs MoM', in_review: 'In review', awaiting_approval: 'Awaiting approval', changes_requested: 'Changes requested', needs_info: 'Needs your input' }
 export function Status({ s, children }: { s?: string | null; children?: ReactNode }) {
@@ -286,4 +286,4 @@ export function EntityLink({ link, children, className = '' }: { link?: { kind: 
 export function AssetDot({ cls }: { cls: string }) {
   return <i style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 2, background: ASSET_COLORS[cls] || '#999' }} />
 }
-export const ASSET_COLORS: Record<string, string> = { Equity: '#1D3A2E', Debt: '#9A7A47', Gold: '#C9A961', Cash: '#A9B8A9', Alternatives: '#5F7D6E' }
+export const ASSET_COLORS: Record<string, string> = { Equity: '#1D3A2E', Debt: '#848C70', Gold: '#C9A961', Cash: '#A9B8A9', Alternatives: '#5F7D6E' }

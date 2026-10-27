@@ -59,7 +59,7 @@ export default function Growth() {
                 <textarea className="textarea" rows={3} autoFocus value={editing!.text} onChange={(e) => setEditing({ id: x.id, text: e.target.value })}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); op({ op: "edit", id: x.id, text: editing!.text }, "Goal updated"); setEditing(null) } }} />
               ) : <p className="goal-text">{x.text}</p>}
-              {x.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={x.progress * 100} brass /><div className="tiny muted" style={{ marginTop: 4 }}>{Math.round(x.progress * 100)}% there</div></div>}
+              {x.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={x.progress * 100} /><div className="tiny muted" style={{ marginTop: 4 }}>{Math.round(x.progress * 100)}% there</div></div>}
               <div className="goal-foot">
                 <span className="tiny muted">{x.by === 'manager' ? `Set by ${x.set_by}` : 'Yours'}</span>
                 <div className="row" style={{ gap: 0 }}>
@@ -134,7 +134,7 @@ export default function Growth() {
         <Panel title="Ways to close the gap">
           <div className="col" style={{ gap: 0 }}>
             {g.suggestions.map((s: any, i: number) => (
-              <div key={i} className="suggest-item"><span className="ring" style={{ marginTop: 5 }} /><p className="grow small">{s.text}</p><button className="iconbtn" aria-label="Open" onClick={() => nav(hrefFor(s.link))}><ArrowRight /></button></div>
+              <div key={i} className="suggest-item"><span className="bullet" aria-hidden /><p className="grow small">{s.text}</p><button className="iconbtn" aria-label="Open" onClick={() => nav(hrefFor(s.link))}><ArrowRight /></button></div>
             ))}
           </div>
           <div className="guardrail"><ShieldCheck size={15} /><span className="tiny">{g.guardrail}</span></div>
@@ -145,7 +145,7 @@ export default function Growth() {
       <div className="grid g3">
         {g.contests.map((c: any) => (
           <section key={c.id} className="panel panel-pad contest">
-            <div className="spread"><h3>{c.name}</h3><span className="pill brass">Ends {when(c.ends)}</span></div>
+            <div className="spread"><h3>{c.name}</h3><span className="pill outline">Ends {when(c.ends)}</span></div>
             <p className="small muted" style={{ margin: '4px 0 12px' }}>{c.rule}. Prize: {c.prize}.</p>
             <div className="display" style={{ fontSize: 30, color: 'var(--ink-strong)' }}>#{c.my_rank}</div>
             <div className="col" style={{ gap: 4, marginTop: 10 }}>
