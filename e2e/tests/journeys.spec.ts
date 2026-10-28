@@ -73,7 +73,7 @@ test('agent: text request → approval card → approve → outbox', async ({ ap
   await expect(card).toContainText('Approved')
   await expect(card.getByRole('link', { name: /Outbox OB-/ })).toBeVisible()
   await card.getByRole('link', { name: /Outbox OB-/ }).click()
-  await expect(app.getByText('You said')).toBeVisible()
+  await expect(app.getByText('You said', { exact: true })).toBeVisible()
 })
 
 test('agent: edit a card before approving', async ({ app }) => {
