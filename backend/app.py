@@ -24,14 +24,17 @@ async def on_error(request: Request, exc: Exception):
 
 @app.get("/api/health")
 def health():
-    from .store import SEED_VERSION
-    return {"ok": True, "store": store().__class__.__name__, "time": now_ist(), "seed": SEED_VERSION,
+    from .migrations import applied
+    from .store import SEED_VERSION, table_prefix
+    return {"ok": True, "store": store().__class__.__name__, "tables": table_prefix(), "time": now_ist(), "seed": SEED_VERSION,
+            "migrations": applied(store()),
             "commit": (os.environ.get("VERCEL_GIT_COMMIT_SHA") or "local")[:7],
             "groq": bool(os.environ.get("GROQ_API_KEY_AGENT") or os.environ.get("GROQ_API_KEY_SPEECH"))}
 
 
 @app.post("/api/reset")
 def reset():
+    store().snapshot("before_reset")  # Preferences → Reset can always be undone with scripts/restore_snapshot.py
     store().reset()
     return {"ok": True}
 
@@ -91,7 +94,7 @@ def run_action(action: str, args: dict = Body(...)):
     try:
         return actions.run(action, args, {"via": "manual"})
     except (ValueError, KeyError) as e:
-        raise HTTPException(400, str(e))
+        raise HTTPException(400, str(e)) from e
 
 
 # ------------------------------------------------------------ updates panel

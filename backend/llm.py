@@ -31,8 +31,15 @@ def _log(kind: str, key: str, model: str, status: int, ms: int, note: str = "") 
     print(f"[groq] {kind} key={key} model={model} status={status} {ms}ms {note}")
 
 
+def _fake() -> bool:
+    return os.environ.get("KOVA_LLM") == "fake"
+
+
 def chat(messages: list[dict], tools: list[dict] | None = None, models: list[str] | None = None, temperature: float = 0.3,
          max_tokens: int = 1400, primary: str = "agent") -> dict:
+    if _fake():
+        from . import llm_fake
+        return llm_fake.chat(messages, tools)
     keys = _keys(primary)
     if not keys:
         raise LLMError("No Groq API key is configured on the server.")
@@ -86,6 +93,9 @@ def _try_all(messages, tools, models, temperature, max_tokens, keys, rate_limite
 
 
 def transcribe(audio: bytes, filename: str, content_type: str) -> dict:
+    if _fake():
+        from . import llm_fake
+        return llm_fake.transcribe(audio, filename, content_type)
     keys = _keys("speech")
     if not keys:
         raise LLMError("No Groq API key is configured on the server.")

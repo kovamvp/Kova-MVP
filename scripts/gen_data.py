@@ -4,7 +4,10 @@ All dates are written relative to ANCHOR. The API shifts every date by
 (today - ANCHOR) when it seeds the database, so the demo always looks current.
 Run:  python3 scripts/gen_data.py
 """
-import json, random, os, datetime as dt
+import datetime as dt
+import json
+import os
+import random
 
 random.seed(42)
 ANCHOR = dt.date(2026, 10, 26)  # a Monday
@@ -544,7 +547,7 @@ for i, (nm, age, g, src, stage, val, need, lc, mtgs, srcd) in enumerate(pros):
              ("Demat and trading account", "Investing and trading client"), ("Exchange registration (UCC)", "Investing and trading client"), ("DDPI", "Investing and trading client")]
     order = ["Lead", "Prospect", "Registered", "KYC in progress", "Investing client", "Investing and trading client"]
     lvl = order.index(stage) if stage in order else 0
-    for j, (s, needed) in enumerate(steps):
+    for j, (s, _needed) in enumerate(steps):
         done = (lvl >= 4 and j <= 5) or (lvl >= 5) or (lvl >= 2 and j == 0) or (stage == "KYC in progress" and j in (1, 2) and random.random() < 0.8)
         if nm.startswith("Nandini") and s == "FATCA declaration":
             done = False
