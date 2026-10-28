@@ -84,15 +84,15 @@ export default function Products() {
               <Stat label="New or closing soon" value={products.filter((p) => p.is_new || p.close_date).length} sub="See the list below" />
             </div>
           </section>
-          <div className="grid g3" style={{ marginBottom: 16, alignItems: 'start' }}>
-            <Panel title="Your book by product type">
+          <div className="grid g3 row-even" style={{ marginBottom: 16 }}>
+            <Panel title="Your book by product type" className="chart-card">
               <div className="row" style={{ gap: 18 }}>
-                <Donut size={130} data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k], note: inr(v) }))} center={<div className="tiny muted">by value</div>} />
-                <div className="grow"><Legend data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k] }))} format={(v) => `${Math.round((v / total) * 100)}%`} /></div>
+                <Donut size={150} data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k], note: inr(v) }))} center={<div className="tiny muted">by value</div>} />
+                <div className="grow"><Legend notes data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k], note: inr(v) }))} format={(v) => `${Math.round((v / total) * 100)}%`} /></div>
               </div>
             </Panel>
             <Panel title="Most held">
-              <HBars data={top.map((p) => ({ label: <Link to={`/products/${p.id}`}>{p.name}</Link>, value: held[p.id]?.value || 0, sub: plural(held[p.id]?.n || 0, 'client') }))} format={(v) => inr(v)} />
+              <HBars data={top.map((p) => ({ label: <><Link to={`/products/${p.id}`}>{p.name}</Link> <span className="tiny muted">· {plural(held[p.id]?.n || 0, 'client')}</span></>, value: held[p.id]?.value || 0 }))} format={(v) => inr(v)} />
             </Panel>
             <Panel title="Fits your clients" aside="Suitable, not yet held">
               <div className="col" style={{ gap: 0 }}>

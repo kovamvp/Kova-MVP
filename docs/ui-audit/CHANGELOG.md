@@ -2,7 +2,8 @@
 
 One entry per UI batch. Each batch is its own `ui/<name>` branch and pull request, merged only after the
 validation checklist (section 6 of the UI brief) passes. Findings and IDs (S1, A1, D2 …) refer to
-`docs/ui-audit/REPORT.md`. Before/after screenshots for each batch are in `docs/ui-audit/screens/<batch>/`.
+`docs/ui-audit/REPORT.md`. Before/after screenshots for each batch are in its pull request (#1, #2, #4–#9); they were
+removed from the repository after merging to keep it light, and remain in its history.
 
 How every batch is checked
 - `cd web && npx tsc -b && npm run build`
@@ -206,3 +207,26 @@ scroll on its own.
 Checked
 - tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
   0 page overflow.
+
+## 9 · `ui/polish` — even rows, aligned Requests columns, phone rows inside the screen
+
+Found after batch 8 shipped (Divyansh's review of the live app).
+
+What changed and why
+- **Requests** rows are a fixed grid: the last reply, due date, priority and status line up from row to row. They
+  were placed by the width of their neighbours, so every row started its columns somewhere else.
+- **Rows of panels end on one line** (Meetings, Prospects, Products, Growth). Batch 8 stopped cards stretching over
+  holes, which left ragged gaps between cards instead; the fix is to stretch and balance the content:
+  Needs a MoM shows five with "Show all n" and the prep boxes fill Next up; the Prospects side column uses one-line
+  bars; Most held puts the client count on the name line; the product-type donut is centred and its legend shows
+  rupees as well as shares.
+- **Phones**: client and prospect rows put the figure on a second line inside the card (it was clipped past the
+  right edge, hidden by the page's overflow guard); Products and Growth tables become lists; the Clients filters
+  share one line; tab bars scroll sideways; grids no longer widen past the screen for a long pill or heading.
+- DESIGN.md rules for rows and phones updated to match.
+
+Checked
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
+  0 page overflow, no open panel over the context bar.
+- Elements past the right edge at 390 px: 26 states before, 14 after, all of them tab bars that scroll sideways
+  on purpose (Requests and Studio).
