@@ -217,6 +217,15 @@ export function Drawer({ title, sub, onClose, children, foot, wide, scrim = true
   useEsc(onClose)
   const id = useId()
   const ref = useDialogFocus(scrim)
+  /* A side panel (no scrim) tells the page it is open, so the floating context bar can re-centre in the
+     space that is left and the agent orb is never hidden behind the panel. */
+  useEffect(() => {
+    if (scrim) return
+    const b = document.body
+    b.classList.add('panel-open')
+    b.classList.toggle('panel-wide', !!wide)
+    return () => { b.classList.remove('panel-open', 'panel-wide') }
+  }, [scrim, wide])
   return createPortal(
     <>
       {scrim && <div className="scrim" onClick={onClose} />}

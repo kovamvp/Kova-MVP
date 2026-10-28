@@ -85,3 +85,18 @@ What changed and why
 Checked
 - tsc and build clean; feature regression 18/18; contrast scan 0 failing text elements on 23 routes; walk of
   234 states: 0 console errors, 0 page overflow. The panel still covers the context bar (fixed in D1-lite).
+
+## 4 · `ui/bottom-system` — side panels never hide the context bar (D1-lite)
+
+What changed and why
+- With a side panel open (Portfolio, Actions, Agent, Learning, Proposal) the context bar re-centres in the space to
+  the panel's left, so the agent orb and the panel buttons stay visible and switch panels directly. The page itself
+  is not pushed: its layout is viewport-based, so padding it would squeeze a client page to about 770 px.
+- Under 1280 px the quick icons (call, schedule) step aside while a panel is open; under 720 px the panel is full
+  screen and the bar is hidden.
+- The dock has a thin cream edge so it separates from forest surfaces such as the Updates panel.
+- `scroll-padding-bottom` for the dock and context bar landed in batch 1 (A3).
+
+Checked
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
+  0 page overflow, and no state where an open panel covers the context bar (17–20 per width before).

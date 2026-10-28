@@ -131,7 +131,9 @@ input, select, textarea { font: inherit; color: inherit; }
 /* dock */
 .dock-wrap { position: fixed; left: 0; right: 0; bottom: 18px; z-index: 50; display: flex; justify-content: center; pointer-events: none; }
 .dock {
+  /* the thin cream edge keeps the dock apart from forest surfaces it floats over (the Updates panel) */
   pointer-events: auto; display: flex; gap: 2px; padding: 6px; background: var(--forest); border-radius: var(--r-pill);
+  outline: 1px solid rgba(243, 240, 232, .14); outline-offset: -1px;
   box-shadow: var(--shadow-float);
 }
 .dock a {
@@ -343,6 +345,13 @@ a.list-row:hover, button.list-row:hover { background: var(--forest-wash); }
 .ctxbar button.cb svg { width: 16px; height: 16px; stroke-width: 1.8; }
 .ctxbar .cb.minor { color: var(--muted); padding: 0 10px; }
 .has-ctxbar { padding-bottom: 72px; }
+/* With a side panel open the context bar re-centres in the free space to the panel's left, so the orb and the
+   panel buttons stay visible and switch panels. Narrower screens drop the quick icons; phones show the panel full screen. */
+.ctxbar-wrap { transition: right .22s cubic-bezier(.2, .8, .2, 1); }
+body.panel-open .ctxbar-wrap { right: min(520px, 100vw); }
+body.panel-open.panel-wide .ctxbar-wrap { right: min(640px, 100vw); }
+@media (max-width: 1279px) { body.panel-open .ctxbar .cb.minor, body.panel-open .ctxbar .sep:has(+ .cb.minor) { display: none; } }
+@media (max-width: 719px) { body.panel-open .ctxbar-wrap { display: none; } }
 
 /* agent orb: the brass held O */
 .orb {
