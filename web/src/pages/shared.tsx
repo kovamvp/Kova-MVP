@@ -1,9 +1,11 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { CalendarPlus, FileText, Lock, Headset, MessageSquare, NotebookPen, Receipt, Send, Sparkles, UserCog } from 'lucide-react'
-import { api, invalidate } from '../lib/api'
-import { date, time } from '../lib/format'
-import { useProducts } from '../lib/data'
+import { CalendarPlus, FileText, Lock, Headset, MessageSquare, NotebookPen, Receipt, Send, UserCog } from 'lucide-react'
+import { api, invalidate, useApi } from '../lib/api'
+import { useAction } from '../lib/action'
+import { date, nowISO, time, when } from '../lib/format'
+import { STAGES, useMeetings, useProducts } from '../lib/data'
 import { useToast } from '../ui'
+import { ReimbursementForm } from './Expense'
 
 /* The floating bar on client, prospect and product pages */
 export function ContextBar({ children, onAgent, agentOn }: { children: ReactNode; onAgent: () => void; agentOn?: boolean }) {
@@ -25,36 +27,152 @@ function nextSlot() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T11:00`
 }
 
-/* Actions panel: manual versions of everything the agent can do */
+/* Actions panel: every action the agent can propose, done by hand. Each runs the same server code as an approved agent card. */
 export function ActionsPanel({ kind, id, name, initial, onAskAgent, productId }: { kind: 'client' | 'prospect'; id: string; name: string; initial?: string | null; onAskAgent: (prompt: string) => void; productId?: string }) {
   const [open, setOpen] = useState<string | null>(initial || null)
   useEffect(() => { if (initial) setOpen(initial) }, [initial])
   const items = [
-    { key: 'schedule', icon: CalendarPlus, label: 'Schedule a meeting', works: true },
-    { key: 'feedback', icon: Send, label: 'Send feedback to a product team', works: true },
-    { key: 'note', icon: FileText, label: 'Add an internal note', works: true },
-    { key: 'message', icon: MessageSquare, label: 'Send a WhatsApp or email', prompt: `Draft a short message to ${name} about ` },
-    { key: 'mom', icon: NotebookPen, label: 'Record minutes of a meeting', prompt: `Log the MoM for my meeting with ${name}: ` },
-    ...(kind === 'client' ? [
-      { key: 'reimb', icon: Receipt, label: 'Claim a reimbursement', prompt: `I want to claim a reimbursement for my meeting with ${name}. ` },
-      { key: 'service', icon: Headset, label: 'Raise a service request', prompt: `Raise a service request for ${name}: ` },
-    ] : [{ key: 'stage', icon: UserCog, label: 'Change stage or next step', prompt: `Update ${name}: ` }]),
+    { key: 'schedule', icon: CalendarPlus, label: 'Schedule a meeting' },
+    { key: 'message', icon: MessageSquare, label: 'Send a WhatsApp or email' },
+    { key: 'mom', icon: NotebookPen, label: 'Record minutes of a meeting' },
+    { key: 'feedback', icon: Send, label: 'Send feedback to a product team' },
+    { key: 'note', icon: FileText, label: 'Add an internal note' },
+    ...(kind === 'client'
+      ? [{ key: 'reimb', icon: Receipt, label: 'Claim a reimbursement' }, { key: 'service', icon: Headset, label: 'Raise a service request' }]
+      : [{ key: 'stage', icon: UserCog, label: 'Change stage or next step' }]),
   ]
+  const done = () => setOpen(null)
   return (
     <div className="col" style={{ gap: 8 }}>
-      <p className="small muted" style={{ marginBottom: 6 }}>Everything the agent can do, done by hand. In this version three actions run directly; the rest open the agent with a head start.</p>
+      <p className="small muted" style={{ marginBottom: 6 }}>Everything the agent can do, done by hand. Each one lands in the outbox exactly as an approved agent card would.</p>
       {items.map((it) => (
         <div key={it.key} className={`action-item ${open === it.key ? 'open' : ''}`}>
-          <button className="action-head" onClick={() => (it.works ? setOpen(open === it.key ? null : it.key) : onAskAgent((it as any).prompt))}>
+          <button className="action-head" aria-expanded={open === it.key} onClick={() => setOpen(open === it.key ? null : it.key)}>
             <span className="acard-icon"><it.icon size={15} /></span>
             <span className="grow" style={{ textAlign: 'left' }}>{it.label}</span>
-            {!it.works && <span className="pill brass"><Sparkles size={11} />With the agent</span>}
           </button>
-          {open === it.key && it.key === 'schedule' && <ScheduleForm kind={kind} id={id} name={name} onDone={() => setOpen(null)} />}
-          {open === it.key && it.key === 'feedback' && <FeedbackForm clientId={kind === 'client' ? id : undefined} productId={productId} onDone={() => setOpen(null)} />}
-          {open === it.key && it.key === 'note' && <NoteForm kind={kind} id={id} onDone={() => setOpen(null)} />}
+          {open === it.key && it.key === 'schedule' && <ScheduleForm kind={kind} id={id} name={name} onDone={done} />}
+          {open === it.key && it.key === 'message' && <MessageForm kind={kind} id={id} onDone={done} />}
+          {open === it.key && it.key === 'mom' && <MomForm kind={kind} id={id} onDone={done} />}
+          {open === it.key && it.key === 'feedback' && <FeedbackForm clientId={kind === 'client' ? id : undefined} productId={productId} onDone={done} />}
+          {open === it.key && it.key === 'note' && <NoteForm kind={kind} id={id} onDone={done} />}
+          {open === it.key && it.key === 'reimb' && <ReimbursementForm clientId={id} clientName={name} onDone={done} />}
+          {open === it.key && it.key === 'service' && <ServiceForm clientId={id} onDone={done} />}
+          {open === it.key && it.key === 'stage' && <StageForm id={id} onDone={done} />}
         </div>
       ))}
+      <p className="small muted" style={{ marginTop: 8 }}>
+        Rather say it? <button className="linkbtn" onClick={() => onAskAgent('')}>Open the agent</button> and describe what you need; it prepares the same actions as cards for you to approve.
+      </p>
+    </div>
+  )
+}
+
+/* WhatsApp only with the client's consent; the server enforces it too */
+function MessageForm({ kind, id, onDone }: { kind: 'client' | 'prospect'; id: string; onDone: () => void }) {
+  const { data: who } = useApi<any>(`/c/${kind === 'client' ? 'clients' : 'prospects'}/${id}`)
+  const waAllowed = kind === 'prospect' || !!who?.consent?.whatsapp
+  const [channel, setChannel] = useState<'Email' | 'WhatsApp'>('Email')
+  const [subject, setSubject] = useState('')
+  const [body, setBody] = useState('')
+  const { busy, run } = useAction()
+  const toast = useToast()
+  const save = () => run(async () => {
+    await api('/actions/send_message', { body: { to_kind: kind, to_id: id, channel, subject: channel === 'Email' ? subject : undefined, body } })
+    invalidate('/c/')
+    toast(`${channel === 'Email' ? 'Email' : 'WhatsApp'} placed in the outbox`)
+    onDone()
+  }, 'The message wasn’t sent')
+  return (
+    <div className="action-form">
+      <div className="seg" role="group" aria-label="Channel">
+        <button className={channel === 'Email' ? 'on' : ''} aria-pressed={channel === 'Email'} onClick={() => setChannel('Email')}>Email</button>
+        <button className={channel === 'WhatsApp' ? 'on' : ''} aria-pressed={channel === 'WhatsApp'} disabled={!waAllowed} onClick={() => setChannel('WhatsApp')}>WhatsApp</button>
+      </div>
+      {!waAllowed && who && <p className="tiny muted">{who.first_name || who.name} hasn’t consented to WhatsApp, so this goes by email.</p>}
+      {channel === 'Email' && <label className="field"><span>Subject</span><input className="input" value={subject} onChange={(e) => setSubject(e.target.value)} /></label>}
+      <label className="field"><span>Message</span><textarea className="textarea" rows={5} value={body} onChange={(e) => setBody(e.target.value)} placeholder={`Hi ${who?.first_name || ''},`} /></label>
+      <div className="row"><button className="btn btn-primary" disabled={busy || !body.trim()} onClick={save}>{channel === 'Email' ? 'Send email' : 'Send WhatsApp'}</button><button className="btn btn-ghost" onClick={onDone}>Cancel</button></div>
+    </div>
+  )
+}
+
+/* MoM for a meeting that has happened; attaches to it, or records a conversation if none is picked */
+function MomForm({ kind, id, onDone }: { kind: 'client' | 'prospect'; id: string; onDone: () => void }) {
+  const { data: meetings = [] } = useMeetings()
+  const now = nowISO()
+  const past = meetings.filter((m: any) => m.with?.kind === kind && m.with?.id === id && m.start <= now && !m.mom).sort((a: any, b: any) => b.start.localeCompare(a.start))
+  const [mid, setMid] = useState<string>('')
+  useEffect(() => { if (!mid && past[0]) setMid(past[0].id) }, [past.length]) // eslint-disable-line
+  const [f, setF] = useState({ summary: '', feedback: '', promises: '', promise_due: '', send_to_client: kind === 'client' })
+  const { busy, run } = useAction()
+  const toast = useToast()
+  const save = () => run(async () => {
+    await api('/actions/log_mom', { body: { with_kind: kind, with_id: id, meeting_id: mid || undefined, summary: f.summary, feedback: f.feedback,
+      promises: f.promises.split('\n').map((x) => x.trim()).filter(Boolean), promise_due: f.promise_due || undefined, send_to_client: f.send_to_client } })
+    invalidate('/c/')
+    toast(f.send_to_client ? 'MoM recorded and placed in the outbox for the client' : 'MoM recorded')
+    onDone()
+  }, 'The MoM wasn’t recorded')
+  return (
+    <div className="action-form">
+      <label className="field"><span>Meeting</span>
+        <select className="select" value={mid} onChange={(e) => setMid(e.target.value)}>
+          {past.map((m: any) => <option key={m.id} value={m.id}>{m.title} · {when(m.start)}</option>)}
+          <option value="">A conversation not on the calendar</option>
+        </select>
+      </label>
+      <label className="field"><span>What was discussed</span><textarea className="textarea" rows={4} value={f.summary} onChange={(e) => setF({ ...f, summary: e.target.value })} /></label>
+      <label className="field"><span>How they reacted</span><input className="input" value={f.feedback} placeholder="Liked the proposal, worried about fees…" onChange={(e) => setF({ ...f, feedback: e.target.value })} /></label>
+      <label className="field"><span>What you promised, one per line</span><textarea className="textarea" rows={2} value={f.promises} onChange={(e) => setF({ ...f, promises: e.target.value })} /></label>
+      {f.promises.trim() && <label className="field"><span>Promised by</span><input className="input" type="date" value={f.promise_due} onChange={(e) => setF({ ...f, promise_due: e.target.value })} /></label>}
+      {kind === 'client' && <label className="check small"><input type="checkbox" checked={f.send_to_client} onChange={(e) => setF({ ...f, send_to_client: e.target.checked })} />Send the MoM to the client</label>}
+      <div className="row"><button className="btn btn-primary" disabled={busy || !f.summary.trim()} onClick={save}>{f.send_to_client ? 'Record and send' : 'Record MoM'}</button><button className="btn btn-ghost" onClick={onDone}>Cancel</button></div>
+    </div>
+  )
+}
+
+function ServiceForm({ clientId, onDone }: { clientId: string; onDone: () => void }) {
+  const [f, setF] = useState({ title: '', details: '', priority: 'normal' })
+  const { busy, run } = useAction()
+  const toast = useToast()
+  const save = () => run(async () => {
+    await api('/actions/service_request', { body: { client_id: clientId, ...f } })
+    invalidate('/c/')
+    toast('Service request sent to Client Experience. Track it in Requests.')
+    onDone()
+  }, 'The request wasn’t raised')
+  return (
+    <div className="action-form">
+      <label className="field"><span>What’s needed</span><input className="input" value={f.title} placeholder="Nominee update, address change, statement…" onChange={(e) => setF({ ...f, title: e.target.value })} /></label>
+      <label className="field"><span>Details for Client Experience</span><textarea className="textarea" rows={3} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} /></label>
+      <div className="seg" role="group" aria-label="Priority"><button className={f.priority === 'normal' ? 'on' : ''} aria-pressed={f.priority === 'normal'} onClick={() => setF({ ...f, priority: 'normal' })}>Normal</button><button className={f.priority === 'high' ? 'on' : ''} aria-pressed={f.priority === 'high'} onClick={() => setF({ ...f, priority: 'high' })}>High priority</button></div>
+      <div className="row"><button className="btn btn-primary" disabled={busy || !f.title.trim() || !f.details.trim()} onClick={save}>Raise request</button><button className="btn btn-ghost" onClick={onDone}>Cancel</button></div>
+    </div>
+  )
+}
+
+function StageForm({ id, onDone }: { id: string; onDone: () => void }) {
+  const { data: p } = useApi<any>(`/c/prospects/${id}`)
+  const [f, setF] = useState<{ stage: string; next_step: string; next_step_date: string } | null>(null)
+  useEffect(() => { if (p && !f) setF({ stage: p.stage, next_step: p.next_step || '', next_step_date: (p.next_step_date || '').slice(0, 10) }) }, [p, f])
+  const { busy, run } = useAction()
+  const toast = useToast()
+  if (!f) return <div className="action-form small muted">Loading…</div>
+  const save = () => run(async () => {
+    await api('/actions/update_prospect', { body: { prospect_id: id, stage: f.stage !== p.stage ? f.stage : undefined, next_step: f.next_step, next_step_date: f.next_step_date || undefined } })
+    invalidate('/c/')
+    toast('Prospect updated')
+    onDone()
+  }, 'The prospect wasn’t updated')
+  return (
+    <div className="action-form">
+      <label className="field"><span>Stage</span><select className="select" value={f.stage} onChange={(e) => setF({ ...f, stage: e.target.value })}>{STAGES.map((s) => <option key={s}>{s}</option>)}</select></label>
+      <div className="grid g2" style={{ gap: 10 }}>
+        <label className="field"><span>Next step</span><input className="input" value={f.next_step} onChange={(e) => setF({ ...f, next_step: e.target.value })} /></label>
+        <label className="field"><span>By</span><input className="input" type="date" value={f.next_step_date} onChange={(e) => setF({ ...f, next_step_date: e.target.value })} /></label>
+      </div>
+      <div className="row"><button className="btn btn-primary" disabled={busy} onClick={save}>Save changes</button><button className="btn btn-ghost" onClick={onDone}>Cancel</button></div>
     </div>
   )
 }

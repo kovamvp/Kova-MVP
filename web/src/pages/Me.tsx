@@ -1,12 +1,12 @@
-import { useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { Award, BookOpen, Camera, Download, Languages, RotateCcw } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
 import { useClients, useGrowth, useRm } from '../lib/data'
-import { date, setNumberStyle } from '../lib/format'
+import { date, inr, setNumberStyle, when } from '../lib/format'
 import { pref, setPref } from '../lib/session'
 import { resizeImage } from '../shell/ProfileMenu'
-import { Avatar, DetailSkeleton, Num, Panel, Stat, useToast } from '../ui'
+import { AmountInput, Avatar, DetailSkeleton, Num, Panel, Stat, useToast } from '../ui'
 
 export function Profile() {
   const { data: rm } = useRm()
@@ -61,7 +61,7 @@ export function Preferences() {
   return (
     <main className="page">
       <div className="page-head"><div><h1>Preferences</h1><p className="lede">How Kova Work behaves for you. Saved on this device in this preview.</p></div></div>
-      <div className="grid g2">
+      <div className="grid g2" style={{ alignItems: 'start' }}>
         <Panel title="Updates & upcoming" aside="Coming in the next release">
           <div className="col" style={{ gap: 12 }}>
             <p className="small muted">Choose what reaches your Updates panel and when it goes quiet. These settings arrive with notifications in the full release.</p>
@@ -78,6 +78,7 @@ export function Preferences() {
             <label className="check"><input type="checkbox" checked={prefs.agentVoice} onChange={(e) => set('agentVoice', e.target.checked)} />Show the live transcript while I speak to the agent</label>
           </div>
         </Panel>
+        <ExpensePolicy />
         <Panel title="Demo data">
           <p className="small muted" style={{ marginBottom: 12 }}>Puts every client, meeting, request and session back to the starting sample, with dates moved to this week. Agent sessions and outbox items you created are removed.</p>
           {confirm ? <div className="row"><button className="btn btn-danger" disabled={busy} onClick={reset}><RotateCcw />{busy ? 'Resetting…' : 'Yes, reset everything'}</button><button className="btn btn-ghost" onClick={() => setConfirm(false)}>Cancel</button></div>
@@ -85,6 +86,50 @@ export function Preferences() {
         </Panel>
       </div>
     </main>
+  )
+}
+
+/* The branch head sets the limits; the demo lets you play that role to try them */
+function ExpensePolicy() {
+  const { data: p, reload } = useApi<any>('/expenses/policy')
+  const [edit, setEdit] = useState<any>(null)
+  const { busy, run } = useAction()
+  const toast = useToast()
+  if (!p) return <Panel title="Expense policy"><p className="small muted">Loading…</p></Panel>
+  const save = () => run(async () => {
+    await api('/expenses/policy', { method: 'PUT', body: { ...edit, by: p.approver } })
+    invalidate('/expenses/'); reload(); setEdit(null); toast('Expense policy updated')
+  }, 'The policy wasn’t saved')
+  const last = p.history?.[p.history.length - 1]
+  return (
+    <Panel title="Expense policy" aside={`Set by ${p.set_by.split(',')[0]}`}>
+      {edit ? (
+        <div className="col" style={{ gap: 10 }}>
+          <p className="small muted">You’re changing this as your branch head. Claims above these limits go to them before Accounts.</p>
+          <div className="grid g2" style={{ gap: 10 }}>
+            <label className="field"><span>Monthly limit</span><AmountInput label="Monthly limit" value={edit.monthly_cap} onChange={(v) => setEdit({ ...edit, monthly_cap: v })} /></label>
+            <label className="field"><span>Bill needed above</span><AmountInput label="Bill needed above" value={edit.bill_required_above} onChange={(v) => setEdit({ ...edit, bill_required_above: v })} /></label>
+          </div>
+          <div className="grid g2" style={{ gap: 10 }}>
+            {Object.entries(edit.category_limits).map(([cat, v]) => (
+              <label key={cat} className="field"><span>{cat}, per claim</span><AmountInput label={`${cat} limit`} value={Number(v)} onChange={(n) => setEdit({ ...edit, category_limits: { ...edit.category_limits, [cat]: n } })} /></label>
+            ))}
+          </div>
+          <div className="row"><button className="btn btn-primary" disabled={busy} onClick={save}>Save policy</button><button className="btn btn-ghost" onClick={() => setEdit(null)}>Cancel</button></div>
+        </div>
+      ) : (
+        <div className="col" style={{ gap: 10 }}>
+          <dl className="kv small" style={{ gridTemplateColumns: '170px 1fr' }}>
+            <dt>Monthly limit</dt><dd className="num">{inr(p.monthly_cap, { compact: false })}</dd>
+            <dt>Bill needed above</dt><dd className="num">{inr(p.bill_required_above, { compact: false })}</dd>
+            <dt>Claim within</dt><dd>{p.claim_within_days} days of the bill</dd>
+            {Object.entries(p.category_limits).map(([cat, v]) => <Fragment key={cat}><dt>{cat}</dt><dd className="num">{inr(Number(v), { compact: false })} per claim</dd></Fragment>)}
+          </dl>
+          {last && <p className="tiny muted">Last change {when(last.at)}: {last.text}</p>}
+          <div><button className="btn btn-quiet" onClick={() => setEdit({ monthly_cap: p.monthly_cap, bill_required_above: p.bill_required_above, category_limits: { ...p.category_limits } })}>Change as branch head</button></div>
+        </div>
+      )}
+    </Panel>
   )
 }
 

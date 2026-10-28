@@ -161,7 +161,7 @@ export default function ClientDetail() {
         <button className="cb minor" onClick={() => setPanel('actions', { do: 'schedule' })} title="Schedule a meeting" aria-label="Schedule a meeting"><CalendarPlus aria-hidden /></button>
         <button className="cb minor" onClick={() => { setAgentPrompt(`Send the MoM from my last meeting with ${c.first_name} on ${c.consent.whatsapp ? 'WhatsApp' : 'email'}: `); setPanel('agent') }} title="Send the MoM" aria-label="Send the MoM from the last meeting"><MessageSquareText aria-hidden /></button>
         <button className="cb minor" onClick={() => setPanel('actions', { do: 'feedback' })} title="Give product feedback" aria-label="Give product feedback"><Send aria-hidden /></button>
-        <button className="cb minor" onClick={() => { setAgentPrompt(null); setPanel('agent'); toast('Attach the bill with the paperclip, or describe the expense.') }} title="Add a reimbursement" aria-label="Add a reimbursement"><Receipt aria-hidden /></button>
+        <button className="cb minor" onClick={() => setPanel('actions', { do: 'reimb' })} title="Claim a reimbursement" aria-label="Claim a reimbursement"><Receipt aria-hidden /></button>
       </ContextBar>
 
       {panel === 'portfolio' && <PortfolioPanel c={c} P={P} products={products} onClose={() => setPanel(null)} />}

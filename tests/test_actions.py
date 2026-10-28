@@ -47,9 +47,17 @@ def test_log_mom_attaches_to_meeting_needing_mom(client):
     assert r["request"]["type"] == "mom_ack"
 
 
+def _yday():
+    import datetime as dt
+
+    from backend import store as S
+    return (dt.date.fromisoformat(S.now_ist()[:10]) - dt.timedelta(days=1)).isoformat()
+
+
 def test_reimbursement_and_service_request_and_note(client):
-    r = client.post("/api/actions/reimbursement", json={"client_id": "CL-1001", "category": "Client meeting meals", "amount": 3478,
-                                                         "merchant": "Global Fusion", "bill_date": "2026-10-21"}).json()
+    body = {"client_id": "CL-1001", "category": "Client meeting meals", "amount": 3478, "merchant": "Global Fusion", "bill_date": _yday()}
+    assert client.post("/api/actions/reimbursement", json=body).status_code == 400  # no bill above the line
+    r = client.post("/api/actions/reimbursement", json=body | {"bill_image": "data:image/jpeg;base64,AAAA"}).json()
     assert r["request"]["team"] == "Accounts" and r["request"]["payload"]["amount"] == 3478
     r = client.post("/api/actions/service_request", json={"client_id": "CL-1001", "title": "Address change", "details": "New address"}).json()
     assert r["request"]["team"] == "Client Experience"
@@ -70,7 +78,7 @@ def test_unknown_action(client):
 
 def test_simulated_replies_advance_with_time(client, clock):
     req = client.post("/api/actions/reimbursement", json={"client_id": "CL-1001", "category": "Local travel", "amount": 500,
-                                                           "merchant": "Uber", "bill_date": "2026-10-21"}).json()["request"]
+                                                           "merchant": "Uber", "bill_date": _yday()}).json()["request"]
     assert client.get(f"/api/c/requests/{req['id']}").json()["status"] == "sent"
     clock.advance(minutes=2)
     assert client.get(f"/api/c/requests/{req['id']}").json()["status"] == "in_review"

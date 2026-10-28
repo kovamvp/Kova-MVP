@@ -6,6 +6,7 @@ import { ago, date, inr, label, time, when } from '../lib/format'
 import { resizeImage } from '../shell/ProfileMenu'
 import { Drawer, Status, useToast } from '../ui'
 import { useSpeech } from './useSpeech'
+import { BillSlot, Checks, readBill } from '../pages/Expense'
 
 export type Scope = { kind: 'client' | 'prospect' | 'product'; id: string }
 
@@ -195,6 +196,15 @@ function Chat({ sess, setSess, scope, name, allowBill, onBack, onArchive, names,
     finally { setBillBusy(false); if (file.current) file.current.value = '' }
   }
 
+  /* a reimbursement card holds its own bill: add or replace it on the card */
+  const addBill = async (card: any, f: File) => {
+    try {
+      const { bill: b, note } = await readBill(f)
+      setSess(await api(`/agent/sessions/${sess.id}/cards/${card.id}/bill`, { body: b }))
+      if (note) toast(note)
+    } catch (e: any) { toast(`The bill wasn’t attached. ${e.message}. Try again.`) }
+  }
+
   const decide = async (card: any, decision: 'approve' | 'reject', args?: any, reason?: string) => {
     try {
       const s = await api(`/agent/sessions/${sess.id}/cards/${card.id}`, { body: { decision, args, ...(reason ? { reason } : {}) } })
@@ -248,7 +258,7 @@ function Chat({ sess, setSess, scope, name, allowBill, onBack, onArchive, names,
               <span className="orb sm" aria-hidden />
               <div className="grow" style={{ minWidth: 0 }}>
                 {m.text && <div className="agent-text">{md(m.text)}</div>}
-                {m.cards?.map((c: any) => <Card key={c.id} card={c} names={names} onDecide={decide} />)}
+                {m.cards?.map((c: any) => <Card key={c.id} card={c} names={names} onDecide={decide} onBill={addBill} />)}
                 {m.reads?.length > 0 && <div className="tiny muted" style={{ marginTop: 4 }}>Looked at {listWords([...new Set<string>(m.reads.map((r: string) => READ_WORDS[r] || r.replace(/_/g, ' ')))])}</div>}
               </div>
             </div>
@@ -304,7 +314,11 @@ function Chat({ sess, setSess, scope, name, allowBill, onBack, onArchive, names,
   )
 }
 
-function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'approve' | 'reject', args?: any, reason?: string) => void; names: Record<string, string> }) {
+function Card({ card, onDecide, onBill, names }: { card: any; onDecide: (c: any, d: 'approve' | 'reject', args?: any, reason?: string) => void; onBill: (c: any, f: File) => Promise<void>; names: Record<string, string> }) {
+  const [billBusy, setBillBusy] = useState(false)
+  const claim = card.action === 'reimbursement'
+  const billNeeded = claim && (card.checks || []).some((c: any) => c.id === 'bill' && !c.ok)
+  const blocked = claim && card.blocking === true
   const meta = ACTION_META[card.action] || { icon: Check, label: card.action }
   const [edit, setEdit] = useState(false)
   const [args, setArgs] = useState<any>(card.args)
@@ -317,6 +331,7 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
   const show = (k: string, v: any) => {
     if (v === null || v === undefined || v === '') return '—'
     if (k === 'start') return when(String(v))
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return date(v, true)
     if (k === 'amount' || k === 'estimated_investable') return inr(Number(v), { compact: false })
     if (typeof v === 'boolean') return v ? 'Yes' : 'No'
     if (Array.isArray(v)) return v.map((x) => (typeof x === 'object' ? x.name : x)).join(', ') || '—'
@@ -334,6 +349,11 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
         </div>
         {!pending && <Status s={card.status}>{card.status === 'approved' ? (card.edited ? 'Approved with edits' : 'Approved') : 'Rejected, nothing sent'}</Status>}
       </div>
+      {claim && pending && (
+        <BillSlot bill={card.bill} required={billNeeded} busy={billBusy}
+          onFile={async (f) => { setBillBusy(true); await onBill(card, f); setBillBusy(false) }} />
+      )}
+      {claim && !pending && card.bill?.thumb && <div className="bill-slot has"><img src={card.bill.thumb} alt="Attached bill" /><div className="small strong">Bill attached</div></div>}
       <dl className="acard-fields">
         {fields.map(([k, v]) => (
           <Fragment key={k}>
@@ -354,6 +374,7 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
           </Fragment>
         ))}
       </dl>
+      {claim && pending && <Checks checks={card.checks} />}
       {pending && rejecting ? (
         <div className="acard-actions acard-reject">
           <input className="input sm grow" autoFocus placeholder="What was wrong? (optional)" aria-label="Why you are rejecting this card (optional)" value={reason} onChange={(e) => setReason(e.target.value)}
@@ -363,9 +384,10 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
         </div>
       ) : pending ? (
         <div className="acard-actions">
-          <button className="btn btn-primary btn-sm" disabled={working} onClick={() => go('approve')}><Check />{edit ? 'Approve edited' : 'Approve'}</button>
+          <button className="btn btn-primary btn-sm" disabled={working || blocked} onClick={() => go('approve')}><Check />{edit ? 'Approve edited' : 'Approve'}</button>
           <button className="btn btn-quiet btn-sm" disabled={working} onClick={() => setEdit((e) => !e)}><Pencil />{edit ? 'Stop editing' : 'Edit'}</button>
           <button className="btn btn-ghost btn-sm" disabled={working} onClick={() => setRejecting(true)}><X />Reject</button>
+          {blocked && <span className="acard-blocked">{billNeeded ? 'Add the bill to approve' : 'Fix the checks above to approve'}</span>}
         </div>
       ) : card.status === 'rejected' ? (
         card.reason ? <div className="acard-result tiny muted">Your reason: {card.reason}</div> : null

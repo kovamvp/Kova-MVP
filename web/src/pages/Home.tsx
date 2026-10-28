@@ -49,7 +49,7 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    api(`/c/layouts/${LAYOUT_ID}`).then((d: any) => setItems(d.items)).catch(() => setItems(DEFAULT_LAYOUT))
+    api(`/c/layouts/${LAYOUT_ID}`).then((d: any) => setItems(d.items || DEFAULT_LAYOUT)).catch(() => setItems(DEFAULT_LAYOUT))
   }, [])
   const persist = (next: Item[]) => {
     window.clearTimeout(saveT.current)

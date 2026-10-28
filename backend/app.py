@@ -8,7 +8,7 @@ from typing import Any
 from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from . import actions
+from . import actions, expenses
 from .store import LIST_COLLECTIONS, SINGLETONS, new_id, now_ist, put_singleton, singleton, store
 
 app = FastAPI(title="KOVA Work API", version="0.1.0")
@@ -57,6 +57,8 @@ def get_doc(coll: str, id_: str):
     if coll not in READABLE:
         raise HTTPException(404, "Unknown collection")
     d = store().get(coll, id_)
+    if d is None and coll == "layouts":
+        return {"id": id_, "items": None}  # no saved layout yet: the app shows the default board
     if d is None:
         raise HTTPException(404, f"{id_} not found")
     if coll == "requests" and actions.advance(d):
@@ -93,8 +95,32 @@ def patch_single(name: str, patch: dict = Body(...)):
 def run_action(action: str, args: dict = Body(...)):
     try:
         return actions.run(action, args, {"via": "manual"})
-    except (ValueError, KeyError) as e:
+    except KeyError as e:
+        raise HTTPException(400, f"Missing {str(e).strip(chr(39)).replace('_', ' ')}") from e
+    except ValueError as e:
         raise HTTPException(400, str(e)) from e
+
+
+# ------------------------------------------------------------ expenses (policy set by the branch head)
+@app.get("/api/expenses/policy")
+def get_expense_policy():
+    return expenses.policy()
+
+
+@app.put("/api/expenses/policy")
+def put_expense_policy(patch: dict = Body(...)):
+    try:
+        return expenses.update_policy(patch)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.post("/api/expenses/check")
+def check_expense(args: dict = Body(...)):
+    """Dry run of every policy check, for the form and the agent card. Nothing is written."""
+    has_bill = args.pop("has_bill", None)
+    bill_amount = args.pop("bill_amount", None)
+    return expenses.check(args, has_bill, bill_amount)
 
 
 # ------------------------------------------------------------ updates panel
@@ -206,7 +232,7 @@ def portfolio_submit(id_: str, body: dict = Body(default={})):
     req = actions.new_request("portfolio_approval", pf["name"], "CIO Office", {"portfolio_id": id_, "amount": pf["amount"], "flags": flags},
                               {"kind": "portfolio", "id": id_}, decision=decision, decision_text=text)
     actions.add_outbox("portfolio_approval", "Kova Work", {"name": "CIO Office", "address": "Anand Iyer"}, f"Approval: {pf['name']}",
-                       f"Portfolio {id_} ({pf['name']}) for {actions.entity_name(pf['tag'])}, amount Rs {pf['amount']:,}. Lines: {len(pf['lines'])}.",
+                       f"Portfolio {id_} ({pf['name']}) for {actions.entity_name(pf['tag'])}, amount {expenses.rupees(pf['amount'])}. Lines: {len(pf['lines'])}.",
                        {"via": "studio", "kind": "portfolio", "id": id_}, {"portfolio": pf, "flags": flags})
     return {"portfolio": pf, "request": req}
 
