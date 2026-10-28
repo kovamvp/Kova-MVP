@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Check, ChevronRight, Search } from 'lucide-react'
+import { Check, ChevronRight } from 'lucide-react'
 import { fitsProfile, ldStats, useClients, useLd, useProducts, useResearch } from '../lib/data'
 import { date, inr } from '../lib/format'
 import { Donut, HBars, Legend } from '../charts'
-import { Num, Panel, Stat, Status } from '../ui'
+import { LoadError, Num, Panel, SkeletonRows, Stat, Status, SearchField } from '../ui'
 
 const CAT_COLORS: Record<string, string> = { 'Mutual fund': '#1D3A2E', PMS: '#5F7D6E', AIF: '#9A7A47', Bond: '#C9A961', 'Fixed deposit': '#A9B8A9', Credit: '#77736A' }
 
@@ -13,7 +13,7 @@ export function suitsCount(p: any, clients: any[]) {
 }
 
 export default function Products() {
-  const { data: products = [] } = useProducts()
+  const { data: products = [], loading, error, reload } = useProducts()
   const { data: clients = [] } = useClients()
   const { data: ld = [] } = useLd()
   const { data: research = [] } = useResearch()
@@ -46,8 +46,8 @@ export default function Products() {
           <p className="lede">{products.length} products on the Kova shelf. Your clients hold {inr(total)} across {Object.keys(held).length} of them.</p>
         </div>
         <div className="seg">
-          <button className={tab === 'shelf' ? 'on' : ''} onClick={() => setParams({})}>Shelf</button>
-          <button className={tab === 'research' ? 'on' : ''} onClick={() => setParams({ tab: 'research' })}>House view &amp; research</button>
+          <button className={tab === 'shelf' ? 'on' : ''} aria-pressed={tab === 'shelf'} onClick={() => setParams({})}>Shelf</button>
+          <button className={tab === 'research' ? 'on' : ''} aria-pressed={tab === 'research'} onClick={() => setParams({ tab: 'research' })}>House view &amp; research</button>
         </div>
       </div>
 
@@ -96,16 +96,16 @@ export default function Products() {
 
           <section className="panel">
             <div className="list-toolbar">
-              <label className="searchbox" style={{ height: 34, maxWidth: 240 }}><Search size={14} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name or manufacturer" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>
+              <SearchField value={q} onChange={setQ} placeholder="Name or manufacturer…" label="Search products" width={240} />
               <div className="row wrap" style={{ gap: 6 }}>
-                <button className={`chip ${!cat ? 'on' : ''}`} onClick={() => setCat('')}>All</button>
-                {cats.map((c) => <button key={c} className={`chip ${cat === c ? 'on' : ''}`} onClick={() => setCat(c)}>{c}</button>)}
+                <button className={`chip ${!cat ? 'on' : ''}`} aria-pressed={!cat} onClick={() => setCat('')}>All</button>
+                {cats.map((c) => <button key={c} className={`chip ${cat === c ? 'on' : ''}`} aria-pressed={cat === c} onClick={() => setCat(c)}>{c}</button>)}
               </div>
               <select className="select sm" style={{ width: 190, marginLeft: 'auto' }} value={ldf} onChange={(e) => setLdf(e.target.value)} aria-label="Learning status">
                 <option value="">Any learning status</option><option value="none">Not started</option><option value="progress">In progress</option><option value="done">Completed</option>
               </select>
             </div>
-            <table className="table products-table">
+            {error && !products.length ? <LoadError what="products" onRetry={reload} /> : loading && !products.length ? <SkeletonRows rows={8} height={56} /> : <table className="table products-table">
               <thead><tr><th>Product</th><th>Risk</th><th>CIO view</th><th className="r">Returns / yield</th><th className="r">Your clients</th><th>Learning</th><th /></tr></thead>
               <tbody>
                 {list.map((p) => {
@@ -123,12 +123,12 @@ export default function Products() {
                           {l.pct === 100 ? <><Check size={13} />Completed</> : l.pct > 0 ? <>Continue · {l.completed}/{l.total}</> : <>Start learning</>}
                         </Link>
                       </td>
-                      <td><Link to={`/products/${p.id}`} className="iconbtn" aria-label="Open"><ChevronRight /></Link></td>
+                      <td><Link to={`/products/${p.id}`} className="iconbtn" aria-label={`Open ${p.name}`}><ChevronRight aria-hidden /></Link></td>
                     </tr>
                   )
                 })}
               </tbody>
-            </table>
+            </table>}
           </section>
         </>
       )}

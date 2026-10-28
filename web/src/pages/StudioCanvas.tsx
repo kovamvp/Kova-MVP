@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Download, Plus, Search, Send, Sparkles, Trash2 } from 'lucide-react'
+import { ArrowLeft, Download, Plus, Send, Sparkles, Trash2 } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { assetClassOf, EQUITY_BAND, fitsProfile, RISK_ORDER, useClients, useModels, useProducts, useProspects } from '../lib/data'
 import { ago, inr } from '../lib/format'
 import { AllocBar } from '../charts'
-import { ASSET_COLORS, Bar, Empty, Status, useToast } from '../ui'
+import { ASSET_COLORS, Bar, DetailSkeleton, Empty, Status, useToast, SearchField } from '../ui'
 import { allocOf } from './Studio'
 
 const SHELVES = [
@@ -93,7 +93,7 @@ export default function StudioCanvas() {
   }, [pf, products, profile, models, who])
 
   if (error) return <main className="page"><Empty title="Portfolio not found" action={<Link className="btn btn-quiet" to="/studio">Back to Studio</Link>} /></main>
-  if (!pf || !calc) return <main className="page"><div className="panel skeleton" style={{ height: 400 }} /></main>
+  if (!pf || !calc) return <DetailSkeleton />
 
   const setLine = (pid: string, amount: number) => change({ lines: pf.lines.map((l: any) => (l.product_id === pid ? { ...l, amount: Math.max(0, Math.round(amount)) } : l)) })
   const add = (pid: string) => {
@@ -141,7 +141,7 @@ export default function StudioCanvas() {
             <section className="panel">
               <div className="list-toolbar" style={{ gap: 8 }}>
                 <div className="row wrap" style={{ gap: 6 }}>{SHELVES.map((s) => <button key={s.key} className={`chip ${shelf === s.key ? 'on' : ''}`} onClick={() => setShelf(s.key)}>{s.label}</button>)}</div>
-                <label className="searchbox" style={{ height: 32, maxWidth: 200, marginLeft: 'auto' }}><Search size={13} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>
+                <SearchField value={q} onChange={setQ} placeholder="Find a product…" label="Find a product on the shelf" height={32} width={200} style={{ marginLeft: 'auto' }} />
               </div>
               <div className="shelf">
                 {shelfList.map((p) => {
@@ -180,8 +180,8 @@ export default function StudioCanvas() {
                       </div>
                       <label className="amt"><span className="tiny muted">₹</span><input className="input sm num" type="number" step={10000} value={l.amount} disabled={locked} onChange={(e) => setLine(l.product_id, +e.target.value)} /></label>
                       <label className="amt pct"><input className="input sm num" type="number" step={0.5} value={+share.toFixed(1)} disabled={locked} onChange={(e) => setLine(l.product_id, (pf.amount * +e.target.value) / 100)} /><span className="tiny muted">%</span></label>
-                      <button className="iconbtn field-agent" title="Ask the agent about this line (coming soon)" onClick={comingSoon}><Sparkles /></button>
-                      {!locked && <button className="iconbtn" aria-label="Remove" onClick={() => remove(l.product_id)}><Trash2 /></button>}
+                      <button className="iconbtn field-agent" title="Ask the agent about this line (coming soon)" aria-label={`Ask the agent about ${p.name} (coming soon)`} onClick={comingSoon}><Sparkles aria-hidden /></button>
+                      {!locked && <button className="iconbtn" aria-label={`Remove ${p.name}`} onClick={() => remove(l.product_id)}><Trash2 /></button>}
                     </div>
                   )
                 })}
@@ -192,7 +192,7 @@ export default function StudioCanvas() {
 
         <aside className="master panel">
           <div className="master-sec">
-            <div className="spread"><h3>Master data</h3><button className="iconbtn field-agent" title="Ask the agent to critique (coming soon)" onClick={comingSoon}><Sparkles /></button></div>
+            <div className="spread"><h3>Master data</h3><button className="iconbtn field-agent" title="Ask the agent to critique (coming soon)" aria-label="Ask the agent to critique the portfolio (coming soon)" onClick={comingSoon}><Sparkles aria-hidden /></button></div>
             <label className="field" style={{ marginTop: 10 }}><span>For</span>
               <select className="select sm" disabled={locked} value={pf.tag ? `${pf.tag.kind}:${pf.tag.id}` : ''} onChange={(e) => change({ tag: e.target.value ? { kind: e.target.value.split(':')[0], id: e.target.value.split(':')[1] } : null })}>
                 <option value="">No one (practice)</option>

@@ -8,6 +8,8 @@ export async function api<T = any>(path: string, opts: { method?: string; body?:
   else if (opts.body !== undefined) {
     init.body = JSON.stringify(opts.body)
     init.headers = { 'content-type': 'application/json' }
+    // small writes survive a page change (used by the undo window); keepalive caps bodies at 64 KB
+    if ((init.body as string).length < 60000) init.keepalive = true
   }
   const r = await fetch(`/api${path}`, init)
   const text = await r.text()

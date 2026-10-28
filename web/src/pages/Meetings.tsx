@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, MapPin, NotebookPen, Search, Users } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MapPin, NotebookPen, Users } from 'lucide-react'
 import { useClients, useMeetings, useProducts, useProspects } from '../lib/data'
 import { date, inr, nowISO, parse, time, todayISO, when } from '../lib/format'
-import { Avatar, Drawer, Panel, Stat, Status } from '../ui'
+import { Avatar, Drawer, Panel, Stat, Status, SearchField } from '../ui'
 
 const TYPE_COLOR: Record<string, string> = { Review: '#1D3A2E', Proposal: '#9A7A47', 'First meeting': '#5F7D6E', Service: '#77736A', 'Family meeting': '#2C4E63' }
 const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -83,18 +83,18 @@ export default function Meetings() {
           <div className="row"><button className="iconbtn" onClick={() => shift(-1)} aria-label="Previous"><ChevronLeft /></button><button className="btn btn-quiet btn-sm" onClick={() => setAnchor(parse(todayISO()))}>Today</button><button className="iconbtn" onClick={() => shift(1)} aria-label="Next"><ChevronRight /></button><h2 style={{ marginLeft: 8 }}>{title}</h2></div>
           <div className="row" style={{ gap: 14 }}>
             <div className="row wrap tiny muted" style={{ gap: 10 }}>{Object.entries(TYPE_COLOR).map(([k, c]) => <span key={k} className="row" style={{ gap: 5 }}><i style={{ width: 8, height: 8, borderRadius: 2, background: c }} />{k}</span>)}<span className="row" style={{ gap: 5 }}><span className="ring" />Set up by the agent</span></div>
-            <div className="seg">{(['day', 'week', 'month'] as const).map((v) => <button key={v} className={view === v ? 'on' : ''} onClick={() => setView(v)}>{v[0].toUpperCase() + v.slice(1)}</button>)}</div>
+            <div className="seg" role="group" aria-label="Calendar view">{(['day', 'week', 'month'] as const).map((v) => <button key={v} className={view === v ? 'on' : ''} aria-pressed={view === v} onClick={() => setView(v)}>{v[0].toUpperCase() + v.slice(1)}</button>)}</div>
           </div>
         </div>
         {view === 'month' ? (
           <div className="month">
             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => <div key={d} className="month-dow tiny muted">{d}</div>)}
             {days.map((d) => (
-              <div key={iso(d)} className={`month-cell ${d.getMonth() !== anchor.getMonth() ? 'out' : ''} ${iso(d) === todayISO() ? 'today' : ''}`} onClick={() => { setAnchor(d); setView('day') }}>
-                <span className="tiny">{d.getDate()}</span>
+              <button key={iso(d)} className={`month-cell ${d.getMonth() !== anchor.getMonth() ? 'out' : ''} ${iso(d) === todayISO() ? 'today' : ''}`} onClick={() => { setAnchor(d); setView('day') }} aria-label={`${d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}, ${inDay(d).length} meeting${inDay(d).length === 1 ? '' : 's'}. Open the day`}>
+                <span className="tiny" aria-hidden>{d.getDate()}</span>
                 {inDay(d).slice(0, 3).map((m) => <span key={m.id} className="month-ev" style={{ borderColor: TYPE_COLOR[m.type] }}>{time(m.start)} {who(m)?.name?.split(' ')[0]}</span>)}
                 {inDay(d).length > 3 && <span className="tiny muted">+{inDay(d).length - 3} more</span>}
-              </div>
+              </button>
             ))}
           </div>
         ) : (
@@ -130,12 +130,12 @@ export default function Meetings() {
               <div key={i} className="w-line small">
                 <span className={`kyc-dot ${p.done ? 'done' : ''}`} />
                 <span className="grow" style={{ textDecoration: p.done ? 'line-through' : 'none', color: p.done ? 'var(--muted)' : undefined }}>{p.text}<br /><span className="tiny muted">{who(p.m)?.name} · from {p.m.title}</span></span>
-                {p.due && <span className={`tiny ${!p.done && p.due < todayISO() ? 'u-overdue-l' : 'muted'}`}>{p.done ? 'Done' : when(p.due)}</span>}
+                {p.due && <span className={`tiny ${!p.done && p.due < todayISO() ? 'u-overdue-l' : 'muted'}`}>{p.done ? 'Done' : `${p.due < todayISO() ? 'Overdue · ' : ''}${when(p.due)}`}</span>}
               </div>
             ))}
           </div>
         </Panel>
-        <Panel title="History" aside={<label className="searchbox" style={{ height: 30, width: 200 }}><Search size={13} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>}>
+        <Panel title="History" aside={<SearchField value={q} onChange={setQ} placeholder="Name or title…" label="Search meeting history" height={30} width={200} style={{ width: 200 }} />}>
           <div className="col" style={{ gap: 0 }}>
             {history.map((m) => (
               <button key={m.id} className="w-line small" style={{ textAlign: 'left' }} onClick={() => setParams({ m: m.id })}>

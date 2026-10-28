@@ -5,7 +5,7 @@ import { api, invalidate } from '../lib/api'
 import { assetClassOf, useClients, useModels, usePortfolios, useProducts, useProspects } from '../lib/data'
 import { ago, inr } from '../lib/format'
 import { AllocBar } from '../charts'
-import { ASSET_COLORS, Empty, Modal, Status, useToast } from '../ui'
+import { ASSET_COLORS, Empty, LoadError, Modal, Status, useToast } from '../ui'
 
 const LISTS = [
   { key: 'draft', label: 'Drafts', match: (s: string) => s === 'draft' },
@@ -21,7 +21,7 @@ export function allocOf(lines: any[], P: Record<string, any>) {
 }
 
 export default function Studio() {
-  const { data: portfolios = [] } = usePortfolios()
+  const { data: portfolios = [], loading, error, reload } = usePortfolios()
   const { data: products = [] } = useProducts()
   const { data: clients = [] } = useClients()
   const { data: prospects = [] } = useProspects()
@@ -42,9 +42,9 @@ export default function Studio() {
         <button className="btn btn-primary" onClick={() => setParams({ new: '1' })}><Plus />Create a portfolio</button>
       </div>
       <div className="tabs" style={{ marginBottom: 16 }}>
-        {LISTS.map((l) => <button key={l.key} className={list === l.key ? 'on' : ''} onClick={() => setList(l.key)}>{l.label}<span className="count">{portfolios.filter((p) => l.match(p.status)).length}</span></button>)}
+        {LISTS.map((l) => <button key={l.key} className={list === l.key ? 'on' : ''} aria-pressed={list === l.key} onClick={() => setList(l.key)}>{l.label}<span className="count">{portfolios.filter((p) => l.match(p.status)).length}</span></button>)}
       </div>
-      {shown.length === 0 ? <Empty title={`No ${LISTS.find((l) => l.key === list)!.label.toLowerCase()}`} action={<button className="btn btn-quiet" onClick={() => setParams({ new: '1' })}>Create a portfolio</button>} /> : (
+      {error && !portfolios.length ? <section className="panel"><LoadError what="portfolios" onRetry={reload} /></section> : loading && !portfolios.length ? <div className="grid g3">{[0, 1, 2].map((i) => <div key={i} className="panel skeleton" style={{ height: 210 }} />)}</div> : shown.length === 0 ? <Empty title={`No ${LISTS.find((l) => l.key === list)!.label.toLowerCase()}`} action={<button className="btn btn-quiet" onClick={() => setParams({ new: '1' })}>Create a portfolio</button>} /> : (
         <div className="grid g3">
           {shown.map((pf) => {
             const used = pf.lines.reduce((a: number, l: any) => a + l.amount, 0)

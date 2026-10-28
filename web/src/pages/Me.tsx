@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react'
 import { Award, BookOpen, Camera, Download, Languages, RotateCcw } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
+import { useAction } from '../lib/action'
 import { useClients, useGrowth, useRm } from '../lib/data'
 import { date } from '../lib/format'
 import { pref, setPref } from '../lib/session'
 import { resizeImage } from '../shell/ProfileMenu'
-import { Avatar, Num, Panel, Stat, useToast } from '../ui'
+import { Avatar, DetailSkeleton, Num, Panel, Stat, useToast } from '../ui'
 
 export function Profile() {
   const { data: rm } = useRm()
@@ -13,9 +14,10 @@ export function Profile() {
   const { data: growth } = useGrowth()
   const file = useRef<HTMLInputElement>(null)
   const toast = useToast()
-  if (!rm) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
+  const { busy, run } = useAction()
+  if (!rm) return <DetailSkeleton />
   const aum = clients.reduce((a, c) => a + c.aum, 0)
-  const upload = async (f?: File) => { if (!f) return; await api('/s/rm', { method: 'PATCH', body: { photo: await resizeImage(f, 320) } }); invalidate('/s/rm'); toast('Photo updated') }
+  const upload = (f?: File) => f && run(async () => { await api('/s/rm', { method: 'PATCH', body: { photo: await resizeImage(f, 320) } }); invalidate('/s/rm'); toast('Photo updated') }, 'Couldn’t update your photo')
   return (
     <main className="page">
       <div className="page-head"><div><h1>My profile</h1><p className="lede">How you appear to colleagues and, once Kova Client launches, to your clients.</p></div>
@@ -23,11 +25,11 @@ export function Profile() {
       <div className="grid g-main">
         <section className="panel panel-pad">
           <div className="row" style={{ gap: 20 }}>
-            <button onClick={() => file.current?.click()} style={{ position: 'relative' }} aria-label="Change photo">
+            <button onClick={() => file.current?.click()} style={{ position: 'relative', borderRadius: '50%' }} aria-label="Change profile photo" disabled={busy}>
               <Avatar name={rm.name} photo={rm.photo} size={96} />
               <span className="photo-edit"><Camera size={14} /></span>
             </button>
-            <input ref={file} type="file" accept="image/*" hidden onChange={(e) => upload(e.target.files?.[0])} />
+            <input ref={file} type="file" accept="image/*" hidden onChange={(e) => { upload(e.target.files?.[0]); e.target.value = '' }} />
             <div><h2 style={{ fontSize: 26 }}>{rm.name}</h2><p className="muted">{rm.title} · {rm.grade} · {rm.branch}</p><p className="small" style={{ marginTop: 8, maxWidth: 520 }}>{rm.about}</p></div>
           </div>
           <div className="statline" style={{ margin: '22px -20px -18px', borderTop: '1px solid var(--line)' }}>
@@ -54,6 +56,8 @@ export function Preferences() {
   const [prefs, setPrefs] = useState(() => pref('prefs', { digest: true, contests: true, cio: true, quiet: '21:00', numbers: 'lakh-crore', agentVoice: true }))
   const set = (k: string, v: any) => { const n = { ...prefs, [k]: v }; setPrefs(n); setPref('prefs', n) }
   const [confirm, setConfirm] = useState(false)
+  const { busy, run } = useAction()
+  const reset = () => run(async () => { await api('/reset', { method: 'POST' }); invalidate(''); setConfirm(false); toast('Demo data reset') }, 'Couldn’t reset the demo data')
   return (
     <main className="page">
       <div className="page-head"><div><h1>Preferences</h1><p className="lede">How Kova Work behaves for you. Saved on this device in this preview.</p></div></div>
@@ -75,7 +79,7 @@ export function Preferences() {
         </Panel>
         <Panel title="Demo data">
           <p className="small muted" style={{ marginBottom: 12 }}>Puts every client, meeting, request and session back to the starting sample, with dates moved to this week. Agent sessions and outbox items you created are removed.</p>
-          {confirm ? <div className="row"><button className="btn btn-brass" onClick={async () => { await api('/reset', { method: 'POST' }); invalidate(''); setConfirm(false); toast('Demo data reset') }}><RotateCcw />Yes, reset everything</button><button className="btn btn-ghost" onClick={() => setConfirm(false)}>Cancel</button></div>
+          {confirm ? <div className="row"><button className="btn btn-brass" disabled={busy} onClick={reset}><RotateCcw />{busy ? 'Resetting…' : 'Yes, reset everything'}</button><button className="btn btn-ghost" onClick={() => setConfirm(false)}>Cancel</button></div>
             : <button className="btn btn-quiet" onClick={() => setConfirm(true)}><RotateCcw />Reset demo data</button>}
         </Panel>
       </div>

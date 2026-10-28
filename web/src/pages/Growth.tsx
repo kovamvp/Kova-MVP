@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Check, Pencil, Plus, ShieldCheck, Trash2 } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
+import { deferred, useAction } from '../lib/action'
 import { useGrowth } from '../lib/data'
 import { date, daysFrom, inr, when } from '../lib/format'
 import { Columns } from '../charts'
-import { Bar, hrefFor, Num, Panel, useToast } from '../ui'
+import { Bar, DetailSkeleton, hrefFor, Num, Panel, useToast } from '../ui'
 
 export default function Growth() {
   const { data: g } = useGrowth()
@@ -14,10 +15,18 @@ export default function Growth() {
   const [showDone, setShowDone] = useState(false)
   const toast = useToast()
   const nav = useNavigate()
-  if (!g) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
+  const { busy, run } = useAction()
+  const [removing, setRemoving] = useState<Set<string>>(new Set())
+  if (!g) return <DetailSkeleton />
 
-  const op = async (body: any, msg: string) => {
-    try { await api('/growth/goals', { body }); invalidate('/s/growth'); toast(msg) } catch (e: any) { toast(e.message) }
+  const op = (body: any, msg: string) => run(async () => { await api('/growth/goals', { body }); invalidate('/s/growth'); toast(msg) }, 'Couldn’t update your goals')
+  const remove = (x: any) => {
+    setRemoving((s) => new Set(s).add(x.id))
+    const unset = () => setRemoving((s) => { const n = new Set(s); n.delete(x.id); return n })
+    const cancel = deferred(async () => {
+      try { await api('/growth/goals', { body: { op: 'remove', id: x.id } }); invalidate('/s/growth') } catch (e: any) { toast(`Couldn’t remove the goal. ${e.message}`) } finally { unset() }
+    })
+    toast(<>Goal removed. <button className="toast-undo" onClick={() => { cancel(); unset() }}>Undo</button></>)
   }
   const p = g.points
   const slabs = p.slabs
@@ -26,7 +35,7 @@ export default function Growth() {
   const proj = [...slabs].reverse().find((s: any) => p.projected_quarter >= s.from)
   const next = slabs.find((s: any) => s.from > p.this_quarter)
   const daysLeft = daysFrom(g.period.end) ?? 0
-  const open = g.goals
+  const open = g.goals.filter((x: any) => !removing.has(x.id))
 
   return (
     <main className="page">
@@ -56,8 +65,8 @@ export default function Growth() {
                 <div className="row" style={{ gap: 0 }}>
                   {editing?.id === x.id ? <button className="iconbtn" aria-label="Save" onClick={() => { op({ op: "edit", id: x.id, text: editing!.text }, "Goal updated"); setEditing(null) }}><Check /></button>
                     : x.by !== 'manager' && <button className="iconbtn" aria-label="Edit" onClick={() => setEditing({ id: x.id, text: x.text })}><Pencil /></button>}
-                  {x.by !== 'manager' && <button className="iconbtn" aria-label="Remove" onClick={() => op({ op: 'remove', id: x.id }, 'Goal removed')}><Trash2 /></button>}
-                  <button className="btn btn-quiet btn-sm" onClick={() => op({ op: 'achieve', id: x.id }, 'Achieved. Well done.')}><Check />Achieved</button>
+                  {x.by !== 'manager' && <button className="iconbtn" aria-label="Remove" onClick={() => remove(x)}><Trash2 aria-hidden /></button>}
+                  <button className="btn btn-quiet btn-sm" disabled={busy} onClick={() => op({ op: 'achieve', id: x.id }, 'Achieved. Well done.')}><Check />Achieved</button>
                 </div>
               </div>
             </div>
@@ -66,7 +75,7 @@ export default function Growth() {
             <div className="goal empty-goal">
               <span className="goal-num display">{open.length + 1}</span>
               <textarea className="textarea" rows={3} placeholder="Write a goal you can tell is done, e.g. “Get Sunita Desai investing again”" value={adding} onChange={(e) => setAdding(e.target.value)} />
-              <button className="btn btn-primary btn-sm" disabled={!adding.trim()} onClick={() => { op({ op: 'add', text: adding }, 'Goal added'); setAdding('') }}><Plus />Add goal</button>
+              <button className="btn btn-primary btn-sm" disabled={!adding.trim() || busy} onClick={async () => { await op({ op: 'add', text: adding }, 'Goal added'); setAdding('') }}><Plus />Add goal</button>
             </div>
           )}
         </div>

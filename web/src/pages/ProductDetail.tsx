@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, CircleHelp, FileText, GraduationCap, PlayCircle, Send, Trophy } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
+import { useAction } from '../lib/action'
 import { useClients, useGrowth, useLd } from '../lib/data'
 import { date, inr } from '../lib/format'
-import { Avatar, Bar, Drawer, Empty, Num, Panel, Stat, Status, useToast } from '../ui'
+import { Avatar, Bar, DetailSkeleton, Drawer, Empty, Num, Panel, Stat, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ContextBar, FeedbackForm } from './shared'
 import { suitsCount } from './Products'
@@ -23,7 +24,7 @@ export default function ProductDetail() {
   const [feedback, setFeedback] = useState(false)
   const names = useMemo(() => Object.fromEntries(clients.map((c) => [c.id, c.name])), [clients])
   if (error) return <main className="page"><Empty title="Product not found" action={<Link className="btn btn-quiet" to="/products">Back to products</Link>} /></main>
-  if (!p) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
+  if (!p) return <DetailSkeleton />
 
   const done: string[] = ld.find((x) => x.product_id === p.id)?.completed || []
   const mods = p.ld.modules
@@ -148,13 +149,14 @@ function LearningPanel({ p, done, onClose }: { p: any; done: string[]; onClose: 
   const [open, setOpen] = useState<string | null>(mods.find((m: any) => !done.includes(m.id))?.id || mods[0].id)
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const pct = Math.round((done.length / mods.length) * 100)
-  const toggle = async (mid: string) => {
+  const { busy, run } = useAction()
+  const toggle = (mid: string) => run(async () => {
     await api(`/ld/${p.id}/toggle`, { body: { module_id: mid } })
     invalidate('/c/ld_progress')
     const nowDone = !done.includes(mid)
     if (nowDone && done.length + 1 === mods.length) toast(`Learning for ${p.name} completed`)
     if (nowDone) setOpen(mods.find((m: any) => m.id !== mid && !done.includes(m.id))?.id || null)
-  }
+  }, 'Couldn’t save your progress')
   return (
     <Drawer wide scrim={false} onClose={onClose} title="Learning" sub={`${p.name} · set by ${p.product_manager.name}`}>
       <div className="spread small" style={{ marginBottom: 6 }}><span className="strong">{done.length} of {mods.length} steps</span><span className="num">{pct}%</span></div>
@@ -166,7 +168,7 @@ function LearningPanel({ p, done, onClose }: { p: any; done: string[]; onClose: 
           const quizOk = m.type !== 'quiz' || (m.questions || []).every((q: any, qi: number) => answers[qi] === q.answer)
           return (
             <li key={m.id} className={`ld-step ${isDone ? 'done' : ''} ${open === m.id ? 'open' : ''}`}>
-              <button className="ld-step-head" onClick={() => setOpen(open === m.id ? null : m.id)}>
+              <button className="ld-step-head" aria-expanded={open === m.id} onClick={() => setOpen(open === m.id ? null : m.id)}>
                 <span className="ld-num">{isDone ? <Check size={13} /> : i + 1}</span>
                 <span className="grow" style={{ textAlign: 'left' }}><span className="strong small">{m.title}</span><br /><span className="tiny muted row" style={{ gap: 4, display: 'inline-flex' }}><Icon size={12} />{m.type} · {m.minutes} min</span></span>
               </button>
@@ -185,7 +187,7 @@ function LearningPanel({ p, done, onClose }: { p: any; done: string[]; onClose: 
                       ))}
                     </fieldset>
                   ))}
-                  <button className={`btn btn-sm ${isDone ? 'btn-quiet' : 'btn-primary'}`} disabled={!isDone && !quizOk} onClick={() => toggle(m.id)}>
+                  <button className={`btn btn-sm ${isDone ? 'btn-quiet' : 'btn-primary'}`} disabled={busy || (!isDone && !quizOk)} onClick={() => toggle(m.id)}>
                     {isDone ? 'Mark as not done' : m.type === 'quiz' ? (quizOk ? 'Submit answers' : 'Answer all questions correctly') : 'Mark complete'}
                   </button>
                 </div>

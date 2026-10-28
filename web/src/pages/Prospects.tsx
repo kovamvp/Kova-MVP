@@ -1,14 +1,15 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowRight, ChevronDown, ChevronRight, Plus, RotateCcw, Search } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronRight, Plus, RotateCcw } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
+import { useAction } from '../lib/action'
 import { STAGES, STAGE_INFO, useProducts, useProspects, useMeetings, useModels } from '../lib/data'
 import { ago, date, inr, when, daysFrom } from '../lib/format'
 import { Columns, HBars } from '../charts'
-import { Avatar, Modal, Num, Panel, Stat, useToast } from '../ui'
+import { Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Stat, useToast, SearchField } from '../ui'
 
 export default function Prospects() {
-  const { data: prospects = [] } = useProspects()
+  const { data: prospects = [], loading, error, reload } = useProspects()
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()
   const { data: models = [] } = useModels()
@@ -20,6 +21,7 @@ export default function Prospects() {
   const [creating, setCreating] = useState(params.get('new') === '1')
   const nav = useNavigate()
   const toast = useToast()
+  const { busy, run } = useAction()
   const P = Object.fromEntries(products.map((p) => [p.id, p]))
 
   const open = prospects.filter((p) => p.stage !== 'Closed')
@@ -113,17 +115,19 @@ export default function Prospects() {
 
       <section className="panel" style={{ marginTop: 16 }}>
         <div className="list-toolbar">
-          <label className="searchbox" style={{ height: 34, maxWidth: 260 }}><Search size={14} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, need or source" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>
+          <SearchField value={q} onChange={setQ} placeholder="Name, need or source…" label="Search prospects" width={260} />
           <div className="row wrap" style={{ gap: 6 }}>
-            <button className={`chip ${!stage ? 'on' : ''}`} onClick={() => setStage('')}>All open</button>
-            {STAGES.map((s) => <button key={s} title={STAGE_INFO[s]} className={`chip ${stage === s ? 'on' : ''}`} onClick={() => setStage(s)}>{s}</button>)}
+            <button className={`chip ${!stage ? 'on' : ''}`} aria-pressed={!stage} onClick={() => setStage('')}>All open</button>
+            {STAGES.map((s) => <button key={s} title={STAGE_INFO[s]} className={`chip ${stage === s ? 'on' : ''}`} aria-pressed={stage === s} onClick={() => setStage(s)}>{s}</button>)}
           </div>
           <select className="select sm" value={sort} onChange={(e) => setSort(e.target.value)} style={{ width: 180, marginLeft: 'auto' }} aria-label="Sort">
             <option value="value">Largest first</option><option value="prob">Most likely first</option><option value="next">Next step date</option><option value="stale">Longest since contact</option>
           </select>
         </div>
-        {list.map((p) => <ProspectRow key={p.id} p={p} next={nextMeeting(p.id)} />)}
-        {list.length === 0 && <div className="empty">No open prospects match.</div>}
+        {error && !prospects.length ? <LoadError what="prospects" onRetry={reload} /> : loading && !prospects.length ? <SkeletonRows rows={6} height={78} /> : <>
+          {list.map((p) => <ProspectRow key={p.id} p={p} next={nextMeeting(p.id)} />)}
+          {list.length === 0 && <div className="empty">No open prospects match.</div>}
+        </>}
 
         <button className="closed-toggle" onClick={() => { setShowClosed((s) => !s); setParams(showClosed ? {} : { closed: '1' }) }}>
           {showClosed ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -136,7 +140,7 @@ export default function Prospects() {
             <div className="cr-aum small num">{inr(p.estimated_investable)}</div>
             <div className="cr-next small">{p.closed?.reason}</div>
             <div className="cr-flags tiny muted">Learning: {p.closed?.learning || '—'}</div>
-            <button className="btn btn-quiet btn-sm" onClick={async () => { await api(`/prospects/${p.id}/reopen`, { method: 'POST' }); invalidate('/c/prospects'); toast(`${p.name} reopened`) }}><RotateCcw />Reopen</button>
+            <button className="btn btn-quiet btn-sm" disabled={busy} onClick={() => run(async () => { await api(`/prospects/${p.id}/reopen`, { method: 'POST' }); invalidate('/c/prospects'); toast(`${p.name} reopened`) }, `Couldn’t reopen ${p.name}`)}><RotateCcw />Reopen</button>
           </div>
         ))}
       </section>
@@ -162,7 +166,7 @@ function ProspectRow({ p, next }: { p: any; next?: any }) {
       </div>
       <div className="cr-next">
         {next ? <><div className="tiny muted">Meeting</div><div className="small">{next.title}</div><div className="tiny muted">{when(next.start)}</div></>
-          : p.next_step ? <><div className="tiny muted">Next step</div><div className="small">{p.next_step}</div><div className={`tiny ${(daysFrom(p.next_step_date) ?? 1) < 0 ? 'u-overdue-l' : 'muted'}`}>{when(p.next_step_date)}</div></> : <span className="tiny faint">No next step</span>}
+          : p.next_step ? <><div className="tiny muted">Next step</div><div className="small">{p.next_step}</div><div className={`tiny ${(daysFrom(p.next_step_date) ?? 1) < 0 ? 'u-overdue-l' : 'muted'}`}>{(daysFrom(p.next_step_date) ?? 1) < 0 ? 'Overdue · ' : ''}{when(p.next_step_date)}</div></> : <span className="tiny faint">No next step</span>}
       </div>
       <div className="cr-flags">
         <div className="tiny muted ellipsis2">{p.need}</div>
@@ -176,20 +180,21 @@ function ProspectRow({ p, next }: { p: any; next?: any }) {
 function CreateProspect({ onClose, onCreated }: { onClose: () => void; onCreated: (id: string) => void }) {
   const [f, setF] = useState({ name: '', phone: '', email: '', source: 'Referral', source_detail: '', estimated_investable: 5000000, need: '', stage: 'Lead', next_step: 'Intro call', next_step_date: '' })
   const toast = useToast()
+  const { busy, run } = useAction()
   const set = (k: string, v: any) => setF({ ...f, [k]: v })
-  const save = async () => {
+  const save = () => run(async () => {
     const p = await api('/prospects', { body: f })
     invalidate('/c/prospects')
     toast(`${p.name} added as a ${p.stage.toLowerCase()}`)
     onCreated(p.id)
-  }
+  }, 'Couldn’t add the prospect')
   return (
     <Modal title="Add a prospect" sub="Everything here comes from you. The prospect doesn’t see it." onClose={onClose}
-      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={!f.name.trim()} onClick={save}>Add prospect</button></>}>
+      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={!f.name.trim() || busy} onClick={save}>{busy ? 'Adding…' : 'Add prospect'}</button></>}>
       <div className="grid g2" style={{ gap: 12 }}>
         <label className="field" style={{ gridColumn: '1 / -1' }}><span>Name</span><input className="input" autoFocus value={f.name} onChange={(e) => set('name', e.target.value)} /></label>
-        <label className="field"><span>Mobile</span><input className="input" value={f.phone} onChange={(e) => set('phone', e.target.value)} /></label>
-        <label className="field"><span>Email</span><input className="input" value={f.email} onChange={(e) => set('email', e.target.value)} /></label>
+        <label className="field"><span>Mobile</span><input className="input" type="tel" inputMode="tel" autoComplete="off" value={f.phone} onChange={(e) => set('phone', e.target.value)} /></label>
+        <label className="field"><span>Email</span><input className="input" type="email" autoComplete="off" spellCheck={false} value={f.email} onChange={(e) => set('email', e.target.value)} /></label>
         <label className="field"><span>Source</span><select className="select" value={f.source} onChange={(e) => set('source', e.target.value)}>{['Referral', 'Event', 'Inbound', 'Cold outreach'].map((s) => <option key={s}>{s}</option>)}</select></label>
         <label className="field"><span>Referred by or where you met</span><input className="input" value={f.source_detail} onChange={(e) => set('source_detail', e.target.value)} /></label>
         <label className="field"><span>Estimated investable (₹)</span><input className="input" type="number" value={f.estimated_investable} onChange={(e) => set('estimated_investable', +e.target.value)} /></label>

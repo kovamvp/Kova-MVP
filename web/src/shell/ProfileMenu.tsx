@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { BookOpen, Camera, LogOut, SlidersHorizontal, UserRound } from 'lucide-react'
+import { BookOpen, Camera, Loader2, LogOut, SlidersHorizontal, UserRound } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
-import { Avatar, useToast } from '../ui'
+import { useAction } from '../lib/action'
+import { Avatar, useEsc, useToast } from '../ui'
 
 export async function resizeImage(file: File, max = 320, quality = 0.85): Promise<string> {
   const url = URL.createObjectURL(file)
@@ -19,36 +20,41 @@ export default function ProfileMenu({ rm, onClose, onOut }: { rm: any; onClose: 
   const ref = useRef<HTMLDivElement>(null)
   const file = useRef<HTMLInputElement>(null)
   const toast = useToast()
+  const { busy, run } = useAction()
+  useEsc(onClose)
   useEffect(() => {
     const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node) && !(e.target as HTMLElement).closest('.right')) onClose() }
     setTimeout(() => document.addEventListener('click', h))
+    ref.current?.querySelector<HTMLElement>('a, button')?.focus()
     return () => document.removeEventListener('click', h)
   }, [onClose])
-  const upload = async (f?: File) => {
-    if (!f) return
+  const upload = (f?: File) => f && run(async () => {
     const photo = await resizeImage(f, 320)
     await api('/s/rm', { method: 'PATCH', body: { photo } })
     invalidate('/s/rm')
     toast('Profile photo updated')
-  }
+  }, 'Couldn’t update your photo')
   return (
-    <div className="menu" ref={ref} role="menu">
+    <div className="menu" ref={ref} aria-label="Your profile and settings">
       <div className="menu-head">
-        <button onClick={() => file.current?.click()} title="Change photo" style={{ position: 'relative' }}>
+        <button onClick={() => file.current?.click()} className="menu-photo" aria-label="Change profile photo" disabled={busy}>
           <Avatar name={rm?.name || ''} photo={rm?.photo} size={44} />
-          <span style={{ position: 'absolute', right: -2, bottom: -2, background: 'var(--paper)', borderRadius: '50%', padding: 3, border: '1px solid var(--line)', display: 'grid' }}><Camera size={11} /></span>
+          <span className="menu-photo-badge" aria-hidden>{busy ? <Loader2 size={11} className="spin" /> : <Camera size={11} />}</span>
         </button>
         <div className="grow">
           <div className="strong">{rm?.name}</div>
-          <div className="tiny muted">{rm?.title} · {rm?.branch}</div>
+          <div className="tiny muted">{rm?.title}</div>
+          <div className="tiny muted">{rm?.branch}</div>
         </div>
-        <input ref={file} type="file" accept="image/*" hidden onChange={(e) => upload(e.target.files?.[0])} />
+        <input ref={file} type="file" accept="image/*" hidden onChange={(e) => { upload(e.target.files?.[0]); e.target.value = '' }} />
       </div>
-      <Link to="/me" role="menuitem"><UserRound />My profile</Link>
-      <Link to="/preferences" role="menuitem"><SlidersHorizontal />Preferences</Link>
-      <Link to="/handbook" role="menuitem"><BookOpen />Handbook</Link>
+      <nav>
+        <Link to="/me"><UserRound aria-hidden />My profile</Link>
+        <Link to="/preferences"><SlidersHorizontal aria-hidden />Preferences</Link>
+        <Link to="/handbook"><BookOpen aria-hidden />Handbook</Link>
+      </nav>
       <div className="divider" style={{ margin: '4px 0' }} />
-      <button className="mi" onClick={onOut} role="menuitem"><LogOut />Sign out</button>
+      <button className="mi" onClick={onOut}><LogOut aria-hidden />Sign out</button>
     </div>
   )
 }

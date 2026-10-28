@@ -5,7 +5,7 @@ import { useApi } from '../lib/api'
 import { EQUITY_BAND, fitsProfile, useClients, useMeetings, useProducts } from '../lib/data'
 import { ago, date, inr, label, when } from '../lib/format'
 import { AllocBar, Donut } from '../charts'
-import { ASSET_COLORS, Avatar, Delta, Drawer, Empty, Num, Panel, Stat, Status, useToast } from '../ui'
+import { ASSET_COLORS, Avatar, Delta, DetailSkeleton, Drawer, Empty, SkeletonRows, Num, Panel, Stat, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
 
@@ -29,7 +29,7 @@ export default function ClientDetail() {
   const P = useMemo(() => Object.fromEntries(products.map((p) => [p.id, p])), [products])
   const names = useMemo(() => Object.fromEntries([...clients.map((x) => [x.id, x.name]), ...products.map((p) => [p.id, p.name])]), [clients, products])
   if (error) return <main className="page"><Empty title="Client not found" action={<Link className="btn btn-quiet" to="/clients">Back to clients</Link>} /></main>
-  if (!c) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
+  if (!c) return <DetailSkeleton />
 
   const momFor = params.get('mom') ? meetings.find((m) => m.id === params.get('mom')) : null
   const agentInitial = agentPrompt ?? (momFor ? `Log the MoM for "${momFor.title}" (${momFor.id}): ` : null)
@@ -155,11 +155,11 @@ export default function ClientDetail() {
         <button className={`cb ${panel === 'portfolio' ? 'on' : ''}`} onClick={() => setPanel(panel === 'portfolio' ? null : 'portfolio')}><LayoutGrid />Portfolio</button>
         <button className={`cb ${panel === 'actions' ? 'on' : ''}`} onClick={() => setPanel(panel === 'actions' ? null : 'actions')}><ListChecks />Actions</button>
         <span className="sep" />
-        <button className="cb minor" onClick={() => toast(<>Call {c.first_name} on {c.phone}. Calling from Kova arrives with telephony.</>)} title="Call"><Phone /></button>
-        <button className="cb minor" onClick={() => setPanel('actions', { do: 'schedule' })} title="Schedule a meeting"><CalendarPlus /></button>
-        <button className="cb minor" onClick={() => { setAgentPrompt(`Send the MoM from my last meeting with ${c.first_name} on ${c.consent.whatsapp ? 'WhatsApp' : 'email'}: `); setPanel('agent') }} title="Send MoM on WhatsApp"><MessageSquareText /></button>
-        <button className="cb minor" onClick={() => setPanel('actions', { do: 'feedback' })} title="Give product feedback"><Send /></button>
-        <button className="cb minor" onClick={() => { setAgentPrompt(null); setPanel('agent'); toast('Attach the bill with the paperclip, or describe the expense.') }} title="Add a reimbursement"><Receipt /></button>
+        <button className="cb minor" onClick={() => toast(<>Call {c.first_name} on {c.phone}. Calling from Kova arrives with telephony.</>)} title="Call" aria-label={`Call ${c.first_name}`}><Phone aria-hidden /></button>
+        <button className="cb minor" onClick={() => setPanel('actions', { do: 'schedule' })} title="Schedule a meeting" aria-label="Schedule a meeting"><CalendarPlus aria-hidden /></button>
+        <button className="cb minor" onClick={() => { setAgentPrompt(`Send the MoM from my last meeting with ${c.first_name} on ${c.consent.whatsapp ? 'WhatsApp' : 'email'}: `); setPanel('agent') }} title="Send the MoM" aria-label="Send the MoM from the last meeting"><MessageSquareText aria-hidden /></button>
+        <button className="cb minor" onClick={() => setPanel('actions', { do: 'feedback' })} title="Give product feedback" aria-label="Give product feedback"><Send aria-hidden /></button>
+        <button className="cb minor" onClick={() => { setAgentPrompt(null); setPanel('agent'); toast('Attach the bill with the paperclip, or describe the expense.') }} title="Add a reimbursement" aria-label="Add a reimbursement"><Receipt aria-hidden /></button>
       </ContextBar>
 
       {panel === 'portfolio' && <PortfolioPanel c={c} P={P} products={products} onClose={() => setPanel(null)} />}
@@ -175,6 +175,7 @@ export default function ClientDetail() {
 
 function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string, any>; products: any[]; onClose: () => void }) {
   const groups: Record<string, any[]> = {}
+  if (!products.length) return <Drawer wide scrim={false} title="Portfolio" sub={c.name} onClose={onClose}><SkeletonRows rows={5} /></Drawer>
   c.holdings.forEach((h: any) => (groups[h.asset_class] ||= []).push(h))
   const held = new Set(c.holdings.map((h: any) => h.product_id))
   const fits = products.filter((p) => !held.has(p.id) && p.cio_view.stance === 'Preferred' && fitsProfile(p, c.risk_profile) && p.min_investment <= c.aum * 0.25).slice(0, 4)

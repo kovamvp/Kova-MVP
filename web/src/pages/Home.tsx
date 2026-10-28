@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout/legacy'
 import 'react-grid-layout/css/styles.css'
-import { GripVertical, Plus, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react'
+import { GripVertical, Plus, RotateCcw, SlidersHorizontal, X } from 'lucide-react'
 import { api } from '../lib/api'
 import { useClients, useGrowth, useLd, useMeetings, usePortfolios, useProducts, useProspects, useRequests, useResearch, useRm } from '../lib/data'
 import { todayISO, when } from '../lib/format'
-import { Avatar, Modal, useToast } from '../ui'
+import { Avatar, Modal, useToast, SearchField } from '../ui'
 import { Ctx, DEFAULT_LAYOUT, PickKind, WIDGET, WIDGETS } from '../widgets/registry'
 import Updates from './Updates'
 
@@ -71,7 +71,7 @@ export default function Home() {
         <div className="row">
           {edit ? (
             <>
-              <button className="btn btn-ghost" onClick={() => { update(DEFAULT_LAYOUT); toast('Back to the default layout') }}><RotateCcw />Reset to default</button>
+              <button className="btn btn-ghost" onClick={() => { const prev = items; update(DEFAULT_LAYOUT); toast(<>Back to the default layout. <button className="toast-undo" onClick={() => prev && update(prev)}>Undo</button></>) }}><RotateCcw />Reset to default</button>
               <button className="btn btn-primary" onClick={() => setEdit(false)}>Done</button>
             </>
           ) : (
@@ -86,7 +86,7 @@ export default function Home() {
             <div className="library-head">
               <h3>Widgets</h3>
               <p className="tiny muted">Drag onto your board, or click to add. Cards marked “pick” can be placed many times, once per client, product or portfolio. Updates &amp; upcoming stays fixed and returns when you’re done.</p>
-              <label className="searchbox" style={{ height: 34, marginTop: 10 }}><Search size={14} /><input value={libQuery} onChange={(e) => setLibQuery(e.target.value)} placeholder="Find a widget" style={{ border: 0, background: 'transparent', outline: 'none', width: '100%' }} /></label>
+              <SearchField value={libQuery} onChange={setLibQuery} placeholder="Find a widget…" label="Find a widget" style={{ marginTop: 10 }} />
             </div>
             <div className="library-list">
               {lib.map((w) => (
@@ -132,8 +132,8 @@ export default function Home() {
                 <div key={it.i} className={`widget panel ${edit ? 'is-edit' : ''}`}>
                   {edit && (
                     <div className="w-edit">
-                      <span className="w-drag" title="Drag to move"><GripVertical size={15} /></span>
-                      <button className="iconbtn" aria-label="Remove widget" onClick={() => update(items.filter((x) => x.i !== it.i))}><X /></button>
+                      <span className="w-drag" title="Drag to move" aria-hidden><GripVertical size={15} /></span>
+                      <button className="iconbtn" aria-label={`Remove ${WIDGET[it.type].name}`} onClick={() => { const prev = items; update(items.filter((x) => x.i !== it.i)); toast(<>{WIDGET[it.type].name} removed. <button className="toast-undo" onClick={() => update(prev)}>Undo</button></>) }}><X aria-hidden /></button>
                     </div>
                   )}
                   <div className="w-body">{WIDGET[it.type].render(ctx, it.ref)}</div>
