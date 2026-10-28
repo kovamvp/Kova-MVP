@@ -12,6 +12,15 @@ export function suitsCount(p: any, clients: any[]) {
   return clients.filter((c) => c.segment !== 'lost' && !c.holdings.some((h: any) => h.product_id === p.id) && fitsProfile(p, c.risk_profile) && p.min_investment <= c.aum * 0.25)
 }
 
+// PD3: one number and its basis, in separate columns. Returns to 1 dp; yields and rates keep 2 dp as quoted.
+function returnOf(p: any): [string, string] {
+  if (p.returns?.['3y'] != null) return [`${Number(p.returns['3y']).toFixed(1)}%`, '3-year return, a year']
+  if (p.ytm != null) return [`${Number(p.ytm).toFixed(2)}%`, 'Yield to maturity']
+  if (p.rate != null) return [`${Number(p.rate).toFixed(2)}%`, 'Rate']
+  if (p.target_irr) { const m = String(p.target_irr).match(/^([\d.]+)\s*-\s*([\d.]+)%\s*(.*)$/); return m ? [`${m[1]}–${m[2]}%`, `Target IRR${m[3] ? `, ${m[3]}` : ''}`] : [String(p.target_irr), 'Target IRR'] }
+  return ['—', '']
+}
+
 export default function Products() {
   const { data: products = [], loading, error, reload } = useProducts()
   const { data: clients = [] } = useClients()
@@ -75,7 +84,7 @@ export default function Products() {
               <Stat label="New or closing soon" value={products.filter((p) => p.is_new || p.close_date).length} sub="See the list below" />
             </div>
           </section>
-          <div className="grid g3" style={{ marginBottom: 16 }}>
+          <div className="grid g3" style={{ marginBottom: 16, alignItems: 'start' }}>
             <Panel title="Your book by product type">
               <div className="row" style={{ gap: 18 }}>
                 <Donut size={130} data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k], note: inr(v) }))} center={<div className="tiny muted">by value</div>} />
@@ -87,7 +96,7 @@ export default function Products() {
             </Panel>
             <Panel title="Fits your clients" aside="Suitable, not yet held">
               <div className="col" style={{ gap: 0 }}>
-                {products.filter((p) => p.cio_view.stance === 'Preferred').map((p) => ({ p, n: suitsCount(p, clients).length })).sort((a, b) => b.n - a.n).slice(0, 5).map(({ p, n }) => (
+                {products.filter((p) => p.cio_view.stance === 'Preferred').map((p) => ({ p, n: suitsCount(p, clients).length })).sort((a, b) => b.n - a.n).slice(0, 6).map(({ p, n }) => (
                   <Link key={p.id} to={`/products/${p.id}?panel=agent&ask=clients`} className="w-line small"><span className="grow ellipsis">{p.name}</span><span className="pill forest">{plural(n, 'client')}</span></Link>
                 ))}
               </div>
@@ -106,17 +115,17 @@ export default function Products() {
               </select>
             </div>
             {error && !products.length ? <LoadError what="products" onRetry={reload} /> : loading && !products.length ? <SkeletonRows rows={8} height={56} /> : <table className="table products-table">
-              <thead><tr><th>Product</th><th>Risk</th><th>CIO view</th><th className="r">Returns / yield</th><th className="r">Your clients</th><th>Learning</th><th /></tr></thead>
+              <thead><tr><th>Product</th><th>Risk</th><th>CIO view</th><th className="r">Return / yield</th><th>Basis</th><th className="r">Your clients</th><th>Learning</th><th /></tr></thead>
               <tbody>
                 {list.map((p) => {
                   const l = ldOf[p.id]
-                  const ret = p.returns?.['3y'] ? `${p.returns['3y']}% 3y` : p.ytm ? `${p.ytm}% YTM` : p.rate ? `${p.rate}% rate` : p.target_irr ? `${p.target_irr} IRR` : '—'
+                  const [ret, basis] = returnOf(p)
                   return (
                     <tr key={p.id}>
                       <td><Link to={`/products/${p.id}`} className="strong">{p.name}</Link> {p.is_new && <span className="pill forest" style={{ marginLeft: 4 }}>New</span>}{p.close_date && <span className="pill brass" style={{ marginLeft: 4 }}>Closes {date(p.close_date)}</span>}<div className="tiny muted">{p.category} · {p.sub_category} · {p.manufacturer}</div></td>
                       <td className="small">{p.risk}</td>
                       <td><Status s={p.cio_view.stance} /></td>
-                      <td className="r num small">{ret}</td>
+                      <td className="r num small">{ret}</td><td className="small muted">{basis}</td>
                       <td className="r small">{held[p.id] ? <><Num v={held[p.id].value} fixed /><div className="tiny muted">{plural(held[p.id].n, 'client')}</div></> : <span className="faint">—</span>}</td>
                       <td>
                         <Link to={`/products/${p.id}?panel=ld`} className={`ld-btn ${l.pct === 100 ? 'done' : l.pct > 0 ? 'progress' : ''}`}>

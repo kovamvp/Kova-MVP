@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, CircleHelp, FileText, GraduationCap, PlayCircle, Send } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
+import { pushRecent } from '../lib/session'
 import { useAction } from '../lib/action'
 import { useClients, useGrowth, useLd } from '../lib/data'
 import { date, inr, label } from '../lib/format'
@@ -16,6 +17,7 @@ export default function ProductDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: p, error } = useApi<any>(`/c/products/${id}`)
+  useEffect(() => { if (p) pushRecent({ kind: 'product', id: p.id, title: p.name, sub: `${p.category} · ${p.sub_category}` }) }, [p?.id])
   const { data: clients = [] } = useClients()
   const { data: ld = [] } = useLd()
   const { data: growth } = useGrowth()
@@ -50,8 +52,8 @@ export default function ProductDetail() {
       <header className="panel profile-head" style={{ paddingBottom: 20 }}>
         <div className="spread" style={{ alignItems: 'flex-start', gap: 24 }}>
           <div className="grow">
-            <div className="small muted">{p.manufacturer} · {p.category}</div>
-            <h1 style={{ marginTop: 4 }}>{p.name}</h1>
+            <h1>{p.name}</h1>
+            <div className="small muted" style={{ marginTop: 4 }}>{p.manufacturer} · {p.category}</div>
             <div className="row wrap" style={{ gap: 6, marginTop: 10 }}>
               <span className="pill outline">{p.sub_category}</span><span className="pill outline">Risk: {p.risk}</span>
               <Status s={p.cio_view.stance}>CIO: {p.cio_view.stance}</Status>
@@ -86,7 +88,7 @@ export default function ProductDetail() {
           </div>
 
           <Panel title="Details">
-            <dl className="kv">
+            <dl className="kv kv-pairs">
               <dt>Liquidity</dt><dd>{p.liquidity}</dd>
               {p.fee && <><dt>Fees</dt><dd>{p.fee}</dd></>}
               {p.benchmark && <><dt>Benchmark</dt><dd>{p.benchmark}</dd></>}

@@ -166,3 +166,43 @@ What changed and why
 Checked
 - tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
   0 page overflow.
+
+## 8 · `ui/pages` — login, shell, Clients, client page, Prospects, Meetings, Products, Growth; DESIGN.md
+
+What changed and why
+- **Login** Signing in shows "Signing in…" and can't be pressed twice; the email field is typed and named for
+  password managers; the mark, wordmark and story are one lockup centred in the forest field.
+- **Shell** Search results are grouped by kind with small headers; with nothing typed, search shows the last five
+  clients, prospects and products you opened (on this device). The active dock item has a soft pill behind it.
+- **Clients** Timeline legend swatches are visible marks (they were about 1.1:1). Red flags shows the top six with
+  "See all n", which sorts the list by flags and scrolls to it. What to do next is one list with its buttons in a
+  fixed column. Clients with no flags leave that column empty.
+- **Client page** The risk pill is short ("Moderately aggressive · Feb 2025", full wording on hover). The gain
+  figure carries ▲ or ▼.
+- **Prospects** Suggestions from the product and CIO teams are a list ("{product} for {name}", why, who, when)
+  instead of six identical cards; pipeline by stage is horizontal bars with full names; opportunity sentences read
+  "Dr. Imran Qureshi viewed …". On a prospect, stage names underline on hover, Kova Client access is text rather
+  than a disabled checkbox, readiness shows "2 of 9 done", and Next step no longer stretches.
+- **Meetings** Events under 45 minutes show one line (time and name); overlapping events share the column in lanes;
+  meeting type is text on the event instead of five similar colours, and brass marks only a meeting that still
+  needs a MoM. Empty talking points say "Nothing flagged yet" with a link to the agent. Next up and Needs a MoM
+  keep their own heights.
+- **Products** Return / yield is one number per row with its basis in its own column (returns 1 dp; yields and
+  rates 2 dp, as quoted). Quiz options are full width. The manufacturer sits under the product name. Shelf panels
+  align to the top; Details sits in two pairs on wide screens.
+- **Growth** Slab names sit under the track, clear of the stats; the projection is a solid lighter forest segment
+  labelled at its end ("870 by 31 Dec"). Achieved stays visible but quieter; Edit and Remove are in a "More actions"
+  menu, and Remove keeps its Undo. Contest counts carry their unit ("4 new PMS clients"). Goals are 3 + 2 between
+  760 and 1100 px.
+- **DESIGN.md** at the repo root: the system as shipped, with the Debt colour picked by eye (no adjacency
+  contrast claim), side panels that overlay rather than push, and new Motion and Agent card states sections.
+
+Not done here, by decision: ST1, ST3, ST5, ST6, RQ1, RQ3, the Actions panel and CP3 wait for the workflow
+branches; MT4 (scroll the now line into view in Day view) was optional and left out because the calendar does not
+scroll on its own.
+- At 390 px, states with elements past the right edge inside sideways-scrolling rows went from 42 to 26 (Clients
+  and Prospects lists).
+
+Checked
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
+  0 page overflow.

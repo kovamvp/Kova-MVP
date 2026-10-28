@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { CalendarDays, Gem, LayoutGrid, Search, User, UserRoundSearch } from 'lucide-react'
 import { api } from '../lib/api'
 import { datesInText } from '../lib/format'
+import { recent } from '../lib/session'
 import { hrefFor, useEsc } from '../ui'
 
 const ICON: Record<string, any> = { client: User, prospect: UserRoundSearch, product: Gem, portfolio: LayoutGrid, meeting: CalendarDays }
@@ -30,7 +31,13 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
     const t = setTimeout(() => api(`/search?q=${encodeURIComponent(q)}`).then(setRes).catch(() => setRes([])), 120)
     return () => clearTimeout(t)
   }, [q])
-  const items = useMemo(() => (q.trim() ? res : QUICK), [q, res])
+  /* results grouped by kind with a small header per group; with no query, recent pages then shortcuts */
+  const ORDER = ['client', 'prospect', 'product', 'portfolio', 'meeting']
+  const GROUP: Record<string, string> = { client: 'Clients', prospect: 'Prospects', product: 'Products', portfolio: 'Portfolios', meeting: 'Meetings' }
+  const items = useMemo(() => {
+    if (q.trim()) return [...res].sort((a, b) => ORDER.indexOf(a.kind) - ORDER.indexOf(b.kind)).map((r) => ({ ...r, group: GROUP[r.kind] || 'Other' }))
+    return [...recent().map((r) => ({ ...r, group: 'Recent' })), ...QUICK.map((r) => ({ ...r, group: 'Jump to' }))]
+  }, [q, res])
   useEffect(() => setI(0), [items])
   const go = (it: any) => { onClose(); nav(hrefFor(it)) }
   useEsc(onClose)
@@ -49,15 +56,18 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
             }} />
         </div>
         <div className="palette-list" id="palette-list" role="listbox" aria-label="Results">
-          {!q.trim() && <div className="tiny muted" style={{ padding: '8px 16px 4px' }}>Jump to</div>}
           {items.map((it, k) => {
             const Icon = ICON[it.kind] || LayoutGrid
+            const head = k === 0 || items[k - 1].group !== it.group
             return (
-              <button key={it.kind + it.id} id={`pi-${k}`} role="option" aria-selected={k === i} tabIndex={-1} className={`palette-item ${k === i ? 'on' : ''}`} onMouseEnter={() => setI(k)} onClick={() => go(it)}>
+              <Fragment key={it.kind + it.id}>
+              {head && <div className="palette-group tiny muted" role="presentation">{it.group}</div>}
+              <button id={`pi-${k}`} role="option" aria-selected={k === i} tabIndex={-1} className={`palette-item ${k === i ? 'on' : ''}`} onMouseEnter={() => setI(k)} onClick={() => go(it)}>
                 <Icon size={16} aria-hidden />
                 <span className="grow ellipsis">{it.title}</span>
                 <span className="tiny muted">{datesInText(it.sub)}</span>
               </button>
+              </Fragment>
             )
           })}
           {q.trim() && !res.length && <div className="empty small">Nothing matches “{q}”.</div>}

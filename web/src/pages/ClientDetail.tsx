@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, CalendarPlus, Check, ChevronRight, LayoutGrid, ListChecks, MessageSquareText, Phone, Receipt, Send, ShieldCheck, X } from 'lucide-react'
 import { useApi } from '../lib/api'
+import { pushRecent } from '../lib/session'
 import { EQUITY_BAND, fitsProfile, useClients, useMeetings, useProducts } from '../lib/data'
 import { ago, date, inr, label, when } from '../lib/format'
 import { AllocBar, Donut } from '../charts'
@@ -18,6 +19,7 @@ export default function ClientDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: c, error } = useApi<any>(`/c/clients/${id}`)
+  useEffect(() => { if (c) pushRecent({ kind: 'client', id: c.id, title: c.name, sub: `${label(c.segment)} client · ${c.locality}` }) }, [c?.id])
   const { data: clients = [] } = useClients()
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()
@@ -51,7 +53,7 @@ export default function ClientDetail() {
             <p className="muted" style={{ marginTop: 4 }}>{c.family_role} in the <Link className="linkbtn" to={`/clients?view=families`}>{c.name.split(' ')[1]} family</Link> · {c.occupation} · {c.locality} · client since {date(c.client_since, true)}</p>
             <div className="row wrap" style={{ gap: 6, marginTop: 10 }}>
               <Status s={c.segment} />
-              <span className="pill outline">Risk: {c.risk_profile}, profiled {date(c.risk_profile_date, true)}</span>
+              <span className="pill outline" title={`Risk profile: ${c.risk_profile}, profiled on ${date(c.risk_profile_date, true)}`}>{c.risk_profile} · {date(c.risk_profile_date, true).replace(/^\d+ /, '')}</span>
               <span className="pill gain"><ShieldCheck size={12} />KYC {c.kyc.status}</span>
               {c.accounts.demat && <span className="pill outline">Demat</span>}
               {c.nominee === 'Missing' && <span className="pill loss">No nominee</span>}
@@ -80,7 +82,7 @@ export default function ClientDetail() {
             <div className="statline">
               <Stat label="Invested" value={<Num v={c.invested} src="Purchase cost" />} />
               <Stat label="Current value" value={<Num v={c.aum} />} />
-              <Stat label="Gain" value={<span style={{ color: gain >= 0 ? 'var(--gain-ink)' : 'var(--loss-ink)' }}><Num v={gain} src="Current value minus cost" /></span>} />
+              <Stat label="Gain" value={<span className="row" style={{ gap: 6, color: gain >= 0 ? 'var(--gain-ink)' : 'var(--loss-ink)' }}><span aria-hidden style={{ fontSize: '0.6em' }}>{gain >= 0 ? '▲' : '▼'}</span><Num v={gain} src="Current value minus cost" /></span>} />
               <Stat label="Revenue this year" value={<Num v={c.revenue_ytd} src="Trail and fees, mock" />} />
             </div>
           </section>

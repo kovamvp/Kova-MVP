@@ -5,7 +5,21 @@ import { useClients, useMeetings, useProducts, useProspects } from '../lib/data'
 import { date, inr, nowISO, parse, time, todayISO, when, stripTitle } from '../lib/format'
 import { Avatar, Drawer, Panel, Stat, Status, SearchField } from '../ui'
 
-const TYPE_COLOR: Record<string, string> = { Review: '#1D3A2E', Proposal: '#848C70', 'First meeting': '#5F7D6E', Service: '#77736A', 'Family meeting': '#2C4E63' }
+// Lay out overlapping events side by side: each event gets a lane and the lane count of its cluster (MT1)
+function lanes(evs: any[]) {
+  const out = new Map<string, { lane: number; of: number }>()
+  let cluster: any[] = [], ends: string[] = [], clusterEnd = ''
+  const flush = () => { cluster.forEach((m) => { out.get(m.id)!.of = ends.length }); cluster = []; ends = [] }
+  for (const m of evs) {
+    if (cluster.length && m.start >= clusterEnd) flush()
+    let lane = ends.findIndex((e) => e <= m.start)
+    if (lane < 0) { lane = ends.length; ends.push(m.end) } else ends[lane] = m.end
+    out.set(m.id, { lane, of: 1 }); cluster.push(m)
+    clusterEnd = cluster.length === 1 ? m.end : (m.end > clusterEnd ? m.end : clusterEnd)
+  }
+  flush()
+  return out
+}
 const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 const HOURS = Array.from({ length: 11 }, (_, i) => 9 + i)
 
@@ -26,7 +40,8 @@ export default function Meetings() {
   const now = nowISO()
   const upcoming = meetings.filter((m) => m.status === 'scheduled' && m.end >= now).sort((a, b) => a.start.localeCompare(b.start))
   const next = upcoming[0]
-  const needMom = meetings.filter((m) => m.status === 'needs_mom' || (m.status === 'scheduled' && m.end < now))
+  const late = (m: any) => m.status === 'needs_mom' || (m.status === 'scheduled' && m.end < now)
+  const needMom = meetings.filter(late)
   const promises = meetings.flatMap((m) => (m.promises || []).map((p: any) => ({ ...p, m }))).sort((a, b) => Number(a.done) - Number(b.done) || (a.due || '').localeCompare(b.due || ''))
   const history = meetings.filter((m) => m.status === 'completed' || m.status === 'cancelled').filter((m) => !q || (m.title + (who(m)?.name || '')).toLowerCase().includes(q.toLowerCase())).sort((a, b) => b.start.localeCompare(a.start))
 
@@ -63,7 +78,7 @@ export default function Meetings() {
         </div>
       </section>
 
-      <div className="grid g-main mb16">
+      <div className="grid g-main mb16" style={{ alignItems: 'start' }}>
         {next ? <PrepPack m={next} who={who(next)} P={P} meetings={meetings} onOpen={() => setParams({ m: next.id })} /> : <Panel title="Next up"><p className="small muted">Nothing scheduled.</p></Panel>}
         <Panel title="Needs a MoM" aside="One tap opens the agent">
           {needMom.length === 0 && <p className="small muted">All caught up.</p>}
@@ -82,7 +97,7 @@ export default function Meetings() {
         <div className="cal-toolbar">
           <div className="row"><button className="iconbtn" onClick={() => shift(-1)} aria-label="Previous"><ChevronLeft /></button><button className="btn btn-quiet btn-sm" onClick={() => setAnchor(parse(todayISO()))}>Today</button><button className="iconbtn" onClick={() => shift(1)} aria-label="Next"><ChevronRight /></button><h2 style={{ marginLeft: 8 }}>{title}</h2></div>
           <div className="row" style={{ gap: 14 }}>
-            <div className="row wrap tiny muted" style={{ gap: 10 }}>{Object.entries(TYPE_COLOR).map(([k, c]) => <span key={k} className="row" style={{ gap: 5 }}><i style={{ width: 8, height: 8, borderRadius: 2, background: c }} />{k}</span>)}<span className="row" style={{ gap: 5 }}><span className="ring" />Set up by the agent</span></div>
+            <div className="row wrap tiny muted" style={{ gap: 10 }}><span className="row" style={{ gap: 5 }}><i className="cal-key needs" />Needs a MoM</span><span className="row" style={{ gap: 5 }}><span className="ring" />Set up by the agent</span></div>
             <div className="seg" role="group" aria-label="Calendar view">{(['day', 'week', 'month'] as const).map((v) => <button key={v} className={view === v ? 'on' : ''} aria-pressed={view === v} onClick={() => setView(v)}>{v[0].toUpperCase() + v.slice(1)}</button>)}</div>
           </div>
         </div>
@@ -92,7 +107,7 @@ export default function Meetings() {
             {days.map((d) => (
               <button key={iso(d)} className={`month-cell ${d.getMonth() !== anchor.getMonth() ? 'out' : ''} ${iso(d) === todayISO() ? 'today' : ''}`} onClick={() => { setAnchor(d); setView('day') }} aria-label={`${d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}, ${inDay(d).length} meeting${inDay(d).length === 1 ? '' : 's'}. Open the day`}>
                 <span className="tiny" aria-hidden>{d.getDate()}</span>
-                {inDay(d).slice(0, 3).map((m) => <span key={m.id} className="month-ev" style={{ borderColor: TYPE_COLOR[m.type] }}>{time(m.start)} {stripTitle(who(m)?.name || '').split(' ')[0]}</span>)}
+                {inDay(d).slice(0, 3).map((m) => <span key={m.id} className={`month-ev ${m.status} ${late(m) ? 'needs_mom' : ''}`}>{time(m.start)} {stripTitle(who(m)?.name || '').split(' ')[0]}</span>)}
                 {inDay(d).length > 3 && <span className="tiny muted">+{inDay(d).length - 3} more</span>}
               </button>
             ))}
@@ -106,17 +121,25 @@ export default function Meetings() {
               <div key={iso(d)} className="cal-col">
                 {HOURS.map((h) => <div key={h} className="cal-slot" />)}
                 {iso(d) === todayISO() && new Date().getHours() >= 9 && new Date().getHours() < 20 && <div className="cal-now" style={{ top: `${((new Date().getHours() + new Date().getMinutes() / 60 - 9) / 11) * 100}%` }} />}
-                {inDay(d).map((m) => {
+                {(() => { const L = lanes(inDay(d)); return inDay(d).map((m) => {
                   const s = parse(m.start), e = parse(m.end)
                   const top = ((s.getHours() + s.getMinutes() / 60 - 9) / 11) * 100
-                  const h = Math.max(((e.getTime() - s.getTime()) / 36e5 / 11) * 100, 4.5)
+                  const mins = (e.getTime() - s.getTime()) / 6e4
+                  const h = Math.max((mins / 60 / 11) * 100, 4.5)
+                  const { lane, of } = L.get(m.id)!
+                  const label = `${time(m.start)}, ${who(m)?.name}: ${m.title} (${m.type})`
                   return (
-                    <button key={m.id} className={`cal-ev ${m.status}`} style={{ top: `${top}%`, height: `${h}%`, borderLeftColor: TYPE_COLOR[m.type] }} onClick={() => setParams({ m: m.id })}>
-                      <span className="tiny strong ellipsis">{m.created_by === 'agent' && <span className="ring" style={{ width: 8, height: 8, marginRight: 4 }} />}{who(m)?.name}</span>
-                      <span className="tiny muted ellipsis">{time(m.start)} · {m.title}</span>
+                    <button key={m.id} className={`cal-ev ${m.status} ${late(m) ? 'needs_mom' : ''} ${mins < 45 ? 'short' : ''}`} title={label} aria-label={label}
+                      style={{ top: `${top}%`, height: `${h}%`, left: `calc(${(lane / of) * 100}% + 4px)`, width: `calc(${100 / of}% - 8px)`, right: 'auto' }} onClick={() => setParams({ m: m.id })}>
+                      {mins < 45 ? (
+                        <span className="tiny ellipsis">{m.created_by === 'agent' && <span className="ring" style={{ width: 8, height: 8, marginRight: 4 }} />}<span className="strong">{time(m.start)}</span> {who(m)?.name}</span>
+                      ) : (<>
+                        <span className="tiny strong ellipsis">{m.created_by === 'agent' && <span className="ring" style={{ width: 8, height: 8, marginRight: 4 }} />}{who(m)?.name}</span>
+                        <span className="tiny muted ellipsis">{time(m.start)} · {m.type}</span>
+                      </>)}
                     </button>
                   )
-                })}
+                }) })()}
               </div>
             ))}
           </div>
@@ -161,6 +184,11 @@ function prep(m: any, who: any, P: Record<string, any>, meetings: any[]) {
 
 function PrepPack({ m, who, P, meetings, onOpen }: { m: any; who: any; P: Record<string, any>; meetings: any[]; onOpen: () => void }) {
   const { past, open, talk } = prep(m, who, P, meetings)
+  const points = [
+    ...(who?.red_flags || []).slice(0, 1).map((f: any) => <li key={f.text}>{f.text}</li>),
+    ...talk.map((p: any) => <li key={p.id}>{p.name}: CIO {p.cio_view.stance.toLowerCase()}</li>),
+    ...(who?.cash_flows || []).filter((f: any) => f.kind === 'Maturity').slice(0, 1).map((f: any, i: number) => <li key={`cf${i}`}>{inr(f.amount)} maturing {when(f.date)}</li>),
+  ]
   return (
     <section className="panel next-up">
       <div className="panel-head"><h2>Next up</h2><button className="linkbtn small" onClick={onOpen}>Full prep pack <ChevronRight size={14} /></button></div>
@@ -173,7 +201,7 @@ function PrepPack({ m, who, P, meetings, onOpen }: { m: any; who: any; P: Record
         <div className="grid g3" style={{ gap: 12 }}>
           <div className="prep-box"><div className="tiny muted">Agenda</div><ul>{m.agenda.map((a: string) => <li key={a}>{a}</li>)}{!m.agenda.length && <li className="muted">None set</li>}</ul></div>
           <div className="prep-box"><div className="tiny muted">Last time</div><p className="small">{past?.mom?.summary || 'First recorded meeting.'}</p>{open.length > 0 && <p className="small row" style={{ marginTop: 6, gap: 6, alignItems: 'baseline' }}><span className="ring" aria-hidden /><span><span className="strong">Open promise:</span> {open[0].text}</span></p>}</div>
-          <div className="prep-box"><div className="tiny muted">Talking points</div><ul>{(who?.red_flags || []).slice(0, 1).map((f: any) => <li key={f.text}>{f.text}</li>)}{talk.map((p: any) => <li key={p.id}>{p.name}: CIO {p.cio_view.stance.toLowerCase()}</li>)}{(who?.cash_flows || []).filter((f: any) => f.kind === 'Maturity').slice(0, 1).map((f: any, i: number) => <li key={i}>{inr(f.amount)} maturing {when(f.date)}</li>)}</ul></div>
+          <div className="prep-box"><div className="tiny muted">Talking points</div>{points.length ? <ul>{points}</ul> : <p className="small">Nothing flagged yet. <Link className="linkbtn" to={`/${m.with.kind === 'client' ? 'clients' : 'prospects'}/${m.with.id}?panel=agent`}>Ask the agent to prepare you</Link>.</p>}</div>
         </div>
       </div>
     </section>
