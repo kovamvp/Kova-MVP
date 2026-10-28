@@ -877,3 +877,13 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 .claim-checks .cc.approval svg { color: var(--brass); }
 .claim-checks .cc.info svg { color: var(--muted); }
 .acard-blocked { font-size: 12.5px; color: var(--muted); align-self: center; }
+
+/* ---------- prospects: gated stages, readiness, becoming a client */
+.stage.locked .stage-name { color: var(--muted); }
+.stage.locked .stage-dot { color: var(--muted); border-style: dashed; }
+.kyc-row { min-height: 26px; }
+.select.sm { height: 28px; padding: 0 8px; font-size: 12.5px; }
+.convert-row { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 12px 14px; border: 1px solid var(--forest-tint); border-radius: var(--r-m); background: var(--forest-wash); }
+.closed-banner.converted { background: var(--forest-wash); border-color: var(--forest-tint); }
+.consent-set { border: 0; padding: 0; margin: 14px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.kyc-row .select { width: auto; flex: none; }

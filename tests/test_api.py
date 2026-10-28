@@ -66,7 +66,7 @@ def test_goals_rules(client):
 
 
 def test_prospect_create_close_reopen_stage(client):
-    p = client.post("/api/prospects", json={"name": "Test Person", "need": "Parking money", "estimated_investable": 5000000}).json()
+    p = client.post("/api/prospects", json={"name": "Test Person", "need": "Parking money", "estimated_investable": 5000000, "phone": "+91 90000 00000"}).json()
     assert p["stage"] == "Lead" and len(p["kyc_steps"]) == 9
     c = client.post(f"/api/prospects/{p['id']}/close", json={"reason": "Fees"}).json()
     assert c["stage"] == "Closed" and c["closed"]["previous_stage"] == "Lead"

@@ -262,8 +262,13 @@ def update_prospect(args: dict, source: dict | None = None) -> dict:
     p = store().get("prospects", args["prospect_id"])
     if not p:
         raise ValueError("Prospect not found")
+    from . import prospects
     changes = []
-    for k in ("stage", "next_step", "next_step_date", "estimated_investable", "risk_indication"):
+    if args.get("stage") not in (None, "", p.get("stage")):
+        prev = p["stage"]
+        prospects.move(p, args["stage"], by_agent=bool(source and source.get("card_id")))  # raises if the stage's steps aren't done
+        changes.append(f"stage: {prev} → {args['stage']}")
+    for k in ("next_step", "next_step_date", "estimated_investable", "risk_indication"):
         if args.get(k) not in (None, ""):
             changes.append(f"{k.replace('_', ' ')}: {p.get(k)} → {args[k]}")
             p[k] = args[k]
@@ -283,6 +288,11 @@ def create_ticket(args: dict, source: dict | None = None) -> dict:
     return {"request": req}
 
 
+def convert_prospect(args: dict, source: dict | None = None) -> dict:
+    from .prospects import convert  # prospects imports this module, so import late
+    return convert(args, source)
+
+
 ACTIONS = {
     "schedule_meeting": schedule_meeting,
     "product_feedback": product_feedback,
@@ -293,6 +303,7 @@ ACTIONS = {
     "add_note": add_note,
     "update_prospect": update_prospect,
     "create_ticket": create_ticket,
+    "convert_prospect": convert_prospect,
 }
 
 

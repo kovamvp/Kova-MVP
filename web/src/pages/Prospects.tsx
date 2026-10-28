@@ -27,8 +27,8 @@ export default function Prospects() {
   const { busy, run } = useAction()
   const P = Object.fromEntries(products.map((p) => [p.id, p]))
 
-  const open = prospects.filter((p) => p.stage !== 'Closed')
-  const closed = prospects.filter((p) => p.stage === 'Closed')
+  const open = prospects.filter((p) => p.stage !== 'Closed' && !p.converted)
+  const closed = prospects.filter((p) => p.stage === 'Closed' || p.converted)
   const potential = open.reduce((a, p) => a + p.estimated_investable, 0)
   const weighted = open.reduce((a, p) => a + (p.estimated_investable * p.probability) / 100, 0)
   const nextMeeting = (id: string) => meetings.filter((m) => m.with.id === id && m.status === 'scheduled').sort((a, b) => a.start.localeCompare(b.start))[0]
@@ -139,14 +139,14 @@ export default function Prospects() {
 
         <button className="closed-toggle" onClick={() => { setShowClosed((s) => !s); setParams(showClosed ? {} : { closed: '1' }) }}>
           {showClosed ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-          Closed prospects <span className="tiny muted">({closed.length}) · kept on record, can be reopened</span>
+          Closed and converted <span className="tiny muted">({closed.length}) · kept on record; closed ones can be reopened</span>
         </button>
         {showClosed && closed.map((p) => (
           <div key={p.id} className="client-row closed">
             <Avatar name={p.name} size={40} />
-            <div className="cr-name"><Link to={`/prospects/${p.id}`} className="strong">{p.name}</Link><div className="tiny muted">{p.source} · closed {date(p.closed?.date)}</div></div>
+            <div className="cr-name"><Link to={`/prospects/${p.id}`} className="strong">{p.name}</Link><div className="tiny muted">{p.source} · {p.converted ? `became a client ${date(p.converted.date)}` : `closed ${date(p.closed?.date)}`}</div></div>
             <div className="cr-aum small num">{inr(p.estimated_investable, { fixed: true })}</div>
-            <div className="cr-next small">{p.closed?.reason}</div>
+            <div className="cr-next small">{p.converted ? <Link to={`/clients/${p.converted.client_id}`}>Open client page</Link> : p.closed?.reason}</div>
             <div className="cr-flags tiny muted">Learning: {p.closed?.learning || '—'}</div>
             <button className="btn btn-quiet btn-sm" disabled={busy} onClick={() => run(async () => { await api(`/prospects/${p.id}/reopen`, { method: 'POST' }); invalidate('/c/prospects'); toast(`${p.name} reopened`) }, `Couldn’t reopen ${p.name}`)}><RotateCcw />Reopen</button>
           </div>

@@ -1,6 +1,6 @@
 import { Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Archive, ArrowLeft, ArrowUp, CalendarPlus, Check, FileText, HandCoins, Headset, Loader2, Mail, MessageSquare, Mic, NotebookPen, Paperclip, Pencil, Plus, Receipt, RotateCcw, Send, Square, UserCog, X } from 'lucide-react'
+import { Archive, ArrowLeft, ArrowUp, CalendarPlus, Check, FileText, HandCoins, Headset, Loader2, Mail, MessageSquare, Mic, NotebookPen, Paperclip, Pencil, Plus, Receipt, RotateCcw, Send, Square, UserCheck, UserCog, X } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
 import { ago, date, inr, label, time, when } from '../lib/format'
 import { resizeImage } from '../shell/ProfileMenu'
@@ -19,11 +19,15 @@ const ACTION_META: Record<string, { icon: any; label: string }> = {
   service_request: { icon: Headset, label: 'Service request' },
   add_note: { icon: FileText, label: 'Internal note' },
   update_prospect: { icon: UserCog, label: 'Update prospect' },
+  convert_prospect: { icon: UserCheck, label: 'Make a client' },
+}
+const CONSENT_LABEL: Record<string, string> = {
+  email: 'Email', whatsapp: 'WhatsApp', profile_enrichment: 'Personal details for advice', marketing: 'Offers and product news', data_sharing_with_partners: 'Sharing with partners',
 }
 const FIELD_LABEL: Record<string, string> = {
   with_id: 'With', to_id: 'To', about_id: 'About', client_id: 'Client', product_id: 'Product', prospect_id: 'Prospect', start: 'When', duration_minutes: 'Minutes',
   send_to_client: 'Send to client', promise_due: 'Promises due', changes_asked: 'Changes asked', portfolio_reaction: 'Portfolio reaction', bill_date: 'Bill date',
-  next_step_date: 'Next step date', estimated_investable: 'Estimated investable', interest_product_id: 'Interested in', meeting_id: 'Meeting',
+  next_step_date: 'Next step date', consent: 'Client consented to', estimated_investable: 'Estimated investable', interest_product_id: 'Interested in', meeting_id: 'Meeting',
 }
 const HIDE = new Set(['with_kind', 'to_kind', 'about_kind'])
 const ORDER = ['with_id', 'to_id', 'about_id', 'client_id', 'prospect_id', 'product_id', 'channel', 'title', 'type', 'start', 'duration_minutes', 'location', 'attendees', 'agenda', 'subject', 'body', 'summary', 'feedback', 'portfolio_reaction', 'changes_asked', 'promises', 'promise_due', 'personal', 'send_to_client', 'category', 'merchant', 'amount', 'bill_date', 'gst', 'details', 'text', 'priority']
@@ -359,7 +363,16 @@ function Card({ card, onDecide, onBill, names }: { card: any; onDecide: (c: any,
           <Fragment key={k}>
             <dt>{FIELD_LABEL[k] || k.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())}</dt>
             <dd>
-              {edit && pending ? (
+              {k === 'consent' && v && typeof v === 'object' ? (
+                pending ? (
+                  <span className="col" style={{ gap: 4 }}>
+                    {Object.keys(CONSENT_LABEL).map((c) => (
+                      <label key={c} className="check small"><input type="checkbox" checked={!!(v as any)[c]} onChange={(e) => setArgs({ ...args, consent: { ...(v as any), [c]: e.target.checked } })} />{CONSENT_LABEL[c]}</label>
+                    ))}
+                    <span className="tiny muted">Tick only what they agreed to on the consent form.</span>
+                  </span>
+                ) : <span>{Object.keys(CONSENT_LABEL).filter((c) => (v as any)[c]).map((c) => CONSENT_LABEL[c]).join(', ') || 'Nothing'}</span>
+              ) : edit && pending ? (
                 LONG.has(k) ? <textarea className="textarea" rows={k === 'body' || k === 'summary' ? 6 : 3} value={String(v ?? '')} onChange={(e) => setArgs({ ...args, [k]: e.target.value })} />
                   : k === 'start' ? <span className="col" style={{ gap: 3 }}><input className="input sm" type="datetime-local" aria-label="When" value={String(v).slice(0, 16)} onChange={(e) => setArgs({ ...args, start: e.target.value })} /><span className="tiny muted">{when(String(v))}</span></span>
                   : typeof v === 'boolean' ? <input type="checkbox" checked={v} onChange={(e) => setArgs({ ...args, [k]: e.target.checked })} />
@@ -395,6 +408,7 @@ function Card({ card, onDecide, onBill, names }: { card: any; onDecide: (c: any,
         <div className="acard-result tiny">
           {card.result?.outbox && <Link to={`/requests?tab=outbox&o=${card.result.outbox}`} className="linkbtn"><Mail />Outbox {card.result.outbox}</Link>}
           {card.result?.request && <Link to={`/requests?r=${card.result.request}`} className="linkbtn"><HandCoins />Request {card.result.request}</Link>}
+          {card.result?.client && <Link to={`/clients/${card.result.client}`} className="linkbtn"><UserCheck />Client {card.result.client}</Link>}
           {card.result?.meeting && <Link to={`/meetings?m=${card.result.meeting}`} className="linkbtn"><CalendarPlus />Meeting {card.result.meeting}</Link>}
           {card.result?.warning && <span className="muted">{card.result.warning}</span>}
         </div>

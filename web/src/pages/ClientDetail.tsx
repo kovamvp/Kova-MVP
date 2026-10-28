@@ -50,7 +50,7 @@ export default function ClientDetail() {
           <Avatar name={c.name} photo={c.photo} size={68} />
           <div className="grow" style={{ minWidth: 0 }}>
             <h1>{c.name}</h1>
-            <p className="muted" style={{ marginTop: 4 }}>{c.family_role} in the <Link className="linkbtn" to={`/clients?view=families`}>{c.name.split(' ')[1]} family</Link> · {c.occupation} · {c.locality} · client since {date(c.client_since, true)}</p>
+            <p className="muted" style={{ marginTop: 4 }}>{c.family_role} in the <Link className="linkbtn" to={`/clients?view=families`}>{c.name.split(' ').slice(-1)[0]} family</Link>{[c.occupation, c.locality, `client since ${date(c.client_since, true)}`].filter(Boolean).map((x) => ` · ${x}`).join('')}</p>
             <div className="row wrap" style={{ gap: 6, marginTop: 10 }}>
               <Status s={c.segment} />
               <span className="pill outline" title={`Risk profile: ${c.risk_profile}, profiled on ${date(c.risk_profile_date, true)}`}>{c.risk_profile} · {date(c.risk_profile_date, true).replace(/^\d+ /, '')}</span>
@@ -63,7 +63,7 @@ export default function ClientDetail() {
           <div className="stat" style={{ textAlign: 'right' }}>
             <span className="label">With Kova</span>
             <span className="value l"><Num v={c.aum} /></span>
-            <span className="sub">{gain >= 0 ? <Delta v={(gain / Math.max(1, c.invested)) * 100} /> : null} · XIRR {c.xirr}%</span>
+            <span className="sub">{c.invested > 0 ? <>{gain >= 0 ? <Delta v={(gain / Math.max(1, c.invested)) * 100} /> : null} · XIRR {c.xirr}%</> : 'Nothing invested yet'}</span>
           </div>
         </div>
         <div className="consent-strip">
@@ -82,7 +82,7 @@ export default function ClientDetail() {
             <div className="statline">
               <Stat label="Invested" value={<Num v={c.invested} src="Purchase cost" />} />
               <Stat label="Current value" value={<Num v={c.aum} />} />
-              <Stat label="Gain" value={<span className="row" style={{ gap: 6, color: gain >= 0 ? 'var(--gain-ink)' : 'var(--loss-ink)' }}><span aria-hidden style={{ fontSize: '0.6em' }}>{gain >= 0 ? '▲' : '▼'}</span><Num v={gain} src="Current value minus cost" /></span>} />
+              <Stat label="Gain" value={<span className="row" style={{ gap: 6, color: gain >= 0 ? 'var(--gain-ink)' : 'var(--loss-ink)' }}>{gain !== 0 && <span aria-hidden style={{ fontSize: '0.6em' }}>{gain > 0 ? '▲' : '▼'}</span>}<Num v={gain} src="Current value minus cost" /></span>} />
               <Stat label="Revenue this year" value={<Num v={c.revenue_ytd} src="Trail and fees, mock" />} />
             </div>
           </section>
@@ -106,6 +106,12 @@ export default function ClientDetail() {
         </div>
 
         <div className="col" style={{ gap: 16 }}>
+          {c.holdings.length === 0 ? (
+          <Panel title="First portfolio">
+            <p className="small">{c.first_name} has no investments with Kova yet{c.estimated_investable ? `; you estimated ${inr(c.estimated_investable)} to invest` : ''}. Start from a CIO model that suits a {c.risk_profile.toLowerCase()} profile.</p>
+            <Link className="btn btn-primary" style={{ marginTop: 12 }} to={`/studio?new=1&tag=client:${c.id}`}>Build their first portfolio</Link>
+          </Panel>
+          ) : (
           <Panel title="Allocation" aside={<button className="linkbtn" onClick={() => setPanel('portfolio')}>Portfolio <ChevronRight size={14} /></button>}>
             <AllocBar parts={Object.entries(c.allocation as Record<string, number>).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} />
             <div className="col small" style={{ gap: 6, marginTop: 12 }}>
@@ -113,6 +119,7 @@ export default function ClientDetail() {
             </div>
             <p className={`small sev ${eq > band[1] ? 'high' : 'low'}`} style={{ marginTop: 12 }}>Equity {eq}% against a {band[0]}–{band[1]}% band for a {c.risk_profile.toLowerCase()} profile.</p>
           </Panel>
+          )}
 
           <Panel title="Coming up">
             {upcoming.length === 0 && c.cash_flows.length === 0 && <p className="small muted">Nothing scheduled.</p>}
