@@ -107,7 +107,7 @@ export default function Clients() {
         <div className="suggest">
           {suggestions.map((s, i) => (
             <div key={i} className="suggest-item">
-              <span className="ring" style={{ marginTop: 5 }} />
+              <span className="bullet" aria-hidden />
               <p className="grow small">{s.text}</p>
               <button className="btn btn-quiet btn-sm" onClick={() => nav(s.to)}>{s.action}<ArrowRight /></button>
             </div>
@@ -233,7 +233,7 @@ function Onboard({ onClose }: { onClose: () => void }) {
           {step === 0 && (
             <div className="col" style={{ gap: 0, margin: '0 -20px' }}>
               {open.map((p) => (
-                <button key={p.id} className="list-row" style={{ textAlign: 'left', background: pick?.id === p.id ? 'var(--brass-wash)' : undefined }} onClick={() => setPick(p)}>
+                <button key={p.id} className="list-row" style={{ textAlign: 'left', background: pick?.id === p.id ? 'var(--forest-wash)' : undefined }} onClick={() => setPick(p)}>
                   <Avatar name={p.name} size={32} />
                   <span className="grow"><span className="strong">{p.name}</span><br /><span className="tiny muted">{p.stage} · {inr(p.estimated_investable)} · {p.need}</span></span>
                   {pick?.id === p.id && <Check size={16} color="var(--forest)" />}

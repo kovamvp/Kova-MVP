@@ -6,7 +6,7 @@ import { date, inr } from '../lib/format'
 import { Donut, HBars, Legend } from '../charts'
 import { LoadError, Num, Panel, SkeletonRows, Stat, Status, SearchField } from '../ui'
 
-const CAT_COLORS: Record<string, string> = { 'Mutual fund': '#1D3A2E', PMS: '#5F7D6E', AIF: '#9A7A47', Bond: '#C9A961', 'Fixed deposit': '#A9B8A9', Credit: '#77736A' }
+const CAT_COLORS: Record<string, string> = { 'Mutual fund': '#1D3A2E', PMS: '#5F7D6E', AIF: '#B0A98E', Bond: '#C9A961', 'Fixed deposit': '#A9B8A9', Credit: '#77736A' }
 
 export function suitsCount(p: any, clients: any[]) {
   return clients.filter((c) => c.segment !== 'lost' && !c.holdings.some((h: any) => h.product_id === p.id) && fitsProfile(p, c.risk_profile) && p.min_investment <= c.aum * 0.25)
@@ -120,7 +120,7 @@ export default function Products() {
                       <td className="r small">{held[p.id] ? <><Num v={held[p.id].value} /><div className="tiny muted">{held[p.id].n} clients</div></> : <span className="faint">—</span>}</td>
                       <td>
                         <Link to={`/products/${p.id}?panel=ld`} className={`ld-btn ${l.pct === 100 ? 'done' : l.pct > 0 ? 'progress' : ''}`}>
-                          {l.pct === 100 ? <><Check size={13} />Completed</> : l.pct > 0 ? <>Continue · {l.completed}/{l.total}</> : <>Start learning</>}
+                          {l.pct === 100 ? <><Check size={13} aria-hidden />Completed</> : l.pct > 0 ? <><span className="ld-mini" aria-hidden><i style={{ width: `${l.pct}%` }} /></span>Continue, {l.completed} of {l.total}</> : <>Start learning</>}
                         </Link>
                       </td>
                       <td><Link to={`/products/${p.id}`} className="iconbtn" aria-label={`Open ${p.name}`}><ChevronRight aria-hidden /></Link></td>

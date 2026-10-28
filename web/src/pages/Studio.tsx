@@ -57,7 +57,7 @@ export default function Studio() {
                 <div className="display strong" style={{ fontSize: 22, margin: '14px 0 8px' }}>{inr(pf.amount)}</div>
                 <AllocBar parts={Object.entries(al).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} />
                 <div className="spread tiny muted" style={{ marginTop: 10 }}><span>{pf.lines.length} products · {Math.round((used / Math.max(1, pf.amount)) * 100)}% allocated</span><span>Updated {ago(pf.updated)}</span></div>
-                {pf.note && <div className="tiny" style={{ marginTop: 8, color: pf.status === 'changes_requested' ? 'var(--loss-ink)' : 'var(--muted)' }}>{pf.note}</div>}
+                {pf.note && <div className="tiny" style={{ marginTop: 8, color: pf.status === 'changes_requested' ? 'var(--ink-strong)' : 'var(--muted)' }}>{pf.note}</div>}
               </Link>
             )
           })}

@@ -95,7 +95,7 @@ export default function Home() {
                   onDragEnd={() => setDragType(null)}>
                   <span className="lib-icon"><w.icon /></span>
                   <span className="grow" style={{ minWidth: 0 }}>
-                    <span className="small strong" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>{w.name}{w.pick && <span className="pill brass" style={{ height: 18 }}>pick</span>}</span>
+                    <span className="small strong" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>{w.name}{w.pick && <span className="pill outline" style={{ height: 18 }}>pick</span>}</span>
                     <span className="tiny muted">{w.desc}</span>
                   </span>
                   <button className="iconbtn" aria-label={`Add ${w.name}`} onClick={() => place(w.type)}><Plus /></button>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, BookOpen, Check, CircleHelp, FileText, GraduationCap, PlayCircle, Send, Trophy } from 'lucide-react'
+import { ArrowLeft, BookOpen, Check, CircleHelp, FileText, GraduationCap, PlayCircle, Send } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
 import { useClients, useGrowth, useLd } from '../lib/data'
@@ -61,7 +61,7 @@ export default function ProductDetail() {
           </div>
           <button className="ld-head" onClick={() => setPanel('ld')}>
             <div className="spread small"><span className="strong row" style={{ gap: 6 }}><GraduationCap size={15} />Your learning</span><span className="num">{pct}%</span></div>
-            <Bar v={pct} brass />
+            <Bar v={pct} />
             <div className="tiny muted">{pct === 100 ? 'Completed. Revisit any time.' : pct > 0 ? `${mods.length - done.length} of ${mods.length} steps left` : `${mods.length} steps, about ${mods.reduce((a: number, m: any) => a + m.minutes, 0)} minutes`}</div>
           </button>
         </div>
@@ -114,12 +114,6 @@ export default function ProductDetail() {
         </div>
 
         <div className="col" style={{ gap: 16 }}>
-          <section className="reward-card">
-            <div className="row" style={{ gap: 8 }}><Trophy size={16} /><span className="strong small">Rewards</span></div>
-            <div className="display" style={{ fontSize: 26, margin: '6px 0 2px' }}>{p.rewards.points_per_lakh} <span className="small">points per lakh</span></div>
-            {contest && <Link to="/growth" className="small" style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>Counts toward {contest.name}, ends {date(contest.ends)}</Link>}
-            <p className="tiny" style={{ marginTop: 10, opacity: 0.8 }}>Points follow suitable sales only. A sale flagged as unsuitable earns nothing and is reviewed.</p>
-          </section>
 
           <Panel title="Your clients holding it" aside={holders.length ? inr(holders.reduce((a, x) => a + x.h.value, 0)) : undefined}>
             {holders.length === 0 && <p className="small muted">None yet.</p>}
@@ -130,6 +124,11 @@ export default function ProductDetail() {
             {fits.length === 0 && <p className="small muted">No current client fits both risk and ticket size.</p>}
             {fits.slice(0, 6).map((c) => <Link key={c.id} to={`/clients/${c.id}`} className="row small fam-member"><Avatar name={c.name} size={26} /><span className="grow">{c.name}<span className="tiny muted"> · {c.risk_profile}</span></span><span className="num muted">{inr(c.aum)}</span></Link>)}
           </Panel>
+          <section className="reward-card" aria-label="Rewards">
+            <div className="spread"><span className="row small strong" style={{ gap: 8 }}><span className="ring" aria-hidden />Rewards</span>{contest && <Link to="/growth" className="linkbtn small">{contest.name}, ends {date(contest.ends)}</Link>}</div>
+            <div style={{ margin: '6px 0 2px' }}><span className="reward-figure num">{p.rewards.points_per_lakh}</span> <span className="small muted">points per lakh</span></div>
+            <p className="tiny muted" style={{ marginTop: 8 }}>Points follow suitable sales only. A sale flagged as unsuitable earns nothing and is reviewed.</p>
+          </section>
         </div>
       </div>
 
@@ -160,7 +159,7 @@ function LearningPanel({ p, done, onClose }: { p: any; done: string[]; onClose: 
   return (
     <Drawer wide scrim={false} onClose={onClose} title="Learning" sub={`${p.name} · set by ${p.product_manager.name}`}>
       <div className="spread small" style={{ marginBottom: 6 }}><span className="strong">{done.length} of {mods.length} steps</span><span className="num">{pct}%</span></div>
-      <Bar v={pct} brass />
+      <Bar v={pct} />
       <ol className="ld-steps">
         {mods.map((m: any, i: number) => {
           const Icon = MOD_ICON[m.type] || BookOpen

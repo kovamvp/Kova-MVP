@@ -82,7 +82,7 @@ export default function Prospects() {
           <div className="col" style={{ gap: 0 }}>
             {opps.map((o, i) => (
               <div key={i} className="suggest-item">
-                <span className="ring" style={{ marginTop: 5 }} />
+                <span className="bullet" aria-hidden />
                 <p className="grow small">{o.text}</p>
                 <button className="btn btn-quiet btn-sm" onClick={() => nav(o.to)}>{o.action}<ArrowRight /></button>
               </div>

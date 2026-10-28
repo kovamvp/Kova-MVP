@@ -132,7 +132,7 @@ export default function StudioCanvas() {
         </div>
         <button className="btn btn-quiet" onClick={exportJson}><Download />Export JSON</button>
       </div>
-      {pf.status === 'changes_requested' && <div className="closed-banner" style={{ marginBottom: 16 }}><span className="grow small"><span className="strong">The CIO Office asked for changes.</span> {pf.note || pf.history?.slice(-1)[0]?.event}</span></div>}
+      {pf.status === 'changes_requested' && <div className="note-card attention small" style={{ marginBottom: 16 }}><span className="strong">The CIO Office asked for changes.</span> {pf.note || pf.history?.slice(-1)[0]?.event} Edit the portfolio below and send it again.</div>}
       {locked && <div className="note-card small" style={{ marginBottom: 16 }}>{pf.status === 'approved' ? 'Approved by the CIO Office. Create a copy to make changes.' : 'With the CIO Office for approval. Editing is locked until they respond.'}</div>}
 
       <div className="studio-grid">

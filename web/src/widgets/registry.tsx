@@ -180,7 +180,7 @@ export const WIDGETS: WidgetDef[] = [
         <>
           <Head title="Requests in flight" href="/requests" />
           <div className="g2 grid" style={{ gap: 10 }}>
-            <Link to="/requests?tab=me" className="sunk" style={{ padding: 12 }}><div className="display" style={{ fontSize: 24, color: me.length ? 'var(--loss)' : 'var(--ink-strong)' }}>{me.length}</div><div className="tiny muted">waiting on you</div></Link>
+            <Link to="/requests?tab=me" className="sunk" style={{ padding: 12 }}><div className="display row" style={{ fontSize: 24, color: 'var(--ink-strong)', gap: 8 }}>{me.length}{me.length > 0 && <span className="ring" aria-hidden />}</div><div className="tiny muted">waiting on you</div></Link>
             <Link to="/requests?tab=others" className="sunk" style={{ padding: 12 }}><div className="display" style={{ fontSize: 24, color: 'var(--ink-strong)' }}>{others.length}</div><div className="tiny muted">with other teams</div></Link>
           </div>
           {me[0] && <div className="tiny muted ellipsis" style={{ marginTop: 10 }}>Oldest on you: {me[0].title}</div>}
@@ -346,7 +346,7 @@ export const WIDGETS: WidgetDef[] = [
         <>
           <Head title="Goal" href="/growth" sub={g.by === 'manager' ? `Set by ${g.set_by}` : 'Yours'} />
           <div className="display" style={{ fontSize: 16, color: 'var(--ink-strong)', lineHeight: 1.3 }}>{g.text}</div>
-          {g.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={g.progress * 100} brass /></div>}
+          {g.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={g.progress * 100} /></div>}
         </>
       )
     },

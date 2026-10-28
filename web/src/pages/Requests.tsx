@@ -48,7 +48,7 @@ export default function Requests() {
       </div>
       <section className="panel mb16">
         <div className="statline">
-          <Stat label="Waiting on you" value={<span style={{ color: counts.me ? 'var(--loss)' : undefined }}>{counts.me}</span>} sub="Approvals and replies you owe" />
+          <Stat label="Waiting on you" value={<span className="row" style={{ gap: 8 }}>{counts.me}{counts.me > 0 && <span className="ring" aria-hidden />}</span>} sub="Approvals and replies you owe" />
           <Stat label="With other teams" value={requests.filter((r) => r.direction === 'waiting_on_others').length} sub={`${overdue.length} past due`} />
           <Stat label="Closed in 30 days" value={requests.filter((r) => r.direction === 'completed').length} sub="Average 2.4 days to close" />
           <Stat label="Agent sends reviewed" value={`${outbox.filter((o) => o.review).length} of ${outbox.length}`} sub={`${outbox.filter((o) => o.review === 'correct').length} marked correct`} />
@@ -73,7 +73,7 @@ export default function Requests() {
                 </span>
                 <span className="req-last tiny muted ellipsis">{last.by}: {last.text}</span>
                 <span className="req-due tiny">{r.due ? <span className={od ? 'u-overdue-l' : 'muted'}>{od ? 'Overdue · ' : 'Due '}{when(r.due)}</span> : <span className="faint">No due date</span>}</span>
-                {r.priority === 'high' && <span className="pill loss">High</span>}
+                {r.priority === 'high' && <span className="pill outline">High</span>}
                 <Status s={r.status} />
               </button>
             )
@@ -105,10 +105,10 @@ function RequestDrawer({ r, onClose, onResolve }: { r: any; onClose: () => void;
     <Drawer title={r.title} sub={`${T.label} · ${r.id} · ${r.team}`} onClose={onClose}
       foot={r.direction !== 'completed' ? <><button className="btn btn-quiet" disabled={busy} onClick={() => op('nudge', null, `Nudged ${r.team}`)}><Bell />Nudge</button><button className="btn btn-quiet" disabled={busy} onClick={() => op('escalate', null, 'Escalated one level up')}><TriangleAlert />Escalate</button><button className="btn btn-ghost" disabled={busy} onClick={onResolve}><Check />Mark as resolved</button></> : undefined}>
       <div className="col" style={{ gap: 16 }}>
-        <div className="row wrap" style={{ gap: 8 }}><Status s={r.status} />{r.priority === 'high' && <span className="pill loss">High priority</span>}{r.due && <span className="pill outline">Due {when(r.due)}</span>}{r.escalations > 0 && <span className="pill warn">Escalated ×{r.escalations}</span>}</div>
+        <div className="row wrap" style={{ gap: 8 }}><Status s={r.status} />{r.priority === 'high' && <span className="pill outline">High priority</span>}{r.due && <span className="pill outline">Due {when(r.due)}</span>}{r.escalations > 0 && <span className="pill warn">Escalated ×{r.escalations}</span>}</div>
         {r.link && <EntityLink link={r.link} className="linkbtn">Open {r.link.kind} {r.link.id}<ArrowUpRight /></EntityLink>}
         {r.direction === 'waiting_on_me' && (
-          <div className="note-card">
+          <div className="note-card attention">
             <div className="small strong" style={{ marginBottom: 6 }}><CircleAlert size={14} style={{ verticalAlign: -2 }} /> {r.team} is waiting on you</div>
             {r.type === 'portfolio_approval' ? <Link className="btn btn-primary btn-sm" to={`/studio/${r.payload.portfolio_id}`}>Make the changes in Studio</Link> : (
               <><textarea className="textarea" rows={3} value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Reply or confirm what you’ve done" />

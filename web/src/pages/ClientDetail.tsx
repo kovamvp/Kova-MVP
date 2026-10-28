@@ -55,7 +55,7 @@ export default function ClientDetail() {
               <span className="pill gain"><ShieldCheck size={12} />KYC {c.kyc.status}</span>
               {c.accounts.demat && <span className="pill outline">Demat</span>}
               {c.nominee === 'Missing' && <span className="pill loss">No nominee</span>}
-              {c.tags.map((t: string) => <span key={t} className="pill brass">{t}</span>)}
+              {c.tags.map((t: string) => <span key={t} className="pill">{t}</span>)}
             </div>
           </div>
           <div className="stat" style={{ textAlign: 'right' }}>

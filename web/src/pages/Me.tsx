@@ -43,7 +43,7 @@ export function Profile() {
           <Panel title="Credentials">
             <dl className="kv small" style={{ gridTemplateColumns: '90px 1fr' }}><dt>ARN</dt><dd>{rm.arn}</dd><dt>EUIN</dt><dd>{rm.euin}</dd><dt>Email</dt><dd>{rm.email}</dd><dt>Mobile</dt><dd>{rm.phone}</dd><dt>Reports to</dt><dd>{rm.manager.name}, {rm.manager.title}</dd></dl>
           </Panel>
-          <Panel title="Certifications"><div className="col small" style={{ gap: 6 }}>{rm.certifications.map((c: string) => <div key={c} className="row" style={{ gap: 8 }}><Award size={14} color="var(--brass)" />{c}</div>)}</div></Panel>
+          <Panel title="Certifications"><div className="col small" style={{ gap: 6 }}>{rm.certifications.map((c: string) => <div key={c} className="row" style={{ gap: 8 }}><Award size={14} color="var(--forest)" aria-hidden />{c}</div>)}</div></Panel>
           <Panel title="Languages"><div className="row small" style={{ gap: 8 }}><Languages size={14} />{rm.languages.join(', ')}</div></Panel>
         </div>
       </div>
@@ -79,7 +79,7 @@ export function Preferences() {
         </Panel>
         <Panel title="Demo data">
           <p className="small muted" style={{ marginBottom: 12 }}>Puts every client, meeting, request and session back to the starting sample, with dates moved to this week. Agent sessions and outbox items you created are removed.</p>
-          {confirm ? <div className="row"><button className="btn btn-brass" disabled={busy} onClick={reset}><RotateCcw />{busy ? 'Resetting…' : 'Yes, reset everything'}</button><button className="btn btn-ghost" onClick={() => setConfirm(false)}>Cancel</button></div>
+          {confirm ? <div className="row"><button className="btn btn-danger" disabled={busy} onClick={reset}><RotateCcw />{busy ? 'Resetting…' : 'Yes, reset everything'}</button><button className="btn btn-ghost" onClick={() => setConfirm(false)}>Cancel</button></div>
             : <button className="btn btn-quiet" onClick={() => setConfirm(true)}><RotateCcw />Reset demo data</button>}
         </Panel>
       </div>
@@ -95,7 +95,7 @@ export function Handbook() {
       <div className="grid g3">
         {topics.map((t) => (
           <section key={t.id} className="panel panel-pad handbook-card">
-            <BookOpen size={18} color="var(--brass)" />
+            <BookOpen size={18} color="var(--forest)" aria-hidden />
             <h3 style={{ margin: '10px 0 4px' }}>{t.title}</h3>
             <p className="small muted">{t.minutes} min read</p>
             <span className="pill outline" style={{ marginTop: 10 }}>Coming soon</span>
