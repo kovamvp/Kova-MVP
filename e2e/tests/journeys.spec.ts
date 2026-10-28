@@ -56,7 +56,7 @@ test('client: portfolio panel opens from the context bar', async ({ app }) => {
   await expect(app.getByRole('dialog')).toContainText('Worth a conversation')
 })
 
-test.fixme('client: portfolio panel deep link does not crash (known S1, fixed in the UI batch)', async ({ app }) => {
+test('client: portfolio panel deep link does not crash', async ({ app }) => {
   await app.goto('/clients/CL-1001?panel=portfolio')
   await expect(app.getByRole('dialog')).toContainText('Worth a conversation')
 })

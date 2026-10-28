@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Download, Plus, Search, Send, Sparkles, Trash2 } from 'lucide-react'
+import { ArrowLeft, Check, Download, Plus, Send, Sparkles, Trash2 } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { assetClassOf, EQUITY_BAND, fitsProfile, RISK_ORDER, useClients, useModels, useProducts, useProspects } from '../lib/data'
-import { ago, inr } from '../lib/format'
+import { ago, inr, label } from '../lib/format'
 import { AllocBar } from '../charts'
-import { ASSET_COLORS, Bar, Empty, Status, useToast } from '../ui'
+import { AmountInput, ASSET_COLORS, Bar, DetailSkeleton, Empty, Status, useToast, SearchField } from '../ui'
 import { allocOf } from './Studio'
 
 const SHELVES = [
@@ -93,7 +93,7 @@ export default function StudioCanvas() {
   }, [pf, products, profile, models, who])
 
   if (error) return <main className="page"><Empty title="Portfolio not found" action={<Link className="btn btn-quiet" to="/studio">Back to Studio</Link>} /></main>
-  if (!pf || !calc) return <main className="page"><div className="panel skeleton" style={{ height: 400 }} /></main>
+  if (!pf || !calc) return <DetailSkeleton />
 
   const setLine = (pid: string, amount: number) => change({ lines: pf.lines.map((l: any) => (l.product_id === pid ? { ...l, amount: Math.max(0, Math.round(amount)) } : l)) })
   const add = (pid: string) => {
@@ -128,11 +128,11 @@ export default function StudioCanvas() {
       <div className="page-head" style={{ marginBottom: 16 }}>
         <div className="grow">
           <input className="title-input" value={pf.name} disabled={locked} onChange={(e) => change({ name: e.target.value })} aria-label="Portfolio name" />
-          <p className="small muted" style={{ marginTop: 4 }}><span className="num">{pf.id}</span> · {pf.source === 'recommended' && calc.model ? `from ${calc.model.name}` : pf.source} · <Status s={pf.status} /> · {saving === 'saving' ? 'Saving…' : saving === 'saved' ? 'Saved' : `Updated ${ago(pf.updated)}`}</p>
+          <p className="small muted" style={{ marginTop: 4 }}><span className="num">{pf.id}</span> · {pf.source === 'recommended' && calc.model ? `From the ${calc.model.name} model` : pf.source === 'scratch' ? 'Started from scratch' : pf.source === 'import' ? 'Imported' : label(pf.source || '')} · <Status s={pf.status} /> · {saving === 'saving' ? 'Saving…' : saving === 'saved' ? 'Saved' : `Updated ${ago(pf.updated)}`}</p>
         </div>
         <button className="btn btn-quiet" onClick={exportJson}><Download />Export JSON</button>
       </div>
-      {pf.status === 'changes_requested' && <div className="closed-banner" style={{ marginBottom: 16 }}><span className="grow small"><span className="strong">The CIO Office asked for changes.</span> {pf.note || pf.history?.slice(-1)[0]?.event}</span></div>}
+      {pf.status === 'changes_requested' && <div className="note-card attention small" style={{ marginBottom: 16 }}><span className="strong">The CIO Office asked for changes.</span> {pf.note || pf.history?.slice(-1)[0]?.event} Edit the portfolio below and send it again.</div>}
       {locked && <div className="note-card small" style={{ marginBottom: 16 }}>{pf.status === 'approved' ? 'Approved by the CIO Office. Create a copy to make changes.' : 'With the CIO Office for approval. Editing is locked until they respond.'}</div>}
 
       <div className="studio-grid">
@@ -141,7 +141,7 @@ export default function StudioCanvas() {
             <section className="panel">
               <div className="list-toolbar" style={{ gap: 8 }}>
                 <div className="row wrap" style={{ gap: 6 }}>{SHELVES.map((s) => <button key={s.key} className={`chip ${shelf === s.key ? 'on' : ''}`} onClick={() => setShelf(s.key)}>{s.label}</button>)}</div>
-                <label className="searchbox" style={{ height: 32, maxWidth: 200, marginLeft: 'auto' }}><Search size={13} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Find" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>
+                <SearchField value={q} onChange={setQ} placeholder="Find a product…" label="Find a product on the shelf" height={32} width={200} style={{ marginLeft: 'auto' }} />
               </div>
               <div className="shelf">
                 {shelfList.map((p) => {
@@ -153,7 +153,7 @@ export default function StudioCanvas() {
                         <div className="tiny muted ellipsis">{p.risk} · min {inr(p.min_investment)} · {p.returns?.['3y'] ? `${p.returns['3y']}% 3y` : p.ytm ? `${p.ytm}% YTM` : p.rate ? `${p.rate}%` : p.target_irr || ''}</div>
                       </div>
                       <Status s={p.cio_view.stance} />
-                      <button className="iconbtn" onClick={() => add(p.id)} disabled={inPf} aria-label={`Add ${p.name}`}><Plus /></button>
+                      {inPf ? <span className="shelf-added"><Check size={13} aria-hidden />Added</span> : <button className="iconbtn" onClick={() => add(p.id)} aria-label={`Add ${p.name}`}><Plus aria-hidden /></button>}
                     </div>
                   )
                 })}
@@ -176,12 +176,12 @@ export default function StudioCanvas() {
                       <div className="grow" style={{ minWidth: 0 }}>
                         <Link to={`/products/${p.id}`} className="small strong">{p.name}</Link>
                         <div className="tiny muted">{p.sub_category} · {p.liquidity}</div>
-                        {under && <div className="tiny" style={{ color: 'var(--loss)' }}>Minimum is {inr(p.min_investment)}</div>}
+                        {under && <div className="tiny" style={{ color: 'var(--loss-ink)' }}>Minimum is {inr(p.min_investment)}</div>}
                       </div>
-                      <label className="amt"><span className="tiny muted">₹</span><input className="input sm num" type="number" step={10000} value={l.amount} disabled={locked} onChange={(e) => setLine(l.product_id, +e.target.value)} /></label>
+                      <label className="amt"><span className="tiny muted">₹</span><AmountInput className="sm" echo={false} label={`Amount for ${p.name}`} value={l.amount} disabled={locked} onChange={(v) => setLine(l.product_id, v)} /></label>
                       <label className="amt pct"><input className="input sm num" type="number" step={0.5} value={+share.toFixed(1)} disabled={locked} onChange={(e) => setLine(l.product_id, (pf.amount * +e.target.value) / 100)} /><span className="tiny muted">%</span></label>
-                      <button className="iconbtn field-agent" title="Ask the agent about this line (coming soon)" onClick={comingSoon}><Sparkles /></button>
-                      {!locked && <button className="iconbtn" aria-label="Remove" onClick={() => remove(l.product_id)}><Trash2 /></button>}
+                      <button className="iconbtn field-agent" title="Ask the agent about this line (coming soon)" aria-label={`Ask the agent about ${p.name} (coming soon)`} onClick={comingSoon}><Sparkles aria-hidden /></button>
+                      {!locked && <button className="iconbtn" aria-label={`Remove ${p.name}`} onClick={() => remove(l.product_id)}><Trash2 /></button>}
                     </div>
                   )
                 })}
@@ -192,7 +192,7 @@ export default function StudioCanvas() {
 
         <aside className="master panel">
           <div className="master-sec">
-            <div className="spread"><h3>Master data</h3><button className="iconbtn field-agent" title="Ask the agent to critique (coming soon)" onClick={comingSoon}><Sparkles /></button></div>
+            <div className="spread"><h3>Master data</h3><button className="iconbtn field-agent" title="Ask the agent to critique (coming soon)" aria-label="Ask the agent to critique the portfolio (coming soon)" onClick={comingSoon}><Sparkles aria-hidden /></button></div>
             <label className="field" style={{ marginTop: 10 }}><span>For</span>
               <select className="select sm" disabled={locked} value={pf.tag ? `${pf.tag.kind}:${pf.tag.id}` : ''} onChange={(e) => change({ tag: e.target.value ? { kind: e.target.value.split(':')[0], id: e.target.value.split(':')[1] } : null })}>
                 <option value="">No one (practice)</option>
@@ -201,7 +201,7 @@ export default function StudioCanvas() {
               </select>
             </label>
             {who && <div className="tiny muted" style={{ marginTop: 6 }}>Risk profile: {profile || 'not assessed'} · {who.aum !== undefined ? `${inr(who.aum)} with Kova` : `${inr(who.estimated_investable)} estimated`}</div>}
-            <label className="field" style={{ marginTop: 10 }}><span>Portfolio amount</span><input className="input sm num" type="number" step={100000} disabled={locked} value={pf.amount} onChange={(e) => change({ amount: +e.target.value })} /></label>
+            <label className="field" style={{ marginTop: 10 }}><span>Portfolio amount</span><AmountInput className="sm" label="Portfolio amount" disabled={locked} value={pf.amount} onChange={(v) => change({ amount: v })} /></label>
           </div>
           <div className="master-sec">
             <div className="spread small"><span>Allocated</span><span className="num strong">{inr(calc.used)} of {inr(pf.amount)}</span></div>
@@ -228,11 +228,11 @@ export default function StudioCanvas() {
           </div>
           <div className="master-sec">
             <h3 style={{ marginBottom: 8 }}>Suitability</h3>
-            {calc.flags.length === 0 ? <p className="small" style={{ color: 'var(--gain)' }}>No issues found{profile ? ` for a ${profile.toLowerCase()} profile` : ''}.</p>
+            {calc.flags.length === 0 ? <p className="small" style={{ color: 'var(--gain-ink)' }}>No issues found{profile ? ` for a ${profile.toLowerCase()} profile` : ''}.</p>
               : <div className="col" style={{ gap: 6 }}>{calc.flags.map((f, i) => <div key={i} className={`sev ${f.severity} small`}>{f.text}</div>)}</div>}
           </div>
           <div className="master-sec" style={{ borderBottom: 0 }}>
-            {pf.status === 'approved' ? <p className="small" style={{ color: 'var(--gain)' }}>Approved by the CIO Office.</p>
+            {pf.status === 'approved' ? <p className="small" style={{ color: 'var(--gain-ink)' }}>Approved by the CIO Office.</p>
               : pf.status === 'awaiting_approval' ? <p className="small muted">Waiting on the CIO Office. <Link to="/requests?tab=approvals" className="linkbtn">Track it</Link></p>
               : <>
                   <button className="btn btn-primary" style={{ width: '100%' }} disabled={!pf.tag || !pf.lines.length} onClick={submit}><Send />Send for approval</button>

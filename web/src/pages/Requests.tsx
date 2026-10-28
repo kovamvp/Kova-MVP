@@ -2,9 +2,10 @@ import { Fragment, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { AlarmClockCheck, ArrowUpRight, Bell, Check, ChevronDown, ChevronRight, CircleAlert, Code, FileText, Headset, LayoutGrid, MessageSquare, Mic, NotebookPen, Plus, Receipt, Send, Ticket, TriangleAlert } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
+import { deferred, useAction } from '../lib/action'
 import { useClients, useRequests } from '../lib/data'
 import { daysFrom, inr, label, when } from '../lib/format'
-import { Drawer, EntityLink, Modal, Stat, Status, useToast } from '../ui'
+import { Drawer, EntityLink, LoadError, Modal, SkeletonRows, Stat, Status, useToast } from '../ui'
 
 const TYPE: Record<string, { icon: any; label: string }> = {
   reimbursement: { icon: Receipt, label: 'Reimbursement' }, product_feedback: { icon: Send, label: 'Product feedback' },
@@ -22,14 +23,17 @@ const TABS = [
 const TEAMS = ['Operations', 'Client Experience', 'Accounts', 'Product: Mutual Funds', 'Product: PMS & AIF', 'Product: Fixed Income', 'Compliance', 'Technology']
 
 export default function Requests() {
-  const { data: requests = [] } = useRequests(15000)
+  const { data: requestsRaw = [], loading, error, reload } = useRequests(15000)
+  const [resolving, setResolving] = useState<Set<string>>(new Set())
+  const requests = useMemo(() => requestsRaw.map((r) => (resolving.has(r.id) ? { ...r, status: 'done', direction: 'completed' } : r)), [requestsRaw, resolving])
   const { data: outbox = [] } = useApi<any[]>('/c/outbox', { poll: 20000 })
   const [params, setParams] = useSearchParams()
   const tab = params.get('tab') || (params.get('o') ? 'outbox' : 'me')
   const openId = params.get('r')
   const [ticket, setTicket] = useState(params.get('ticket') === '1')
+  const toast = useToast()
   const open = openId ? requests.find((r) => r.id === openId) : null
-  const counts = Object.fromEntries(TABS.map((t) => [t.key, t.key === 'outbox' ? outbox.filter((o) => !o.review).length : requests.filter(t.f).length]))
+  const counts = Object.fromEntries(TABS.map((t) => [t.key, t.key === 'outbox' ? outbox.length : requests.filter(t.f).length]))
   const list = requests.filter(TABS.find((t) => t.key === tab)!.f).sort((a, b) => (b.priority === 'high' ? 1 : 0) - (a.priority === 'high' ? 1 : 0) || (a.due || '9').localeCompare(b.due || '9') || b.created.localeCompare(a.created))
   const overdue = requests.filter((r) => r.direction !== 'completed' && r.due && (daysFrom(r.due) ?? 0) < 0)
 
@@ -44,18 +48,18 @@ export default function Requests() {
       </div>
       <section className="panel mb16">
         <div className="statline">
-          <Stat label="Waiting on you" value={<span style={{ color: counts.me ? 'var(--loss)' : undefined }}>{counts.me}</span>} sub="Approvals and replies you owe" />
+          <Stat label="Waiting on you" value={<span className="row" style={{ gap: 8 }}>{counts.me}{counts.me > 0 && <span className="ring" aria-hidden />}</span>} sub="Approvals and replies you owe" />
           <Stat label="With other teams" value={requests.filter((r) => r.direction === 'waiting_on_others').length} sub={`${overdue.length} past due`} />
           <Stat label="Closed in 30 days" value={requests.filter((r) => r.direction === 'completed').length} sub="Average 2.4 days to close" />
           <Stat label="Agent sends reviewed" value={`${outbox.filter((o) => o.review).length} of ${outbox.length}`} sub={`${outbox.filter((o) => o.review === 'correct').length} marked correct`} />
         </div>
       </section>
       <div className="tabs" style={{ marginBottom: 0 }}>
-        {TABS.map((t) => <button key={t.key} className={tab === t.key ? 'on' : ''} onClick={() => setParams({ tab: t.key })}>{t.label}<span className="count">{counts[t.key]}</span></button>)}
+        {TABS.map((t) => <button key={t.key} className={tab === t.key ? 'on' : ''} aria-pressed={tab === t.key} onClick={() => setParams({ tab: t.key })}>{t.label}<span className="count" aria-label={`, ${counts[t.key]}`}>{counts[t.key]}</span></button>)}
       </div>
       {tab === 'outbox' ? <Outbox items={outbox} focus={params.get('o')} /> : (
         <section className="panel" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 0 }}>
-          {list.length === 0 && <div className="empty">Nothing here right now.</div>}
+          {error && !requestsRaw.length ? <LoadError what="requests" onRetry={reload} /> : loading && !requestsRaw.length ? <SkeletonRows rows={4} /> : list.length === 0 && <div className="empty">Nothing here right now.</div>}
           {list.map((r) => {
             const T = TYPE[r.type] || TYPE.ticket
             const last = r.trail[r.trail.length - 1]
@@ -69,37 +73,46 @@ export default function Requests() {
                 </span>
                 <span className="req-last tiny muted ellipsis">{last.by}: {last.text}</span>
                 <span className="req-due tiny">{r.due ? <span className={od ? 'u-overdue-l' : 'muted'}>{od ? 'Overdue · ' : 'Due '}{when(r.due)}</span> : <span className="faint">No due date</span>}</span>
-                {r.priority === 'high' && <span className="pill loss">High</span>}
+                {r.priority === 'high' && <span className="pill outline">High</span>}
                 <Status s={r.status} />
               </button>
             )
           })}
         </section>
       )}
-      {open && <RequestDrawer r={open} onClose={() => setParams({ tab })} />}
+      {open && <RequestDrawer r={open} onClose={() => setParams({ tab })}
+        onResolve={() => {
+          const id = open.id
+          setResolving((x) => new Set(x).add(id))
+          setParams({ tab })
+          const unset = () => setResolving((x) => { const n = new Set(x); n.delete(id); return n })
+          const cancel = deferred(async () => { try { await api(`/requests/${id}/close`, { body: {} }); invalidate('/c/requests') } catch { toast(`Couldn’t resolve ${id}. Try again.`) } finally { unset() } })
+          toast(<>Marked {id} as resolved. <button className="toast-undo" onClick={() => { cancel(); unset() }}>Undo</button></>)
+        }} />}
       {ticket && <TicketForm onClose={() => { setTicket(false); if (params.get('ticket')) setParams({ tab: 'tickets' }) }} />}
     </main>
   )
 }
 
-function RequestDrawer({ r, onClose }: { r: any; onClose: () => void }) {
+function RequestDrawer({ r, onClose, onResolve }: { r: any; onClose: () => void; onResolve: () => void }) {
   const [reply, setReply] = useState('')
   const toast = useToast()
+  const { busy, run } = useAction()
   const T = TYPE[r.type] || TYPE.ticket
-  const op = async (o: string, body?: any, msg?: string) => { await api(`/requests/${r.id}/${o}`, { body: body || {} }); invalidate('/c/requests'); if (msg) toast(msg) }
+  const op = (o: string, body?: any, msg?: string) => run(async () => { await api(`/requests/${r.id}/${o}`, { body: body || {} }); invalidate('/c/requests'); if (msg) toast(msg) }, 'That didn’t reach the team')
   const pay = Object.entries(r.payload || {}).filter(([k, v]) => v !== null && v !== undefined && v !== '' && !['flags', 'portfolio'].includes(k))
   return (
     <Drawer title={r.title} sub={`${T.label} · ${r.id} · ${r.team}`} onClose={onClose}
-      foot={r.direction !== 'completed' ? <><button className="btn btn-quiet" onClick={() => op('nudge', null, `Nudged ${r.team}`)}><Bell />Nudge</button><button className="btn btn-quiet" onClick={() => op('escalate', null, 'Escalated one level up')}><TriangleAlert />Escalate</button><button className="btn btn-ghost" onClick={() => op('close', null, 'Closed')}>Close</button></> : undefined}>
+      foot={r.direction !== 'completed' ? <><button className="btn btn-quiet" disabled={busy} onClick={() => op('nudge', null, `Nudged ${r.team}`)}><Bell />Nudge</button><button className="btn btn-quiet" disabled={busy} onClick={() => op('escalate', null, 'Escalated one level up')}><TriangleAlert />Escalate</button><button className="btn btn-ghost" disabled={busy} onClick={onResolve}><Check />Mark as resolved</button></> : undefined}>
       <div className="col" style={{ gap: 16 }}>
-        <div className="row wrap" style={{ gap: 8 }}><Status s={r.status} />{r.priority === 'high' && <span className="pill loss">High priority</span>}{r.due && <span className="pill outline">Due {when(r.due)}</span>}{r.escalations > 0 && <span className="pill warn">Escalated ×{r.escalations}</span>}</div>
+        <div className="row wrap" style={{ gap: 8 }}><Status s={r.status} />{r.priority === 'high' && <span className="pill outline">High priority</span>}{r.due && <span className="pill outline">{(daysFrom(r.due) ?? 0) < 0 ? `Overdue · due ${when(r.due).toLowerCase()}` : `Due ${when(r.due).toLowerCase()}`}</span>}{r.escalations > 0 && <span className="pill warn">Escalated ×{r.escalations}</span>}</div>
         {r.link && <EntityLink link={r.link} className="linkbtn">Open {r.link.kind} {r.link.id}<ArrowUpRight /></EntityLink>}
         {r.direction === 'waiting_on_me' && (
-          <div className="note-card">
+          <div className="note-card attention">
             <div className="small strong" style={{ marginBottom: 6 }}><CircleAlert size={14} style={{ verticalAlign: -2 }} /> {r.team} is waiting on you</div>
             {r.type === 'portfolio_approval' ? <Link className="btn btn-primary btn-sm" to={`/studio/${r.payload.portfolio_id}`}>Make the changes in Studio</Link> : (
               <><textarea className="textarea" rows={3} value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Reply or confirm what you’ve done" />
-                <button className="btn btn-primary btn-sm" style={{ marginTop: 8 }} disabled={!reply.trim()} onClick={() => { op('respond', { text: reply }, 'Sent back to the team'); setReply('') }}>Send reply</button></>
+                <button className="btn btn-primary btn-sm" style={{ marginTop: 8 }} disabled={!reply.trim() || busy} onClick={async () => { await op('respond', { text: reply }, 'Sent back to the team'); setReply('') }}>Send reply</button></>
             )}
           </div>
         )}
@@ -129,15 +142,16 @@ function TicketForm({ onClose }: { onClose: () => void }) {
   const { data: clients = [] } = useClients()
   const [f, setF] = useState({ team: 'Operations', client_id: '', priority: 'normal', subject: '', summary: '', due: '', attachments: [] as string[] })
   const toast = useToast()
-  const save = async () => {
+  const { busy, run } = useAction()
+  const save = () => run(async () => {
     const r = await api('/actions/create_ticket', { body: { ...f, client_id: f.client_id || undefined, due: f.due || undefined } })
     invalidate('/c/requests')
     toast(`${r.request.id} raised with the ${f.team} team lead`)
     onClose()
-  }
+  }, 'Couldn’t raise the ticket')
   return (
     <Modal title="Raise a ticket" sub="Goes to the team lead, who assigns it inside the team." onClose={onClose}
-      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={!f.subject.trim()} onClick={save}>Raise ticket</button></>}>
+      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={!f.subject.trim() || busy} onClick={save}>{busy ? 'Raising…' : 'Raise ticket'}</button></>}>
       <div className="grid g2" style={{ gap: 12 }}>
         <label className="field"><span>Team</span><select className="select" value={f.team} onChange={(e) => setF({ ...f, team: e.target.value })}>{TEAMS.map((t) => <option key={t}>{t}</option>)}</select></label>
         <label className="field"><span>Client (optional)</span><select className="select" value={f.client_id} onChange={(e) => setF({ ...f, client_id: e.target.value })}><option value="">Not about a client</option>{clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
@@ -161,7 +175,7 @@ function Outbox({ items, focus }: { items: any[]; focus: string | null }) {
     <section className="panel" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTop: 0 }}>
       <div className="list-toolbar">
         <p className="small muted grow">Exactly what each approved action produced, with what you said and the card it came from. Mark each one so we can measure the agent.</p>
-        <div className="row" style={{ gap: 6 }}>{[['', 'All'], ['none', 'Not reviewed'], ['correct', 'Correct'], ['fix', 'Needs fixing']].map(([k, l]) => <button key={k} className={`chip ${filter === k ? 'on' : ''}`} onClick={() => setFilter(k)}>{l}</button>)}</div>
+        <div className="row" style={{ gap: 6 }}>{[['', 'All'], ['none', `To review (${items.filter((o) => !o.review).length})`], ['correct', 'Correct'], ['fix', 'Needs fixing']].map(([k, l]) => <button key={k} className={`chip ${filter === k ? 'on' : ''}`} onClick={() => setFilter(k)}>{l}</button>)}</div>
       </div>
       {shown.length === 0 && <div className="empty">Nothing here yet. Approve a card in any agent session and it lands here.</div>}
       {shown.map((o) => <OutboxItem key={o.id} o={o} open={open === o.id} onToggle={() => setOpen(open === o.id ? null : o.id)} />)}
@@ -175,8 +189,9 @@ function OutboxItem({ o, open, onToggle }: { o: any; open: boolean; onToggle: ()
   const [note, setNote] = useState(o.review_note || '')
   const [raw, setRaw] = useState(false)
   const toast = useToast()
+  const { busy, run } = useAction()
   const Icon = ACTION_ICON[o.action] || FileText
-  const save = async (patch: any, msg: string) => { await api(`/outbox/${o.id}`, { method: 'PATCH', body: patch }); invalidate('/c/outbox'); toast(msg) }
+  const save = (patch: any, msg: string) => run(async () => { await api(`/outbox/${o.id}`, { method: 'PATCH', body: patch }); invalidate('/c/outbox'); toast(msg) }, 'Couldn’t save that')
   const href = o.source?.kind && o.source?.id ? { kind: o.source.kind, id: o.source.id } : null
   return (
     <div className={`ob ${open ? 'open' : ''}`}>
@@ -185,7 +200,7 @@ function OutboxItem({ o, open, onToggle }: { o: any; open: boolean; onToggle: ()
         <span className="acard-icon"><Icon size={14} /></span>
         <span className="grow" style={{ minWidth: 0, textAlign: 'left' }}>
           <span className="small strong ellipsis" style={{ display: 'block' }}>{o.subject || label(o.action)}</span>
-          <span className="tiny muted">{o.channel} → {o.to?.name}{o.to?.address ? ` (${o.to.address})` : ''} · {when(o.at)} · {o.id}</span>
+          <span className="tiny muted">{o.channel} to {o.to?.name}{o.to?.address ? ` (${o.to.address})` : ''} · {when(o.at)} · {o.id}</span>
         </span>
         {o.source?.card_id && <span className="pill brass"><span className="ring" style={{ width: 8, height: 8 }} />Agent</span>}
         {o.edited && <span className="pill outline">Edited</span>}
@@ -200,7 +215,7 @@ function OutboxItem({ o, open, onToggle }: { o: any; open: boolean; onToggle: ()
             <div className="mail-row"><span className="muted">To</span><span>{o.to?.name} &lt;{o.to?.address}&gt; via {o.channel}</span></div>
             {o.subject !== null && <div className="mail-row"><span className="muted">Subject</span><input className="input sm" value={subject} onChange={(e) => setSubject(e.target.value)} /></div>}
             <textarea className="textarea" rows={Math.min(14, body.split('\n').length + 2)} value={body} onChange={(e) => setBody(e.target.value)} />
-            {(subject !== (o.subject || '') || body !== (o.body || '')) && <button className="btn btn-quiet btn-sm" onClick={() => save({ subject, body }, 'Edits saved; the original is kept')}>Save edits</button>}
+            {(subject !== (o.subject || '') || body !== (o.body || '')) && <button className="btn btn-quiet btn-sm" disabled={busy} onClick={() => save({ subject, body }, 'Edits saved; the original is kept')}>Save edits</button>}
             {o.original && <p className="tiny muted">Edited after sending. Original kept for the review set.</p>}
           </div>
           <button className="linkbtn tiny" style={{ marginTop: 8 }} onClick={() => setRaw((x) => !x)}><Code size={12} />{raw ? 'Hide' : 'Show'} payload JSON</button>

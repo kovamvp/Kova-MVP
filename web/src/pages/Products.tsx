@@ -1,19 +1,28 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Check, ChevronRight, Search } from 'lucide-react'
+import { Check, ChevronRight } from 'lucide-react'
 import { fitsProfile, ldStats, useClients, useLd, useProducts, useResearch } from '../lib/data'
-import { date, inr } from '../lib/format'
+import { date, inr, plural } from '../lib/format'
 import { Donut, HBars, Legend } from '../charts'
-import { Num, Panel, Stat, Status } from '../ui'
+import { LoadError, Num, Panel, SkeletonRows, Stat, Status, SearchField } from '../ui'
 
-const CAT_COLORS: Record<string, string> = { 'Mutual fund': '#1D3A2E', PMS: '#5F7D6E', AIF: '#9A7A47', Bond: '#C9A961', 'Fixed deposit': '#A9B8A9', Credit: '#77736A' }
+const CAT_COLORS: Record<string, string> = { 'Mutual fund': '#1D3A2E', PMS: '#5F7D6E', AIF: '#B0A98E', Bond: '#C9A961', 'Fixed deposit': '#A9B8A9', Credit: '#77736A' }
 
 export function suitsCount(p: any, clients: any[]) {
   return clients.filter((c) => c.segment !== 'lost' && !c.holdings.some((h: any) => h.product_id === p.id) && fitsProfile(p, c.risk_profile) && p.min_investment <= c.aum * 0.25)
 }
 
+// PD3: one number and its basis, in separate columns. Returns to 1 dp; yields and rates keep 2 dp as quoted.
+function returnOf(p: any): [string, string] {
+  if (p.returns?.['3y'] != null) return [`${Number(p.returns['3y']).toFixed(1)}%`, '3-year return, a year']
+  if (p.ytm != null) return [`${Number(p.ytm).toFixed(2)}%`, 'Yield to maturity']
+  if (p.rate != null) return [`${Number(p.rate).toFixed(2)}%`, 'Rate']
+  if (p.target_irr) { const m = String(p.target_irr).match(/^([\d.]+)\s*-\s*([\d.]+)%\s*(.*)$/); return m ? [`${m[1]}–${m[2]}%`, `Target IRR${m[3] ? `, ${m[3]}` : ''}`] : [String(p.target_irr), 'Target IRR'] }
+  return ['—', '']
+}
+
 export default function Products() {
-  const { data: products = [] } = useProducts()
+  const { data: products = [], loading, error, reload } = useProducts()
   const { data: clients = [] } = useClients()
   const { data: ld = [] } = useLd()
   const { data: research = [] } = useResearch()
@@ -46,8 +55,8 @@ export default function Products() {
           <p className="lede">{products.length} products on the Kova shelf. Your clients hold {inr(total)} across {Object.keys(held).length} of them.</p>
         </div>
         <div className="seg">
-          <button className={tab === 'shelf' ? 'on' : ''} onClick={() => setParams({})}>Shelf</button>
-          <button className={tab === 'research' ? 'on' : ''} onClick={() => setParams({ tab: 'research' })}>House view &amp; research</button>
+          <button className={tab === 'shelf' ? 'on' : ''} aria-pressed={tab === 'shelf'} onClick={() => setParams({})}>Shelf</button>
+          <button className={tab === 'research' ? 'on' : ''} aria-pressed={tab === 'research'} onClick={() => setParams({ tab: 'research' })}>House view &amp; research</button>
         </div>
       </div>
 
@@ -75,7 +84,7 @@ export default function Products() {
               <Stat label="New or closing soon" value={products.filter((p) => p.is_new || p.close_date).length} sub="See the list below" />
             </div>
           </section>
-          <div className="grid g3" style={{ marginBottom: 16 }}>
+          <div className="grid g3" style={{ marginBottom: 16, alignItems: 'start' }}>
             <Panel title="Your book by product type">
               <div className="row" style={{ gap: 18 }}>
                 <Donut size={130} data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k], note: inr(v) }))} center={<div className="tiny muted">by value</div>} />
@@ -83,12 +92,12 @@ export default function Products() {
               </div>
             </Panel>
             <Panel title="Most held">
-              <HBars data={top.map((p) => ({ label: <Link to={`/products/${p.id}`}>{p.name}</Link>, value: held[p.id]?.value || 0, sub: `${held[p.id]?.n || 0} clients` }))} format={(v) => inr(v)} />
+              <HBars data={top.map((p) => ({ label: <Link to={`/products/${p.id}`}>{p.name}</Link>, value: held[p.id]?.value || 0, sub: plural(held[p.id]?.n || 0, 'client') }))} format={(v) => inr(v)} />
             </Panel>
             <Panel title="Fits your clients" aside="Suitable, not yet held">
               <div className="col" style={{ gap: 0 }}>
-                {products.filter((p) => p.cio_view.stance === 'Preferred').map((p) => ({ p, n: suitsCount(p, clients).length })).sort((a, b) => b.n - a.n).slice(0, 5).map(({ p, n }) => (
-                  <Link key={p.id} to={`/products/${p.id}?panel=agent&ask=clients`} className="w-line small"><span className="grow ellipsis">{p.name}</span><span className="pill forest">{n} clients</span></Link>
+                {products.filter((p) => p.cio_view.stance === 'Preferred').map((p) => ({ p, n: suitsCount(p, clients).length })).sort((a, b) => b.n - a.n).slice(0, 6).map(({ p, n }) => (
+                  <Link key={p.id} to={`/products/${p.id}?panel=agent&ask=clients`} className="w-line small"><span className="grow ellipsis">{p.name}</span><span className="pill forest">{plural(n, 'client')}</span></Link>
                 ))}
               </div>
             </Panel>
@@ -96,39 +105,39 @@ export default function Products() {
 
           <section className="panel">
             <div className="list-toolbar">
-              <label className="searchbox" style={{ height: 34, maxWidth: 240 }}><Search size={14} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name or manufacturer" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>
+              <SearchField value={q} onChange={setQ} placeholder="Name or manufacturer…" label="Search products" width={240} />
               <div className="row wrap" style={{ gap: 6 }}>
-                <button className={`chip ${!cat ? 'on' : ''}`} onClick={() => setCat('')}>All</button>
-                {cats.map((c) => <button key={c} className={`chip ${cat === c ? 'on' : ''}`} onClick={() => setCat(c)}>{c}</button>)}
+                <button className={`chip ${!cat ? 'on' : ''}`} aria-pressed={!cat} onClick={() => setCat('')}>All</button>
+                {cats.map((c) => <button key={c} className={`chip ${cat === c ? 'on' : ''}`} aria-pressed={cat === c} onClick={() => setCat(c)}>{c}</button>)}
               </div>
               <select className="select sm" style={{ width: 190, marginLeft: 'auto' }} value={ldf} onChange={(e) => setLdf(e.target.value)} aria-label="Learning status">
                 <option value="">Any learning status</option><option value="none">Not started</option><option value="progress">In progress</option><option value="done">Completed</option>
               </select>
             </div>
-            <table className="table products-table">
-              <thead><tr><th>Product</th><th>Risk</th><th>CIO view</th><th className="r">Returns / yield</th><th className="r">Your clients</th><th>Learning</th><th /></tr></thead>
+            {error && !products.length ? <LoadError what="products" onRetry={reload} /> : loading && !products.length ? <SkeletonRows rows={8} height={56} /> : <table className="table products-table">
+              <thead><tr><th>Product</th><th>Risk</th><th>CIO view</th><th className="r">Return / yield</th><th>Basis</th><th className="r">Your clients</th><th>Learning</th><th /></tr></thead>
               <tbody>
                 {list.map((p) => {
                   const l = ldOf[p.id]
-                  const ret = p.returns?.['3y'] ? `${p.returns['3y']}% 3y` : p.ytm ? `${p.ytm}% YTM` : p.rate ? `${p.rate}% rate` : p.target_irr ? `${p.target_irr} IRR` : '—'
+                  const [ret, basis] = returnOf(p)
                   return (
                     <tr key={p.id}>
                       <td><Link to={`/products/${p.id}`} className="strong">{p.name}</Link> {p.is_new && <span className="pill forest" style={{ marginLeft: 4 }}>New</span>}{p.close_date && <span className="pill brass" style={{ marginLeft: 4 }}>Closes {date(p.close_date)}</span>}<div className="tiny muted">{p.category} · {p.sub_category} · {p.manufacturer}</div></td>
                       <td className="small">{p.risk}</td>
                       <td><Status s={p.cio_view.stance} /></td>
-                      <td className="r num small">{ret}</td>
-                      <td className="r small">{held[p.id] ? <><Num v={held[p.id].value} /><div className="tiny muted">{held[p.id].n} clients</div></> : <span className="faint">—</span>}</td>
+                      <td className="r num small">{ret}</td><td className="small muted">{basis}</td>
+                      <td className="r small">{held[p.id] ? <><Num v={held[p.id].value} fixed /><div className="tiny muted">{plural(held[p.id].n, 'client')}</div></> : <span className="faint">—</span>}</td>
                       <td>
                         <Link to={`/products/${p.id}?panel=ld`} className={`ld-btn ${l.pct === 100 ? 'done' : l.pct > 0 ? 'progress' : ''}`}>
-                          {l.pct === 100 ? <><Check size={13} />Completed</> : l.pct > 0 ? <>Continue · {l.completed}/{l.total}</> : <>Start learning</>}
+                          {l.pct === 100 ? <><Check size={13} aria-hidden />Completed</> : l.pct > 0 ? <><span className="ld-mini" aria-hidden><i style={{ width: `${l.pct}%` }} /></span>Continue, {l.completed} of {l.total}</> : <>Start learning</>}
                         </Link>
                       </td>
-                      <td><Link to={`/products/${p.id}`} className="iconbtn" aria-label="Open"><ChevronRight /></Link></td>
+                      <td><Link to={`/products/${p.id}`} className="iconbtn" aria-label={`Open ${p.name}`}><ChevronRight aria-hidden /></Link></td>
                     </tr>
                   )
                 })}
               </tbody>
-            </table>
+            </table>}
           </section>
         </>
       )}

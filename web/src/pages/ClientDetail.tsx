@@ -1,11 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, CalendarPlus, Check, ChevronRight, LayoutGrid, ListChecks, MessageSquareText, Phone, Receipt, Send, ShieldCheck, X } from 'lucide-react'
 import { useApi } from '../lib/api'
+import { pushRecent } from '../lib/session'
 import { EQUITY_BAND, fitsProfile, useClients, useMeetings, useProducts } from '../lib/data'
 import { ago, date, inr, label, when } from '../lib/format'
 import { AllocBar, Donut } from '../charts'
-import { ASSET_COLORS, Avatar, Delta, Drawer, Empty, Num, Panel, Stat, Status, useToast } from '../ui'
+import { ASSET_COLORS, Avatar, Delta, DetailSkeleton, Drawer, Empty, SkeletonRows, Num, Panel, Stat, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
 
@@ -18,6 +19,7 @@ export default function ClientDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: c, error } = useApi<any>(`/c/clients/${id}`)
+  useEffect(() => { if (c) pushRecent({ kind: 'client', id: c.id, title: c.name, sub: `${label(c.segment)} client · ${c.locality}` }) }, [c?.id])
   const { data: clients = [] } = useClients()
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()
@@ -29,7 +31,7 @@ export default function ClientDetail() {
   const P = useMemo(() => Object.fromEntries(products.map((p) => [p.id, p])), [products])
   const names = useMemo(() => Object.fromEntries([...clients.map((x) => [x.id, x.name]), ...products.map((p) => [p.id, p.name])]), [clients, products])
   if (error) return <main className="page"><Empty title="Client not found" action={<Link className="btn btn-quiet" to="/clients">Back to clients</Link>} /></main>
-  if (!c) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
+  if (!c) return <DetailSkeleton />
 
   const momFor = params.get('mom') ? meetings.find((m) => m.id === params.get('mom')) : null
   const agentInitial = agentPrompt ?? (momFor ? `Log the MoM for "${momFor.title}" (${momFor.id}): ` : null)
@@ -51,11 +53,11 @@ export default function ClientDetail() {
             <p className="muted" style={{ marginTop: 4 }}>{c.family_role} in the <Link className="linkbtn" to={`/clients?view=families`}>{c.name.split(' ')[1]} family</Link> · {c.occupation} · {c.locality} · client since {date(c.client_since, true)}</p>
             <div className="row wrap" style={{ gap: 6, marginTop: 10 }}>
               <Status s={c.segment} />
-              <span className="pill outline">Risk: {c.risk_profile}, profiled {date(c.risk_profile_date, true)}</span>
+              <span className="pill outline" title={`Risk profile: ${c.risk_profile}, profiled on ${date(c.risk_profile_date, true)}`}>{c.risk_profile} · {date(c.risk_profile_date, true).replace(/^\d+ /, '')}</span>
               <span className="pill gain"><ShieldCheck size={12} />KYC {c.kyc.status}</span>
               {c.accounts.demat && <span className="pill outline">Demat</span>}
               {c.nominee === 'Missing' && <span className="pill loss">No nominee</span>}
-              {c.tags.map((t: string) => <span key={t} className="pill brass">{t}</span>)}
+              {c.tags.map((t: string) => <span key={t} className="pill">{t}</span>)}
             </div>
           </div>
           <div className="stat" style={{ textAlign: 'right' }}>
@@ -80,7 +82,7 @@ export default function ClientDetail() {
             <div className="statline">
               <Stat label="Invested" value={<Num v={c.invested} src="Purchase cost" />} />
               <Stat label="Current value" value={<Num v={c.aum} />} />
-              <Stat label="Gain" value={<span style={{ color: gain >= 0 ? 'var(--gain)' : 'var(--loss)' }}><Num v={gain} src="Current value minus cost" /></span>} />
+              <Stat label="Gain" value={<span className="row" style={{ gap: 6, color: gain >= 0 ? 'var(--gain-ink)' : 'var(--loss-ink)' }}><span aria-hidden style={{ fontSize: '0.6em' }}>{gain >= 0 ? '▲' : '▼'}</span><Num v={gain} src="Current value minus cost" /></span>} />
               <Stat label="Revenue this year" value={<Num v={c.revenue_ytd} src="Trail and fees, mock" />} />
             </div>
           </section>
@@ -119,7 +121,7 @@ export default function ClientDetail() {
                 <Link key={m.id} to={`/meetings?m=${m.id}`} className="w-line"><CalendarPlus size={15} color="var(--forest)" /><span className="grow small">{m.title}<br /><span className="tiny muted">{when(m.start)} · {m.location}</span></span></Link>
               ))}
               {c.cash_flows.slice(0, 4).map((f: any, i: number) => (
-                <div key={i} className="w-line small"><span className="grow">{f.kind}: {P[f.product_id]?.name}<br /><span className="tiny muted">{when(f.date)}</span></span><span className="num" style={{ color: f.amount < 0 ? 'var(--muted)' : 'var(--ink-strong)' }}>{inr(f.amount)}</span></div>
+                <div key={i} className="w-line small"><span className="grow">{f.kind}: {P[f.product_id]?.name}<br /><span className="tiny muted">{when(f.date)}</span></span><span className="num" style={{ color: f.amount < 0 ? 'var(--muted)' : 'var(--ink-strong)' }}>{inr(f.amount, { fixed: true })}</span></div>
               ))}
             </div>
           </Panel>
@@ -143,7 +145,7 @@ export default function ClientDetail() {
             <Panel title="Family">
               <div className="col" style={{ gap: 4 }}>
                 {family.map((m) => (
-                  <Link key={m.id} to={`/clients/${m.id}`} className="row small fam-member"><Avatar name={m.name} size={28} /><span className="grow">{m.name}<span className="tiny muted"> · {m.family_role}</span></span><span className="num">{inr(m.aum)}</span></Link>
+                  <Link key={m.id} to={`/clients/${m.id}`} className="row small fam-member"><Avatar name={m.name} size={28} /><span className="grow">{m.name}<span className="tiny muted"> · {m.family_role}</span></span><span className="num">{inr(m.aum, { fixed: true })}</span></Link>
                 ))}
               </div>
             </Panel>
@@ -155,11 +157,11 @@ export default function ClientDetail() {
         <button className={`cb ${panel === 'portfolio' ? 'on' : ''}`} onClick={() => setPanel(panel === 'portfolio' ? null : 'portfolio')}><LayoutGrid />Portfolio</button>
         <button className={`cb ${panel === 'actions' ? 'on' : ''}`} onClick={() => setPanel(panel === 'actions' ? null : 'actions')}><ListChecks />Actions</button>
         <span className="sep" />
-        <button className="cb minor" onClick={() => toast(<>Call {c.first_name} on {c.phone}. Calling from Kova arrives with telephony.</>)} title="Call"><Phone /></button>
-        <button className="cb minor" onClick={() => setPanel('actions', { do: 'schedule' })} title="Schedule a meeting"><CalendarPlus /></button>
-        <button className="cb minor" onClick={() => { setAgentPrompt(`Send the MoM from my last meeting with ${c.first_name} on ${c.consent.whatsapp ? 'WhatsApp' : 'email'}: `); setPanel('agent') }} title="Send MoM on WhatsApp"><MessageSquareText /></button>
-        <button className="cb minor" onClick={() => setPanel('actions', { do: 'feedback' })} title="Give product feedback"><Send /></button>
-        <button className="cb minor" onClick={() => { setAgentPrompt(null); setPanel('agent'); toast('Attach the bill with the paperclip, or describe the expense.') }} title="Add a reimbursement"><Receipt /></button>
+        <button className="cb minor" onClick={() => toast(<>Call {c.first_name} on {c.phone}. Calling from Kova arrives with telephony.</>)} title="Call" aria-label={`Call ${c.first_name}`}><Phone aria-hidden /></button>
+        <button className="cb minor" onClick={() => setPanel('actions', { do: 'schedule' })} title="Schedule a meeting" aria-label="Schedule a meeting"><CalendarPlus aria-hidden /></button>
+        <button className="cb minor" onClick={() => { setAgentPrompt(`Send the MoM from my last meeting with ${c.first_name} on ${c.consent.whatsapp ? 'WhatsApp' : 'email'}: `); setPanel('agent') }} title="Send the MoM" aria-label="Send the MoM from the last meeting"><MessageSquareText aria-hidden /></button>
+        <button className="cb minor" onClick={() => setPanel('actions', { do: 'feedback' })} title="Give product feedback" aria-label="Give product feedback"><Send aria-hidden /></button>
+        <button className="cb minor" onClick={() => { setAgentPrompt(null); setPanel('agent'); toast('Attach the bill with the paperclip, or describe the expense.') }} title="Add a reimbursement" aria-label="Add a reimbursement"><Receipt aria-hidden /></button>
       </ContextBar>
 
       {panel === 'portfolio' && <PortfolioPanel c={c} P={P} products={products} onClose={() => setPanel(null)} />}
@@ -175,6 +177,7 @@ export default function ClientDetail() {
 
 function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string, any>; products: any[]; onClose: () => void }) {
   const groups: Record<string, any[]> = {}
+  if (!products.length) return <Drawer wide scrim={false} title="Portfolio" sub={c.name} onClose={onClose}><SkeletonRows rows={5} /></Drawer>
   c.holdings.forEach((h: any) => (groups[h.asset_class] ||= []).push(h))
   const held = new Set(c.holdings.map((h: any) => h.product_id))
   const fits = products.filter((p) => !held.has(p.id) && p.cio_view.stance === 'Preferred' && fitsProfile(p, c.risk_profile) && p.min_investment <= c.aum * 0.25).slice(0, 4)
@@ -195,7 +198,7 @@ function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string,
       </div>
       {Object.entries(groups).map(([cls, hs]) => (
         <div key={cls} style={{ marginBottom: 16 }}>
-          <div className="spread" style={{ marginBottom: 6 }}><h3 className="row" style={{ gap: 8 }}><i style={{ width: 9, height: 9, borderRadius: 2, background: ASSET_COLORS[cls] }} />{cls}</h3><span className="small num muted">{inr(hs.reduce((a, h) => a + h.value, 0))}</span></div>
+          <div className="spread" style={{ marginBottom: 6 }}><h3 className="row" style={{ gap: 8 }}><i style={{ width: 9, height: 9, borderRadius: 2, background: ASSET_COLORS[cls] }} />{cls}</h3><span className="small num muted">{inr(hs.reduce((a, h) => a + h.value, 0), { fixed: true })}</span></div>
           <table className="table">
             <tbody>
               {hs.map((h) => {
@@ -204,7 +207,7 @@ function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string,
                 return (
                   <tr key={h.product_id}>
                     <td><Link to={`/products/${h.product_id}`} className="strong">{p?.name}</Link><div className="tiny muted">{p?.sub_category} · {h.mode}{h.sip_amount ? ` ${inr(h.sip_amount)}/month` : ''} · since {date(h.since, true)}</div></td>
-                    <td className="r"><Num v={h.value} /><div><Delta v={g} /></div></td>
+                    <td className="r"><Num v={h.value} fixed /><div><Delta v={g} /></div></td>
                     <td className="r"><Status s={p?.cio_view.stance} /></td>
                   </tr>
                 )

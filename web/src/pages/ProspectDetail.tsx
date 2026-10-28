@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Check, LayoutGrid, ListChecks, Phone, CalendarPlus, XCircle, RotateCcw } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
+import { pushRecent } from '../lib/session'
+import { useAction } from '../lib/action'
 import { STAGES, STAGE_INFO, useMeetings, usePortfolios, useProducts } from '../lib/data'
-import { ago, date, inr, when } from '../lib/format'
-import { Avatar, Drawer, Empty, Modal, Num, Panel, Status, useToast } from '../ui'
+import { ago, date, inr, when, sourceText, label } from '../lib/format'
+import { Avatar, DetailSkeleton, Drawer, Empty, Modal, Num, Panel, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
 
@@ -12,6 +14,7 @@ export default function ProspectDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: p, error } = useApi<any>(`/c/prospects/${id}`)
+  useEffect(() => { if (p) pushRecent({ kind: 'prospect', id: p.id, title: p.name, sub: `Prospect · ${p.stage}` }) }, [p?.id])
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()
   const { data: portfolios = [] } = usePortfolios()
@@ -20,9 +23,10 @@ export default function ProspectDetail() {
   const setPanel = (x: string | null, extra: Record<string, string> = {}) => setParams(x ? { panel: x, ...extra } : {})
   const [prompt, setPrompt] = useState<string | null>(null)
   const toast = useToast()
+  const { busy, run } = useAction()
   const P = useMemo(() => Object.fromEntries(products.map((x) => [x.id, x])), [products])
   if (error) return <main className="page"><Empty title="Prospect not found" action={<Link className="btn btn-quiet" to="/prospects">Back to prospects</Link>} /></main>
-  if (!p) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
+  if (!p) return <DetailSkeleton />
 
   const ask = params.get('ask')
   const momFor = params.get('mom') ? meetings.find((m) => m.id === params.get('mom')) : null
@@ -30,11 +34,16 @@ export default function ProspectDetail() {
   const mine = meetings.filter((m) => m.with.id === p.id).sort((a, b) => b.start.localeCompare(a.start))
   const pfs = portfolios.filter((x) => x.tag?.id === p.id)
   const stageIdx = STAGES.indexOf(p.stage)
-  const setStage = async (s: string) => {
-    await api(`/prospects/${p.id}/stage`, { body: { stage: s } })
-    invalidate('/c/prospects')
-    toast(`Stage set to ${s}`)
+  const setStage = (s: string) => {
+    if (s === p.stage) return
+    const prev = p.stage
+    const move = async (to: string) => { await api(`/prospects/${p.id}/stage`, { body: { stage: to } }); invalidate('/c/prospects') }
+    run(async () => {
+      await move(s)
+      toast(<>Moved to {s}. <button className="toast-undo" onClick={() => run(async () => { await move(prev); toast(`Back to ${prev}`) }, 'Couldn’t undo the stage change')}>Undo</button></>)
+    }, 'Couldn’t change the stage')
   }
+  const reopen = () => run(async () => { await api(`/prospects/${p.id}/reopen`, { method: 'POST' }); invalidate('/c/prospects'); toast('Reopened') }, 'Couldn’t reopen the prospect')
   const names = { [p.id]: p.name, ...Object.fromEntries(products.map((x) => [x.id, x.name])) }
 
   return (
@@ -45,7 +54,7 @@ export default function ProspectDetail() {
           <Avatar name={p.name} size={68} />
           <div className="grow">
             <h1>{p.name}</h1>
-            <p className="muted" style={{ marginTop: 4 }}>{p.age ? `${p.age} · ` : ''}{p.city} · {p.source}{p.source_detail ? `: ${p.source_detail}` : ''} · added {date(p.created, true)}</p>
+            <p className="muted" style={{ marginTop: 4 }}>{p.age ? `${p.age} · ` : ''}{p.city} · {sourceText(p.source, p.source_detail)} · added {date(p.created, true)}</p>
             <p style={{ marginTop: 10, maxWidth: 640 }}>{p.need}</p>
           </div>
           <div className="stat" style={{ textAlign: 'right' }}>
@@ -58,28 +67,30 @@ export default function ProspectDetail() {
           <div className="closed-banner">
             <XCircle size={18} />
             <div className="grow small"><span className="strong">Closed {date(p.closed?.date)}.</span> {p.closed?.reason} {p.closed?.learning && <span className="muted">Learning: {p.closed.learning}</span>}</div>
-            <button className="btn btn-quiet btn-sm" onClick={async () => { await api(`/prospects/${p.id}/reopen`, { method: 'POST' }); invalidate('/c/prospects'); toast('Reopened') }}><RotateCcw />Reopen</button>
+            <button className="btn btn-quiet btn-sm" disabled={busy} onClick={reopen}><RotateCcw />Reopen</button>
           </div>
         ) : (
-          <div className="stage-track" role="list" aria-label="Stage">
+          <ol className="stage-track" aria-label="Stage">
             {STAGES.map((s, i) => (
-              <button key={s} role="listitem" className={`stage ${i < stageIdx ? 'done' : i === stageIdx ? 'on' : ''}`} onClick={() => setStage(s)} title={STAGE_INFO[s]}>
-                <span className="stage-dot">{i < stageIdx ? <Check size={11} /> : null}</span>
-                <span className="stage-name">{s}</span>
-              </button>
+              <li key={s} className={`stage ${i < stageIdx ? 'done' : i === stageIdx ? 'on' : ''}`}>
+                <button className="stage-btn" onClick={() => setStage(s)} disabled={busy} title={i === stageIdx ? STAGE_INFO[s] : `Move to ${s}: ${STAGE_INFO[s]}`} aria-current={i === stageIdx ? 'step' : undefined}>
+                  <span className="stage-dot" aria-hidden>{i < stageIdx ? <Check size={11} /> : null}</span>
+                  <span className="stage-name">{s}</span>
+                </button>
+              </li>
             ))}
-          </div>
+          </ol>
         )}
       </header>
 
       <div className="grid g-main-wide" style={{ marginTop: 16 }}>
         <div className="col" style={{ gap: 16 }}>
-          <div className="grid g2">
+          <div className="grid g2" style={{ alignItems: 'start' }}>
             <Panel title="Next step">
               {p.next_step ? <><div className="display" style={{ fontSize: 18, color: 'var(--ink-strong)' }}>{p.next_step}</div><div className="small muted">{when(p.next_step_date)}</div></> : <p className="small muted">None set.</p>}
               {mine.filter((m) => m.status === 'scheduled')[0] && <div className="small" style={{ marginTop: 10 }}>Meeting: {mine.filter((m) => m.status === 'scheduled')[0].title}, {when(mine.filter((m) => m.status === 'scheduled')[0].start)}</div>}
             </Panel>
-            <Panel title="Account readiness" aside={STAGE_INFO[p.stage]?.split(';')[0]}>
+            <Panel title="Account readiness" aside={`${p.kyc_steps.filter((s: any) => s.done).length} of ${p.kyc_steps.length} done`}>
               <div className="col" style={{ gap: 5 }}>
                 {p.kyc_steps.map((s: any) => (
                   <div key={s.step} className="row small" style={{ gap: 8 }}>
@@ -125,7 +136,7 @@ export default function ProspectDetail() {
             <dl className="kv" style={{ gridTemplateColumns: '120px 1fr' }}>
               <dt>Mobile</dt><dd>{p.phone || '—'}</dd><dt>Email</dt><dd className="ellipsis">{p.email || '—'}</dd>
               <dt>Risk indication</dt><dd>{p.risk_indication}</dd><dt>Meetings held</dt><dd>{p.meetings_held}</dd><dt>Last contact</dt><dd>{ago(p.last_contact)}</dd>
-              <dt>Kova Client</dt><dd><label className="check toggle-off" title="Not active in this version"><input type="checkbox" checked={p.app_access} disabled readOnly /> {p.app_access ? 'Has access' : 'No access yet'}</label></dd>
+              <dt>Kova Client</dt><dd>{p.app_access ? 'Has access' : <>No access yet <span className="muted">(arrives with Kova Client)</span></>}</dd>
             </dl>
             {p.stage !== 'Closed' && <button className="btn btn-danger btn-sm" style={{ marginTop: 14 }} onClick={() => setClosing(true)}><XCircle />Close prospect</button>}
           </Panel>
@@ -136,8 +147,8 @@ export default function ProspectDetail() {
         <button className={`cb ${panel === 'proposal' ? 'on' : ''}`} onClick={() => setPanel(panel === 'proposal' ? null : 'proposal')}><LayoutGrid />Proposal</button>
         <button className={`cb ${panel === 'actions' ? 'on' : ''}`} onClick={() => setPanel(panel === 'actions' ? null : 'actions')}><ListChecks />Actions</button>
         <span className="sep" />
-        <button className="cb minor" title="Call" onClick={() => toast(`Call ${p.name} on ${p.phone}`)}><Phone /></button>
-        <button className="cb minor" title="Schedule a meeting" onClick={() => setPanel('actions', { do: 'schedule' })}><CalendarPlus /></button>
+        <button className="cb minor" title="Call" aria-label={`Call ${p.name}`} onClick={() => toast(`Call ${p.name} on ${p.phone}`)}><Phone aria-hidden /></button>
+        <button className="cb minor" title="Schedule a meeting" aria-label="Schedule a meeting" onClick={() => setPanel('actions', { do: 'schedule' })}><CalendarPlus aria-hidden /></button>
       </ContextBar>
 
       {panel === 'proposal' && (
@@ -174,9 +185,11 @@ function CloseProspect({ p, onClose }: { p: any; onClose: () => void }) {
   const [reason, setReason] = useState('Chose another firm')
   const [learning, setLearning] = useState('')
   const toast = useToast()
+  const { busy, run } = useAction()
+  const close = () => run(async () => { await api(`/prospects/${p.id}/close`, { body: { reason, learning } }); invalidate('/c/prospects'); toast('Prospect closed'); onClose() }, 'Couldn’t close the prospect')
   return (
     <Modal title={`Close ${p.name}`} sub="The record and everything learned stays on file. You can reopen any time." onClose={onClose}
-      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" onClick={async () => { await api(`/prospects/${p.id}/close`, { body: { reason, learning } }); invalidate('/c/prospects'); toast('Prospect closed'); onClose() }}>Close prospect</button></>}>
+      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={busy} onClick={close}>{busy ? 'Closing…' : 'Close prospect'}</button></>}>
       <div className="col" style={{ gap: 12 }}>
         <label className="field"><span>Why</span><select className="select" value={reason} onChange={(e) => setReason(e.target.value)}>{['Chose another firm', 'Not ready yet; revisit later', 'Fees', 'Investable amount too small', 'Unreachable', 'Other'].map((r) => <option key={r}>{r}</option>)}</select></label>
         <label className="field"><span>What would you do differently?</span><textarea className="textarea" value={learning} onChange={(e) => setLearning(e.target.value)} /></label>

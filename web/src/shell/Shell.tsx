@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { CalendarDays, Gem, Home, Inbox, LayoutGrid, Search, Sprout, Users, UserRoundSearch } from 'lucide-react'
 import { useApi } from '../lib/api'
-import { Avatar } from '../ui'
+import { Avatar, ErrorBoundary } from '../ui'
 import { signOut } from '../lib/session'
 import SearchPalette from './SearchPalette'
 import ProfileMenu from './ProfileMenu'
@@ -36,15 +36,16 @@ export default function Shell({ onOut }: { onOut: () => void }) {
   const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
   return (
     <div className="app">
+      <a href="#main" className="skip-link" onClick={(e) => { e.preventDefault(); const m = document.querySelector<HTMLElement>('main'); m?.setAttribute('tabindex', '-1'); m?.focus() }}>Skip to content</a>
       <header className="topbar">
         <div className="brand">
-          <NavLink to="/" aria-label="Kova Work home"><img src="/wordmark.svg" alt="KOVA" /></NavLink>
+          <NavLink to="/" aria-label="Kova Work home"><img src="/wordmark.svg" alt="KOVA" width={80} height={22} /></NavLink>
           <span className="ws">Work</span>
         </div>
-        <button className="searchbox" onClick={() => setSearch(true)}>
-          <Search size={16} />
-          <span>Search clients, prospects, products</span>
-          <kbd>⌘K</kbd>
+        <button className="searchbox" onClick={() => setSearch(true)} aria-label="Search clients, prospects and products (Ctrl or ⌘ K)">
+          <Search size={16} aria-hidden />
+          <span aria-hidden>Search clients, prospects, products</span>
+          <kbd aria-hidden>⌘K</kbd>
         </button>
         <div className="right" ref={menuRef}>
           <span className="today">{today}</span>
@@ -54,13 +55,15 @@ export default function Shell({ onOut }: { onOut: () => void }) {
           {menu && <ProfileMenu rm={rm} onClose={() => setMenu(false)} onOut={() => { signOut(); onOut(); nav('/') }} />}
         </div>
       </header>
-      <Outlet />
+      <ErrorBoundary resetKey={loc.pathname}>
+        <Outlet />
+      </ErrorBoundary>
       <nav className="dock-wrap" aria-label="Main">
         <div className="dock">
           {NAV.map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className={({ isActive }) => (isActive ? 'active' : '')}>
-              <Icon />
-              <span>{label}</span>
+              <Icon aria-hidden />
+              <span className="dock-label">{label}</span>
             </NavLink>
           ))}
         </div>

@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AlarmClock, Building2, CalendarDays, Check, CircleDollarSign, Clock3, Flag, Gift, Inbox, ListTodo, Sparkles, Undo2, UserRound } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
+import { useAction } from '../lib/action'
 import { useUpdates } from '../lib/data'
 import { daysFrom, nowISO, when } from '../lib/format'
-import { hrefFor, useToast } from '../ui'
+import { hrefFor, useEsc, useToast } from '../ui'
 
 const KIND: Record<string, { icon: any; label: string }> = {
   meeting: { icon: CalendarDays, label: 'Meeting' }, approval: { icon: Inbox, label: 'Approval' }, nudge: { icon: Sparkles, label: 'Nudge' },
@@ -28,6 +29,7 @@ export default function Updates() {
   const [snoozeFor, setSnoozeFor] = useState<string | null>(null)
   const [showDone, setShowDone] = useState(false)
   const toast = useToast()
+  const { run } = useAction()
   const now = nowISO()
   const { live, done, snoozed } = useMemo(() => {
     const live = updates.filter((u) => !u.done && !(u.snoozed_until && u.snoozed_until > now))
@@ -43,26 +45,54 @@ export default function Updates() {
     { name: 'Coming up', items: live.filter((u) => !(u.priority <= 1 || (u.due && daysFrom(u.due)! <= 0)) && u.kind !== 'company') },
     { name: 'From the firm', items: live.filter((u) => u.kind === 'company' && !(u.priority <= 1)) },
   ]
-  const markDone = async (u: any) => {
+  const markDone = (u: any) => run(async () => {
     await api(`/updates/${u.id}/done`, { method: 'POST' })
     invalidate('/c/updates')
-    toast(u.done ? 'Moved back to your list' : <>Marked done. <button style={{ textDecoration: 'underline' }} onClick={() => markDone({ ...u, done: true })}>Undo</button></>)
-  }
-  const snooze = async (u: any, until: string, l: string) => {
+    toast(u.done ? 'Moved back to your list' : <>Marked done. <button className="toast-undo" onClick={() => markDone({ ...u, done: true })}>Undo</button></>)
+  }, u.done ? 'Couldn’t move it back' : 'Couldn’t mark it done')
+  const snooze = (u: any, until: string, l: string) => {
     setSnoozeFor(null)
-    await api(`/updates/${u.id}/snooze`, { body: { until } })
-    invalidate('/c/updates')
-    toast(`Snoozed until ${l.toLowerCase()}`)
+    run(async () => {
+      await api(`/updates/${u.id}/snooze`, { body: { until } })
+      invalidate('/c/updates')
+      toast(`Snoozed until ${l.toLowerCase()}`)
+    }, 'Couldn’t snooze it')
   }
+  /* The panel always ends above the dock, whether the page is scrolled or not, and says when there is more below */
+  const box = useRef<HTMLElement>(null)
+  const body = useRef<HTMLDivElement>(null)
+  const [more, setMore] = useState(false)
+  useLayoutEffect(() => {
+    const fit = () => {
+      const el = box.current
+      if (!el) return
+      const dock = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dock-space')) || 104
+      const top = Math.max(el.getBoundingClientRect().top, 76)
+      el.style.maxHeight = `${Math.max(320, window.innerHeight - top - dock - 8)}px`
+    }
+    fit()
+    window.addEventListener('scroll', fit, { passive: true })
+    window.addEventListener('resize', fit)
+    return () => { window.removeEventListener('scroll', fit); window.removeEventListener('resize', fit) }
+  }, [])
+  useEffect(() => {
+    const b = body.current
+    if (!b) return
+    const check = () => setMore(b.scrollHeight - b.scrollTop - b.clientHeight > 8)
+    check()
+    b.addEventListener('scroll', check, { passive: true })
+    const ro = new ResizeObserver(check); ro.observe(b)
+    return () => { b.removeEventListener('scroll', check); ro.disconnect() }
+  }, [updates.length])
   return (
-    <aside className="updates" aria-label="Updates and upcoming">
+    <aside className="updates" ref={box} aria-label="Updates and upcoming">
       <div className="updates-head">
         <div>
           <h2>Updates &amp; upcoming</h2>
           <div className="tiny muted">{live.length} open · ranked by priority and deadline</div>
         </div>
       </div>
-      <div className="updates-body">
+      <div className={`updates-body ${more ? 'has-more' : ''}`} ref={body}>
         {groups.map((g) => g.items.length > 0 && (
           <div key={g.name} className="u-group">
             <div className="u-group-name">{g.name}</div>
@@ -76,17 +106,15 @@ export default function Updates() {
                     <div className="u-title">{u.title}</div>
                     <div className="tiny muted">{u.body}</div>
                     <div className="tiny u-meta">
-                      {u.due && <span className={overdue ? 'u-overdue' : ''}><Clock3 size={11} /> {overdue ? 'Overdue · ' : ''}{when(u.due)}</span>}
-                      <span>{u.source}</span>
+                      {u.due && <span className={overdue ? 'u-overdue' : ''}><Clock3 size={11} aria-hidden /> {overdue ? 'Overdue · ' : ''}{when(u.due)}</span>}
+                      <span className="u-source">{u.source}</span>
                     </div>
                   </Link>
                   <div className="u-actions">
-                    <button className="iconbtn" title="Mark done" aria-label="Mark done" onClick={() => markDone(u)}><Check /></button>
-                    <button className="iconbtn" title="Snooze" aria-label="Snooze" onClick={() => setSnoozeFor(snoozeFor === u.id ? null : u.id)}><AlarmClock /></button>
+                    <button className="iconbtn" title="Mark done" aria-label="Mark done" onClick={() => markDone(u)}><Check aria-hidden /></button>
+                    <button className="iconbtn" title="Snooze" aria-label="Snooze" aria-expanded={snoozeFor === u.id} onClick={() => setSnoozeFor(snoozeFor === u.id ? null : u.id)}><AlarmClock aria-hidden /></button>
                     {snoozeFor === u.id && (
-                      <div className="u-snooze">
-                        {snoozeTimes().map((s) => <button key={s.l} onClick={() => snooze(u, s.v, s.l)}>{s.l}</button>)}
-                      </div>
+                      <SnoozeMenu onClose={() => setSnoozeFor(null)} onPick={(v, l) => snooze(u, v, l)} />
                     )}
                   </div>
                 </div>
@@ -109,6 +137,16 @@ export default function Updates() {
           </div>
         )}
       </div>
+      {more && <div className="u-more tiny" aria-hidden>{live.length} open · scroll for more</div>}
     </aside>
+  )
+}
+
+function SnoozeMenu({ onClose, onPick }: { onClose: () => void; onPick: (v: string, l: string) => void }) {
+  useEsc(onClose)
+  return (
+    <div className="u-snooze" role="group" aria-label="Snooze until">
+      {snoozeTimes().map((s, i) => <button key={s.l} autoFocus={i === 0} onClick={() => onPick(s.v, s.l)}>{s.l}</button>)}
+    </div>
   )
 }

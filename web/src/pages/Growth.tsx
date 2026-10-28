@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Check, Pencil, Plus, ShieldCheck, Trash2 } from 'lucide-react'
+import { ArrowRight, Check, MoreHorizontal, Pencil, Plus, ShieldCheck, Trash2 } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
+import { deferred, useAction } from '../lib/action'
 import { useGrowth } from '../lib/data'
 import { date, daysFrom, inr, when } from '../lib/format'
 import { Columns } from '../charts'
-import { Bar, hrefFor, Num, Panel, useToast } from '../ui'
+import { Bar, DetailSkeleton, hrefFor, Num, Panel, useEsc, useToast } from '../ui'
 
 export default function Growth() {
   const { data: g } = useGrowth()
@@ -14,10 +15,18 @@ export default function Growth() {
   const [showDone, setShowDone] = useState(false)
   const toast = useToast()
   const nav = useNavigate()
-  if (!g) return <main className="page"><div className="panel skeleton" style={{ height: 300 }} /></main>
+  const { busy, run } = useAction()
+  const [removing, setRemoving] = useState<Set<string>>(new Set())
+  if (!g) return <DetailSkeleton />
 
-  const op = async (body: any, msg: string) => {
-    try { await api('/growth/goals', { body }); invalidate('/s/growth'); toast(msg) } catch (e: any) { toast(e.message) }
+  const op = (body: any, msg: string) => run(async () => { await api('/growth/goals', { body }); invalidate('/s/growth'); toast(msg) }, 'Couldn’t update your goals')
+  const remove = (x: any) => {
+    setRemoving((s) => new Set(s).add(x.id))
+    const unset = () => setRemoving((s) => { const n = new Set(s); n.delete(x.id); return n })
+    const cancel = deferred(async () => {
+      try { await api('/growth/goals', { body: { op: 'remove', id: x.id } }); invalidate('/s/growth') } catch (e: any) { toast(`Couldn’t remove the goal. ${e.message}`) } finally { unset() }
+    })
+    toast(<>Goal removed. <button className="toast-undo" onClick={() => { cancel(); unset() }}>Undo</button></>)
   }
   const p = g.points
   const slabs = p.slabs
@@ -26,7 +35,7 @@ export default function Growth() {
   const proj = [...slabs].reverse().find((s: any) => p.projected_quarter >= s.from)
   const next = slabs.find((s: any) => s.from > p.this_quarter)
   const daysLeft = daysFrom(g.period.end) ?? 0
-  const open = g.goals
+  const open = g.goals.filter((x: any) => !removing.has(x.id))
 
   return (
     <main className="page">
@@ -50,14 +59,14 @@ export default function Growth() {
                 <textarea className="textarea" rows={3} autoFocus value={editing!.text} onChange={(e) => setEditing({ id: x.id, text: e.target.value })}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); op({ op: "edit", id: x.id, text: editing!.text }, "Goal updated"); setEditing(null) } }} />
               ) : <p className="goal-text">{x.text}</p>}
-              {x.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={x.progress * 100} brass /><div className="tiny muted" style={{ marginTop: 4 }}>{Math.round(x.progress * 100)}% there</div></div>}
+              {x.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={x.progress * 100} /><div className="tiny muted" style={{ marginTop: 4 }}>{Math.round(x.progress * 100)}% there</div></div>}
               <div className="goal-foot">
                 <span className="tiny muted">{x.by === 'manager' ? `Set by ${x.set_by}` : 'Yours'}</span>
-                <div className="row" style={{ gap: 0 }}>
-                  {editing?.id === x.id ? <button className="iconbtn" aria-label="Save" onClick={() => { op({ op: "edit", id: x.id, text: editing!.text }, "Goal updated"); setEditing(null) }}><Check /></button>
-                    : x.by !== 'manager' && <button className="iconbtn" aria-label="Edit" onClick={() => setEditing({ id: x.id, text: x.text })}><Pencil /></button>}
-                  {x.by !== 'manager' && <button className="iconbtn" aria-label="Remove" onClick={() => op({ op: 'remove', id: x.id }, 'Goal removed')}><Trash2 /></button>}
-                  <button className="btn btn-quiet btn-sm" onClick={() => op({ op: 'achieve', id: x.id }, 'Achieved. Well done.')}><Check />Achieved</button>
+                <div className="row" style={{ gap: 2 }}>
+                  {editing?.id === x.id ? <button className="btn btn-quiet btn-sm" onClick={() => { op({ op: "edit", id: x.id, text: editing!.text }, "Goal updated"); setEditing(null) }}><Check />Save</button> : <>
+                    <button className="btn btn-ghost btn-sm goal-achieve" disabled={busy} onClick={() => op({ op: 'achieve', id: x.id }, 'Achieved. Well done.')}><Check />Achieved</button>
+                    {x.by !== 'manager' && <GoalMenu n={i + 1} onEdit={() => setEditing({ id: x.id, text: x.text })} onRemove={() => remove(x)} />}
+                  </>}
                 </div>
               </div>
             </div>
@@ -66,7 +75,7 @@ export default function Growth() {
             <div className="goal empty-goal">
               <span className="goal-num display">{open.length + 1}</span>
               <textarea className="textarea" rows={3} placeholder="Write a goal you can tell is done, e.g. “Get Sunita Desai investing again”" value={adding} onChange={(e) => setAdding(e.target.value)} />
-              <button className="btn btn-primary btn-sm" disabled={!adding.trim()} onClick={() => { op({ op: 'add', text: adding }, 'Goal added'); setAdding('') }}><Plus />Add goal</button>
+              <button className="btn btn-primary btn-sm" disabled={!adding.trim() || busy} onClick={async () => { await op({ op: 'add', text: adding }, 'Goal added'); setAdding('') }}><Plus />Add goal</button>
             </div>
           )}
         </div>
@@ -85,17 +94,18 @@ export default function Growth() {
             <div className="stat"><span className="label">Projected at your pace</span><span className="value">{p.projected_quarter}</span><span className="sub">{proj?.name} slab</span></div>
             <div className="stat"><span className="label">Projected payout</span><span className="value"><Num v={p.projected_payout} src="Projection, not final" /></span><span className="sub">Final after compliance checks</span></div>
           </div>
-          <div className="slab-track">
-            {slabs.map((s: any, i: number) => (
-              <div key={s.name} className="slab" style={{ left: `${(s.from / max) * 100}%`, width: `${(((slabs[i + 1]?.from ?? max) - s.from) / max) * 100}%` }}>
-                <span className="tiny">{s.name}</span><span className="tiny muted">{s.from}+</span>
+          <div className="slab-track" role="img" aria-label={`${p.this_quarter} points now, ${cur?.name} slab. Projected ${p.projected_quarter} by ${date(g.period.end)}, ${proj?.name} slab.`}>
+            <div className="slab-fill" style={{ width: `${(p.this_quarter / max) * 100}%` }} />
+            {p.projected_quarter > p.this_quarter && <div className="slab-proj" style={{ left: `${(p.this_quarter / max) * 100}%`, width: `${((p.projected_quarter - p.this_quarter) / max) * 100}%` }} />}
+            {p.projected_quarter > p.this_quarter && <span className="slab-proj-label tiny" style={{ left: `${(p.projected_quarter / max) * 100}%` }}>{p.projected_quarter} by {date(g.period.end)}</span>}
+            <div className="slab-me" style={{ left: `${(p.this_quarter / max) * 100}%` }}><span className="ring lg" /></div>
+            {slabs.map((s: any) => (
+              <div key={s.name} className="slab" style={{ left: `${(s.from / max) * 100}%` }}>
+                <span className="tiny strong">{s.name}</span><span className="tiny muted">{s.from}+ · {s.payout_pct}%</span>
               </div>
             ))}
-            <div className="slab-fill" style={{ width: `${(p.this_quarter / max) * 100}%` }} />
-            <div className="slab-proj" style={{ left: `${(p.this_quarter / max) * 100}%`, width: `${((p.projected_quarter - p.this_quarter) / max) * 100}%` }} />
-            <div className="slab-me" style={{ left: `${(p.this_quarter / max) * 100}%` }}><span className="ring lg" /></div>
           </div>
-          <p className="small" style={{ marginTop: 34 }}>
+          <p className="small" style={{ marginTop: 58 }}>
             {next ? <>You’re {next.from - p.this_quarter} points short of {next.name} today. At your current pace you finish the quarter at about {p.projected_quarter}{proj?.name !== cur?.name ? `, in ${proj?.name}` : `, still in ${cur?.name}`}. The quickest honest route is below.</> : 'You’re in the top slab.'}
           </p>
         </Panel>
@@ -125,7 +135,7 @@ export default function Growth() {
         <Panel title="Ways to close the gap">
           <div className="col" style={{ gap: 0 }}>
             {g.suggestions.map((s: any, i: number) => (
-              <div key={i} className="suggest-item"><span className="ring" style={{ marginTop: 5 }} /><p className="grow small">{s.text}</p><button className="iconbtn" aria-label="Open" onClick={() => nav(hrefFor(s.link))}><ArrowRight /></button></div>
+              <div key={i} className="suggest-item"><span className="bullet" aria-hidden /><p className="grow small">{s.text}</p><button className="iconbtn" aria-label="Open" onClick={() => nav(hrefFor(s.link))}><ArrowRight /></button></div>
             ))}
           </div>
           <div className="guardrail"><ShieldCheck size={15} /><span className="tiny">{g.guardrail}</span></div>
@@ -136,12 +146,12 @@ export default function Growth() {
       <div className="grid g3">
         {g.contests.map((c: any) => (
           <section key={c.id} className="panel panel-pad contest">
-            <div className="spread"><h3>{c.name}</h3><span className="pill brass">Ends {when(c.ends)}</span></div>
-            <p className="small muted" style={{ margin: '4px 0 12px' }}>{c.rule}. Prize: {c.prize}.</p>
+            <div className="spread"><h3>{c.name}</h3><span className="pill outline">Ends {when(c.ends)}</span></div>
+            <p className="small muted" style={{ margin: '4px 0 12px' }}>{c.rule.replace(/\s*\(count\)/, '')}. Prize: {c.prize}.</p>
             <div className="display" style={{ fontSize: 30, color: 'var(--ink-strong)' }}>#{c.my_rank}</div>
             <div className="col" style={{ gap: 4, marginTop: 10 }}>
               {c.leaderboard.map((r: any, i: number) => (
-                <div key={r.name} className={`spread small lb ${r.me ? 'me' : ''}`}><span>{i + 1}. {r.name}</span><span className="num">{r.value > 1000 ? inr(r.value) : r.value}</span></div>
+                <div key={r.name} className={`spread small lb ${r.me ? 'me' : ''}`}><span>{i + 1}. {r.name}</span><span className="num">{contestValue(c, r.value)}</span></div>
               ))}
             </div>
             <p className="tiny faint" style={{ marginTop: 10 }}>Everyone eligible is entered automatically.</p>
@@ -151,3 +161,45 @@ export default function Growth() {
     </main>
   )
 }
+
+// GR3: counts carry their unit from the rule ("4 new PMS clients"); money is already in rupees
+function contestValue(c: any, v: number) {
+  if (!/\(count\)/.test(c.rule)) return v > 1000 ? inr(v) : String(v)
+  const noun = c.rule.replace(/\s*\(count\)/, '')
+  const n = noun.charAt(0).toLowerCase() + noun.slice(1)
+  return `${v} ${v === 1 ? n.replace(/s$/, '') : n}`
+}
+
+// GR2: edit and remove sit behind a small menu so Achieved is the one visible action on each goal
+function GoalMenu({ n, onEdit, onRemove }: { n: number; onEdit: () => void; onRemove: () => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!open) return
+    const off = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('mousedown', off)
+    ref.current?.querySelector<HTMLElement>('[role=menuitem]')?.focus()
+    return () => document.removeEventListener('mousedown', off)
+  }, [open])
+  const pick = (fn: () => void) => { setOpen(false); fn() }
+  const keys = (e: React.KeyboardEvent) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
+    e.preventDefault()
+    const items = [...(ref.current?.querySelectorAll<HTMLElement>('[role=menuitem]') || [])]
+    const i = items.indexOf(document.activeElement as HTMLElement)
+    items[(i + (e.key === 'ArrowDown' ? 1 : items.length - 1)) % items.length]?.focus()
+  }
+  return (
+    <div className="goal-menu" ref={ref}>
+      <button className="iconbtn" aria-label={`More actions for goal ${n}`} aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((o) => !o)}><MoreHorizontal aria-hidden /></button>
+      {open && <MenuEsc onClose={() => { setOpen(false); ref.current?.querySelector<HTMLElement>('[aria-haspopup]')?.focus() }} />}
+      {open && (
+        <div className="goal-menu-list" role="menu" onKeyDown={keys}>
+          <button role="menuitem" className="mi" onClick={() => pick(onEdit)}><Pencil aria-hidden />Edit</button>
+          <button role="menuitem" className="mi" onClick={() => pick(onRemove)}><Trash2 aria-hidden />Remove</button>
+        </div>
+      )}
+    </div>
+  )
+}
+function MenuEsc({ onClose }: { onClose: () => void }) { useEsc(onClose); return null }

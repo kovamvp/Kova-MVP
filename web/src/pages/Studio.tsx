@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { Bot, FileJson, Plus, Sparkles, SquarePen, Upload } from 'lucide-react'
+import { Bot, ChevronLeft, FileJson, Plus, Sparkles, SquarePen, Upload } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
 import { assetClassOf, useClients, useModels, usePortfolios, useProducts, useProspects } from '../lib/data'
 import { ago, inr } from '../lib/format'
 import { AllocBar } from '../charts'
-import { ASSET_COLORS, Empty, Modal, Status, useToast } from '../ui'
+import { AmountInput, ASSET_COLORS, Empty, LoadError, Modal, Status, useToast } from '../ui'
 
 const LISTS = [
   { key: 'draft', label: 'Drafts', match: (s: string) => s === 'draft' },
@@ -21,7 +21,7 @@ export function allocOf(lines: any[], P: Record<string, any>) {
 }
 
 export default function Studio() {
-  const { data: portfolios = [] } = usePortfolios()
+  const { data: portfolios = [], loading, error, reload } = usePortfolios()
   const { data: products = [] } = useProducts()
   const { data: clients = [] } = useClients()
   const { data: prospects = [] } = useProspects()
@@ -42,9 +42,9 @@ export default function Studio() {
         <button className="btn btn-primary" onClick={() => setParams({ new: '1' })}><Plus />Create a portfolio</button>
       </div>
       <div className="tabs" style={{ marginBottom: 16 }}>
-        {LISTS.map((l) => <button key={l.key} className={list === l.key ? 'on' : ''} onClick={() => setList(l.key)}>{l.label}<span className="count">{portfolios.filter((p) => l.match(p.status)).length}</span></button>)}
+        {LISTS.map((l) => <button key={l.key} className={list === l.key ? 'on' : ''} aria-pressed={list === l.key} onClick={() => setList(l.key)}>{l.label}<span className="count">{portfolios.filter((p) => l.match(p.status)).length}</span></button>)}
       </div>
-      {shown.length === 0 ? <Empty title={`No ${LISTS.find((l) => l.key === list)!.label.toLowerCase()}`} action={<button className="btn btn-quiet" onClick={() => setParams({ new: '1' })}>Create a portfolio</button>} /> : (
+      {error && !portfolios.length ? <section className="panel"><LoadError what="portfolios" onRetry={reload} /></section> : loading && !portfolios.length ? <div className="grid g3">{[0, 1, 2].map((i) => <div key={i} className="panel skeleton" style={{ height: 210 }} />)}</div> : shown.length === 0 ? <Empty title={`No ${LISTS.find((l) => l.key === list)!.label.toLowerCase()}`} action={<button className="btn btn-quiet" onClick={() => setParams({ new: '1' })}>Create a portfolio</button>} /> : (
         <div className="grid g3">
           {shown.map((pf) => {
             const used = pf.lines.reduce((a: number, l: any) => a + l.amount, 0)
@@ -57,7 +57,7 @@ export default function Studio() {
                 <div className="display strong" style={{ fontSize: 22, margin: '14px 0 8px' }}>{inr(pf.amount)}</div>
                 <AllocBar parts={Object.entries(al).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} />
                 <div className="spread tiny muted" style={{ marginTop: 10 }}><span>{pf.lines.length} products · {Math.round((used / Math.max(1, pf.amount)) * 100)}% allocated</span><span>Updated {ago(pf.updated)}</span></div>
-                {pf.note && <div className="tiny" style={{ marginTop: 8, color: pf.status === 'changes_requested' ? 'var(--loss)' : 'var(--muted)' }}>{pf.note}</div>}
+                {pf.note && <div className="tiny" style={{ marginTop: 8, color: pf.status === 'changes_requested' ? 'var(--ink-strong)' : 'var(--muted)' }}>{pf.note}</div>}
               </Link>
             )
           })}
@@ -128,7 +128,7 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
   const basics = (
     <div className="grid g3" style={{ gap: 12, marginBottom: 14 }}>
       <label className="field"><span>Portfolio name</span><input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Desai retirement income" /></label>
-      <label className="field"><span>Starting amount (₹)</span><input className="input" type="number" step={100000} value={amount} onChange={(e) => setAmount(+e.target.value)} /><span className="tiny muted">{inr(amount)}</span></label>
+      <label className="field"><span>Starting amount (₹)</span><AmountInput label="Starting amount in rupees" value={amount} onChange={setAmount} /></label>
       {tagPicker}
     </div>
   )
@@ -137,7 +137,7 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
       foot={path === 'recommended' ? <button className="btn btn-primary" disabled={!model} onClick={fromModel}>Open in canvas</button>
         : path === 'scratch' ? <button className="btn btn-primary" onClick={fromScratch}>Open empty canvas</button>
         : path === 'import' ? <button className="btn btn-primary" disabled={!json.trim()} onClick={fromJson}>Import</button> : undefined}>
-      {path !== 'choose' && <button className="linkbtn small" style={{ marginBottom: 12 }} onClick={() => setPath('choose')}>← Other ways to start</button>}
+      {path !== 'choose' && <button className="linkbtn small" style={{ marginBottom: 12 }} onClick={() => setPath('choose')}><ChevronLeft size={14} aria-hidden />Other ways to start</button>}
       {path === 'choose' && (
         <div className="grid g2">
           <button className="choice" onClick={() => setPath('agent')}><Bot /><h3>With the agent</h3><p className="small muted">Answer a few questions and the agent drafts it on the canvas.</p><span className="pill brass" style={{ alignSelf: 'flex-start' }}>Preview</span></button>
@@ -157,6 +157,9 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
       {path === 'recommended' && (
         <>
           {basics}
+          <div className="row wrap tiny muted" style={{ gap: 14, margin: '0 0 8px' }} aria-label="Bar colours">
+            {['Equity', 'Debt', 'Gold', 'Cash'].map((k) => <span key={k} className="row" style={{ gap: 5 }}><i style={{ width: 9, height: 9, borderRadius: 2, background: ASSET_COLORS[k] }} />{k}</span>)}
+          </div>
           <div className="col" style={{ gap: 8 }}>
             {models.map((m) => (
               <button key={m.id} className={`model-row ${model?.id === m.id ? 'on' : ''}`} onClick={() => setModel(m)}>
@@ -175,7 +178,7 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
         <>
           <label className="btn btn-quiet" style={{ marginBottom: 10 }}><Upload />Choose a .json file<input type="file" accept=".json,application/json" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (f) setJson(await f.text()) }} /></label>
           <textarea className="textarea mono" rows={10} value={json} onChange={(e) => { setJson(e.target.value); setErr('') }} placeholder={'{\n  "name": "Bond ladder",\n  "amount": 10000000,\n  "lines": [{ "product_id": "PD-403", "amount": 2500000 }]\n}'} />
-          {err && <p className="small" style={{ color: 'var(--loss)', marginTop: 8 }}>{err}</p>}
+          {err && <p className="small" style={{ color: 'var(--loss-ink)', marginTop: 8 }}>{err}</p>}
         </>
       )}
     </Modal>

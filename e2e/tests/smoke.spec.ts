@@ -29,6 +29,6 @@ test('search palette jumps to a client', async ({ app }) => {
   await app.goto('/')
   await app.keyboard.press('Control+k')
   await app.keyboard.type('kapadia')
-  await app.getByRole('button', { name: /Amit Kapadia/ }).click()
+  await app.getByRole('option', { name: /Amit Kapadia/ }).click()
   await expect(app).toHaveURL(/CL-1006/)
 })

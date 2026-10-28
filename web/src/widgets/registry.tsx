@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, BookOpen, CalendarDays, Flag, Gem, Inbox, LayoutGrid, LineChart, Newspaper, Target, Trophy, User, UserRoundSearch, Users, Wallet } from 'lucide-react'
 import { ago, date, inr, time, when, daysFrom, label, todayISO } from '../lib/format'
-import { bookHistory, ldStats, SEGMENTS, STAGES } from '../lib/data'
+import { assetClassOf, bookHistory, ldStats, SEGMENTS, STAGES } from '../lib/data'
 import { Area, AllocBar } from '../charts'
 import { ASSET_COLORS, Avatar, Bar, Num, Status } from '../ui'
 
@@ -63,23 +63,25 @@ export const WIDGETS: WidgetDef[] = [
             <span className="display" style={{ fontSize: 22, color: 'var(--ink-strong)' }}>{inr(aum)}</span>
             <span className="delta up">▲ {ch.toFixed(1)}% in a year</span>
           </div>
-          <div style={{ marginTop: 'auto' }}><Area points={h.values} labels={h.labels} format={(v) => inr(v)} height={96} /></div>
-          <div className="spread tiny faint" style={{ marginTop: 4 }}><span>{h.labels[0]}</span><span>{h.labels[11]}</span></div>
+          <div style={{ marginTop: 'auto' }}><Area points={h.values} labels={h.labels} format={(v) => inr(v)} height={88} /></div>
         </>
       )
     },
   },
   {
-    type: 'today', name: 'Today’s meetings', desc: 'Who you’re seeing today and what to prepare', icon: CalendarDays, w: 4, h: 4, minW: 3, minH: 3,
+    type: 'today', name: 'Today', desc: 'Who you’re seeing today and the MoMs still to write', icon: CalendarDays, w: 4, h: 4, minW: 3, minH: 3,
     render: ({ meetings, clients, prospects }) => {
       const t = todayISO()
       const today = meetings.filter((m) => m.start.slice(0, 10) === t && m.status !== 'cancelled').sort((a, b) => a.start.localeCompare(b.start))
+      const moms = meetings.filter((m) => m.status === 'needs_mom').sort((a, b) => b.start.localeCompare(a.start))
       const nm = (m: any) => (m.with.kind === 'client' ? clients : prospects).find((x) => x.id === m.with.id)?.name
       return (
         <>
-          <Head title="Today’s meetings" href="/meetings" sub={today.length ? `${today.length} on the calendar` : undefined} />
-          {today.length === 0 && <div className="empty small">No meetings today. A good day to clear MoMs and follow-ups.</div>}
+          <Head title="Today" href="/meetings" sub={[today.length ? `${today.length} meeting${today.length > 1 ? 's' : ''}` : 'No meetings', moms.length ? `${moms.length} MoM${moms.length > 1 ? 's' : ''} to write` : null].filter(Boolean).join(' · ')} />
+          <div className="w-split">
           <div className="col" style={{ gap: 0 }}>
+            <div className="tiny muted w-sub">Meetings</div>
+            {today.length === 0 && <div className="small muted" style={{ padding: '8px 0' }}>No meetings today. A good day to clear MoMs and follow-ups.</div>}
             {today.map((m) => (
               <Link key={m.id} to={`/meetings?m=${m.id}`} className="w-line">
                 <span className="num small strong" style={{ width: 62 }}>{time(m.start)}</span>
@@ -90,6 +92,22 @@ export const WIDGETS: WidgetDef[] = [
                 {m.status === 'needs_mom' && <Status s="needs_mom" />}
               </Link>
             ))}
+          </div>
+          {moms.length > 0 && (
+            <div className="col" style={{ gap: 0 }}>
+              <div className="tiny muted w-sub">MoMs to write</div>
+              {moms.slice(0, 3).map((m) => (
+                <Link key={m.id} to={`/${m.with.kind === 'client' ? 'clients' : 'prospects'}/${m.with.id}?panel=agent&mom=${m.id}`} className="w-line">
+                  <span className="grow" style={{ minWidth: 0 }}>
+                    <span className="ellipsis" style={{ display: 'block' }}>{m.title}</span>
+                    <span className="tiny muted ellipsis" style={{ display: 'block' }}>{nm(m)} · {when(m.start)}</span>
+                  </span>
+                  <span className="linkbtn tiny" style={{ flex: 'none' }}>Write MoM</span>
+                </Link>
+              ))}
+              {moms.length > 3 && <Link to="/meetings" className="linkbtn tiny" style={{ paddingTop: 6 }}>All {moms.length} on Meetings</Link>}
+            </div>
+          )}
           </div>
         </>
       )
@@ -156,7 +174,7 @@ export const WIDGETS: WidgetDef[] = [
         <>
           <Head title="Learning progress" href="/products?ld=1" sub={`${s.done} done · ${s.started} in progress · ${s.notStarted} not started`} />
           <div className="row" style={{ gap: 16, marginBottom: 12 }}>
-            <div className="ld-ring" style={{ ['--p' as any]: s.overall, width: 54, height: 54 }} data-label={`${s.overall}%`} />
+            <div className="ld-ring lg" style={{ ['--p' as any]: s.overall, width: 54, height: 54 }} data-label={`${s.overall}%`} />
             <div className="small muted">Across {products.length} products on the shelf.</div>
           </div>
           <div className="col" style={{ gap: 0 }}>
@@ -180,10 +198,19 @@ export const WIDGETS: WidgetDef[] = [
         <>
           <Head title="Requests in flight" href="/requests" />
           <div className="g2 grid" style={{ gap: 10 }}>
-            <Link to="/requests?tab=me" className="sunk" style={{ padding: 12 }}><div className="display" style={{ fontSize: 24, color: me.length ? 'var(--loss)' : 'var(--ink-strong)' }}>{me.length}</div><div className="tiny muted">waiting on you</div></Link>
+            <Link to="/requests?tab=me" className="sunk" style={{ padding: 12 }}><div className="display row" style={{ fontSize: 24, color: 'var(--ink-strong)', gap: 8 }}>{me.length}{me.length > 0 && <span className="ring" aria-hidden />}</div><div className="tiny muted">waiting on you</div></Link>
             <Link to="/requests?tab=others" className="sunk" style={{ padding: 12 }}><div className="display" style={{ fontSize: 24, color: 'var(--ink-strong)' }}>{others.length}</div><div className="tiny muted">with other teams</div></Link>
           </div>
-          {me[0] && <div className="tiny muted ellipsis" style={{ marginTop: 10 }}>Oldest on you: {me[0].title}</div>}
+          {me.length > 0 && (
+            <div className="col" style={{ gap: 0, marginTop: 10 }}>
+              <div className="tiny muted w-sub">Waiting on you</div>
+              {me.slice(0, 2).map((r) => (
+                <Link key={r.id} to={`/requests?tab=me&r=${r.id}`} className="w-line small">
+                  <span className="grow" style={{ minWidth: 0 }}><span className="ellipsis" style={{ display: 'block' }}>{r.title}</span><span className="tiny muted">{r.team}{r.due ? ` · due ${when(r.due).toLowerCase()}` : ''}</span></span>
+                </Link>
+              ))}
+            </div>
+          )}
         </>
       )
     },
@@ -307,7 +334,7 @@ export const WIDGETS: WidgetDef[] = [
   },
   {
     type: 'portfolio', name: 'Portfolio', desc: 'Jump straight back into a draft', icon: LayoutGrid, pick: 'portfolio', w: 4, h: 3, minW: 3, minH: 3,
-    render: ({ portfolios, clients, prospects }, id) => {
+    render: ({ portfolios, clients, prospects, products }, id) => {
       const pf = portfolios.find((x) => x.id === id)
       if (!pf) return <Missing what="portfolio" />
       const who = pf.tag ? [...clients, ...prospects].find((x) => x.id === pf.tag.id)?.name : 'Practice'
@@ -318,7 +345,18 @@ export const WIDGETS: WidgetDef[] = [
           <div className="row" style={{ gap: 8, marginBottom: 10 }}><Status s={pf.status} /><span className="small muted">{pf.lines.length} products</span></div>
           <div className="spread small"><span className="muted">Allocated</span><span className="num strong">{inr(used)} of {inr(pf.amount)}</span></div>
           <div style={{ marginTop: 6 }}><Bar v={(used / Math.max(1, pf.amount)) * 100} /></div>
-          <Link to={`/studio/${pf.id}`} className="linkbtn small" style={{ marginTop: 'auto' }}>Continue in Studio <ArrowUpRight /></Link>
+          {used > 0 && (() => {
+            const mix: Record<string, number> = {}
+            pf.lines.forEach((l: any) => { const k = assetClassOf(products.find((p: any) => p.id === l.product_id)); mix[k] = (mix[k] || 0) + l.amount })
+            return (
+              <div style={{ marginTop: 14 }}>
+                <div className="tiny muted w-sub" style={{ paddingTop: 0 }}>Asset mix</div>
+                <AllocBar parts={Object.entries(mix).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} />
+                <div className="row wrap tiny muted" style={{ gap: 10, marginTop: 6 }}>{Object.entries(mix).map(([k, v]) => <span key={k} className="row" style={{ gap: 5 }}><i style={{ width: 8, height: 8, borderRadius: 2, background: ASSET_COLORS[k] }} />{k} {Math.round((v / used) * 100)}%</span>)}</div>
+              </div>
+            )
+          })()}
+          <Link to={`/studio/${pf.id}`} className="linkbtn small" style={{ marginTop: 'auto', paddingTop: 10 }}>Continue in Studio <ArrowUpRight /></Link>
         </>
       )
     },
@@ -346,7 +384,7 @@ export const WIDGETS: WidgetDef[] = [
         <>
           <Head title="Goal" href="/growth" sub={g.by === 'manager' ? `Set by ${g.set_by}` : 'Yours'} />
           <div className="display" style={{ fontSize: 16, color: 'var(--ink-strong)', lineHeight: 1.3 }}>{g.text}</div>
-          {g.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={g.progress * 100} brass /></div>}
+          {g.progress != null && <div style={{ marginTop: 'auto' }}><Bar v={g.progress * 100} /></div>}
         </>
       )
     },
@@ -378,7 +416,7 @@ export const WIDGETS: WidgetDef[] = [
           <Head title={r.title} href={`/requests?r=${r.id}`} sub={`${r.id} · ${r.team}`} />
           <Status s={r.status} />
           <div className="tiny muted" style={{ marginTop: 10 }}>{last.by}: {last.text}</div>
-          {r.due && <div className="tiny" style={{ marginTop: 'auto' }}>Due {when(r.due)}{(daysFrom(r.due) ?? 0) < 0 ? ' (overdue)' : ''}</div>}
+          {r.due && <div className="tiny" style={{ marginTop: 'auto' }}>{(daysFrom(r.due) ?? 0) < 0 ? `Overdue · due ${when(r.due).toLowerCase()}` : `Due ${when(r.due).toLowerCase()}`}</div>}
         </>
       )
     },
@@ -388,13 +426,12 @@ export const WIDGET = Object.fromEntries(WIDGETS.map((w) => [w.type, w]))
 
 
 export const DEFAULT_LAYOUT = [
-  { i: 'w-book', type: 'book', x: 0, y: 0, w: 4, h: 4 },
-  { i: 'w-today', type: 'today', x: 4, y: 0, w: 4, h: 4 },
-  { i: 'w-aum', type: 'aum_trend', x: 8, y: 0, w: 4, h: 4 },
-  { i: 'w-pipe', type: 'pipeline', x: 0, y: 4, w: 4, h: 4 },
-  { i: 'w-inc', type: 'incentive', x: 4, y: 4, w: 4, h: 4 },
-  { i: 'w-pf', type: 'portfolio', ref: 'PF-2026-000118', x: 8, y: 4, w: 4, h: 4 },
-  { i: 'w-cl', type: 'client', ref: 'CL-1001', x: 0, y: 8, w: 4, h: 4 },
-  { i: 'w-ld', type: 'ld', x: 4, y: 8, w: 4, h: 4 },
-  { i: 'w-req', type: 'requests_sum', x: 8, y: 8, w: 4, h: 4 },
+  { i: 'w-today', type: 'today', x: 0, y: 0, w: 8, h: 5 },
+  { i: 'w-book', type: 'book', x: 8, y: 0, w: 4, h: 5 },
+  { i: 'w-pipe', type: 'pipeline', x: 0, y: 5, w: 4, h: 4 },
+  { i: 'w-inc', type: 'incentive', x: 4, y: 5, w: 4, h: 4 },
+  { i: 'w-req', type: 'requests_sum', x: 8, y: 5, w: 4, h: 4 },
+  { i: 'w-cl', type: 'client', ref: 'CL-1001', x: 0, y: 9, w: 4, h: 4 },
+  { i: 'w-pf', type: 'portfolio', ref: 'PF-2026-000118', x: 4, y: 9, w: 4, h: 4 },
+  { i: 'w-ld', type: 'ld', x: 8, y: 9, w: 4, h: 4 },
 ]

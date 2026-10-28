@@ -1,20 +1,21 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowRight, Check, ChevronRight, Search, UserPlus, Users } from 'lucide-react'
+import { Check, ChevronRight, UserPlus, Users } from 'lucide-react'
 import { useClients, useFamilies, useMeetings, useProducts, useProspects } from '../lib/data'
 import { SEGMENTS, RISK_ORDER, EQUITY_BAND } from '../lib/data'
-import { ago, inr, label, when } from '../lib/format'
+import { ago, inr, label, when, sinceText, sourceText } from '../lib/format'
 import { Donut, HBars, AllocBar } from '../charts'
-import { ASSET_COLORS, Avatar, Modal, Num, Panel, Status, Stat } from '../ui'
+import { ASSET_COLORS, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Status, Stat, SearchField } from '../ui'
 
 export default function Clients() {
-  const { data: clients = [] } = useClients()
+  const { data: clients = [], loading, error, reload } = useClients()
   const { data: families = [] } = useFamilies()
   const { data: meetings = [] } = useMeetings()
   const { data: products = [] } = useProducts()
   const [params, setParams] = useSearchParams()
   const [q, setQ] = useState('')
   const [sort, setSort] = useState('aum')
+  const listRef = useRef<HTMLElement>(null)
   const [risk, setRisk] = useState('')
   const [view, setView] = useState<'people' | 'families'>('people')
   const [onboard, setOnboard] = useState(params.get('onboard') === '1')
@@ -39,7 +40,7 @@ export default function Clients() {
     if (!clients.length) return []
     const s: { text: string; action: string; to: string }[] = []
     const dormant = clients.filter((c) => c.segment === 'dormant').sort((a, b) => b.aum - a.aum)
-    if (dormant[0]) s.push({ text: `${dormant[0].name} hasn’t heard from you since ${ago(dormant[0].last_contact)}. ${inr(dormant[0].aum)} at stake.`, action: 'Schedule a check-in', to: `/clients/${dormant[0].id}?panel=actions&do=schedule` })
+    if (dormant[0]) s.push({ text: `${dormant[0].name} hasn’t heard from you ${sinceText(dormant[0].last_contact)}. ${inr(dormant[0].aum)} at stake.`, action: 'Schedule a check-in', to: `/clients/${dormant[0].id}?panel=actions&do=schedule` })
     const review = clients.filter((c) => c.holdings.some((h: any) => h.product_id === 'PD-104'))
     if (review.length) s.push({ text: `${review.length} clients hold Indus Peak Small Cap, which the CIO has under review.`, action: 'Read the CIO note', to: '/products/PD-104' })
     const drift = clients.filter((c) => c.allocation?.Equity > EQUITY_BAND[c.risk_profile][1])
@@ -93,38 +94,41 @@ export default function Clients() {
           <HBars data={byRisk.map((r) => ({ label: r.label, value: r.value }))} format={(v) => inr(v)} />
         </Panel>
         <Panel title="Red flags" aside={`${clients.reduce((a, c) => a + c.red_flags.length, 0)} open`}>
-          <div className="col" style={{ gap: 10, maxHeight: 214, overflowY: 'auto' }}>
-            {clients.flatMap((c) => c.red_flags.map((f: any) => ({ c, f }))).sort((a, b) => ['high', 'medium', 'low'].indexOf(a.f.severity) - ['high', 'medium', 'low'].indexOf(b.f.severity)).slice(0, 10).map(({ c, f }, i) => (
+          <div className="col" style={{ gap: 10 }}>
+            {clients.flatMap((c) => c.red_flags.map((f: any) => ({ c, f }))).sort((a, b) => ['high', 'medium', 'low'].indexOf(a.f.severity) - ['high', 'medium', 'low'].indexOf(b.f.severity)).slice(0, 6).map(({ c, f }, i) => (
               <Link key={i} to={`/clients/${c.id}`} className={`sev ${f.severity} small`}>
                 <span className="strong">{c.name}</span> <span className="muted">· {f.text}</span>
               </Link>
             ))}
           </div>
+          {clients.reduce((a, c) => a + c.red_flags.length, 0) > 6 && (
+            <button className="linkbtn small" style={{ marginTop: 12 }} onClick={() => { setSort('flags'); setParams({}); listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}>See all {clients.reduce((a, c) => a + c.red_flags.length, 0)}, most flagged clients first</button>
+          )}
         </Panel>
       </div>
 
       <Panel title="What to do next" aside="From your book today" className="suggest-panel">
-        <div className="suggest">
+        <div className="suggest single">
           {suggestions.map((s, i) => (
             <div key={i} className="suggest-item">
-              <span className="ring" style={{ marginTop: 5 }} />
+              <span className="bullet" aria-hidden />
               <p className="grow small">{s.text}</p>
-              <button className="btn btn-quiet btn-sm" onClick={() => nav(s.to)}>{s.action}<ArrowRight /></button>
+              <button className="btn btn-quiet btn-sm" onClick={() => nav(s.to)}>{s.action}</button>
             </div>
           ))}
         </div>
       </Panel>
 
-      <section className="panel" style={{ marginTop: 16 }}>
+      <section className="panel" style={{ marginTop: 16 }} ref={listRef}>
         <div className="list-toolbar">
-          <div className="seg" role="tablist">
-            <button className={view === 'people' ? 'on' : ''} onClick={() => setView('people')}>Individuals</button>
-            <button className={view === 'families' ? 'on' : ''} onClick={() => setView('families')}>Families</button>
+          <div className="seg" role="group" aria-label="View">
+            <button className={view === 'people' ? 'on' : ''} aria-pressed={view === 'people'} onClick={() => setView('people')}>Individuals</button>
+            <button className={view === 'families' ? 'on' : ''} aria-pressed={view === 'families'} onClick={() => setView('families')}>Families</button>
           </div>
-          <label className="searchbox" style={{ height: 34, maxWidth: 280 }}><Search size={14} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, area or occupation" style={{ border: 0, outline: 0, background: 'transparent', width: '100%' }} /></label>
+          <SearchField value={q} onChange={setQ} placeholder="Name, area or occupation…" label="Search clients" width={280} />
           <div className="row wrap" style={{ gap: 6 }}>
-            <button className={`chip ${!seg ? 'on' : ''}`} onClick={() => setParams({})}>All</button>
-            {SEGMENTS.map((s) => <button key={s.key} className={`chip ${seg === s.key ? 'on' : ''}`} onClick={() => setParams({ segment: s.key })}>{s.label}</button>)}
+            <button className={`chip ${!seg ? 'on' : ''}`} aria-pressed={!seg} onClick={() => setParams({})}>All</button>
+            {SEGMENTS.map((s) => <button key={s.key} className={`chip ${seg === s.key ? 'on' : ''}`} aria-pressed={seg === s.key} onClick={() => setParams({ segment: s.key })}>{s.label}</button>)}
           </div>
           <div className="row" style={{ marginLeft: 'auto', gap: 8 }}>
             <select className="select sm" value={risk} onChange={(e) => setRisk(e.target.value)} aria-label="Risk profile" style={{ width: 190 }}>
@@ -141,7 +145,7 @@ export default function Clients() {
           </div>
         </div>
 
-        {view === 'people' ? (
+        {error && !clients.length ? <LoadError what="clients" onRetry={reload} /> : loading && !clients.length ? <SkeletonRows rows={6} height={78} /> : view === 'people' ? (
           <div>
             {list.map((c) => {
               const nm = nextMeeting(c.id)
@@ -154,7 +158,7 @@ export default function Clients() {
                     <div className="row" style={{ gap: 6, marginTop: 6 }}><Status s={c.segment} /><span className="pill outline">{c.risk_profile}</span></div>
                   </div>
                   <div className="cr-aum">
-                    <div className="display strong" style={{ fontSize: 17 }}><Num v={c.aum} /></div>
+                    <div className="display strong" style={{ fontSize: 17 }}><Num v={c.aum} fixed /></div>
                     <div style={{ width: 120, margin: '6px 0 4px' }}><AllocBar parts={Object.entries(c.allocation as Record<string, number>).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} /></div>
                     <div className="tiny muted">XIRR {c.xirr}%</div>
                   </div>
@@ -164,7 +168,6 @@ export default function Clients() {
                   </div>
                   <div className="cr-flags">
                     {c.red_flags.slice(0, 2).map((f: any, i: number) => <div key={i} className={`sev ${f.severity} tiny`}>{f.text}</div>)}
-                    {c.red_flags.length === 0 && <span className="tiny faint">No flags</span>}
                   </div>
                   <ChevronRight className="cr-go" size={18} />
                 </Link>
@@ -185,7 +188,7 @@ export default function Clients() {
                       <Link key={m.id} to={`/clients/${m.id}`} className="row small fam-member">
                         <Avatar name={m.name} size={26} />
                         <span className="grow">{m.name} <span className="muted tiny">· {m.family_role}</span></span>
-                        <span className="num">{inr(m.aum)}</span>
+                        <span className="num">{inr(m.aum, { fixed: true })}</span>
                       </Link>
                     ))}
                   </div>
@@ -233,7 +236,7 @@ function Onboard({ onClose }: { onClose: () => void }) {
           {step === 0 && (
             <div className="col" style={{ gap: 0, margin: '0 -20px' }}>
               {open.map((p) => (
-                <button key={p.id} className="list-row" style={{ textAlign: 'left', background: pick?.id === p.id ? 'var(--brass-wash)' : undefined }} onClick={() => setPick(p)}>
+                <button key={p.id} className="list-row" style={{ textAlign: 'left', background: pick?.id === p.id ? 'var(--forest-wash)' : undefined }} onClick={() => setPick(p)}>
                   <Avatar name={p.name} size={32} />
                   <span className="grow"><span className="strong">{p.name}</span><br /><span className="tiny muted">{p.stage} · {inr(p.estimated_investable)} · {p.need}</span></span>
                   {pick?.id === p.id && <Check size={16} color="var(--forest)" />}
@@ -244,7 +247,7 @@ function Onboard({ onClose }: { onClose: () => void }) {
           {step === 1 && pick && (
             <dl className="kv">
               <dt>Name</dt><dd>{pick.name}</dd><dt>Mobile</dt><dd>{pick.phone}</dd><dt>Email</dt><dd>{pick.email}</dd>
-              <dt>City</dt><dd>{pick.city}</dd><dt>Source</dt><dd>{pick.source} ({pick.source_detail})</dd>
+              <dt>City</dt><dd>{pick.city}</dd><dt>Source</dt><dd>{sourceText(pick.source, pick.source_detail)}</dd>
               <dt>Investable</dt><dd>{inr(pick.estimated_investable)}</dd><dt>Risk indication</dt><dd>{pick.risk_indication}</dd>
               <dt>Account type</dt><dd><select className="select sm" style={{ width: 280 }} defaultValue="invest"><option value="invest">Investing (mutual funds, bonds, FDs)</option><option>Investing and trading (adds demat)</option></select></dd>
             </dl>
