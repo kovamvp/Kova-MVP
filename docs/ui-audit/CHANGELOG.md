@@ -2,7 +2,8 @@
 
 One entry per UI batch. Each batch is its own `ui/<name>` branch and pull request, merged only after the
 validation checklist (section 6 of the UI brief) passes. Findings and IDs (S1, A1, D2 …) refer to
-`docs/ui-audit/REPORT.md`. Before/after screenshots for each batch are in `docs/ui-audit/screens/<batch>/`.
+`docs/ui-audit/REPORT.md`. Before/after screenshots for each batch are in its pull request (#1, #2, #4–#9); they were
+removed from the repository after merging to keep it light, and remain in its history.
 
 How every batch is checked
 - `cd web && npx tsc -b && npm run build`
