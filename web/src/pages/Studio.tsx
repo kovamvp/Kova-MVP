@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { Bot, FileJson, Plus, Sparkles, SquarePen, Upload } from 'lucide-react'
+import { Bot, ChevronLeft, FileJson, Plus, Sparkles, SquarePen, Upload } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
 import { assetClassOf, useClients, useModels, usePortfolios, useProducts, useProspects } from '../lib/data'
 import { ago, inr } from '../lib/format'
 import { AllocBar } from '../charts'
-import { ASSET_COLORS, Empty, LoadError, Modal, Status, useToast } from '../ui'
+import { AmountInput, ASSET_COLORS, Empty, LoadError, Modal, Status, useToast } from '../ui'
 
 const LISTS = [
   { key: 'draft', label: 'Drafts', match: (s: string) => s === 'draft' },
@@ -128,7 +128,7 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
   const basics = (
     <div className="grid g3" style={{ gap: 12, marginBottom: 14 }}>
       <label className="field"><span>Portfolio name</span><input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Desai retirement income" /></label>
-      <label className="field"><span>Starting amount (₹)</span><input className="input" type="number" step={100000} value={amount} onChange={(e) => setAmount(+e.target.value)} /><span className="tiny muted">{inr(amount)}</span></label>
+      <label className="field"><span>Starting amount (₹)</span><AmountInput label="Starting amount in rupees" value={amount} onChange={setAmount} /></label>
       {tagPicker}
     </div>
   )
@@ -137,7 +137,7 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
       foot={path === 'recommended' ? <button className="btn btn-primary" disabled={!model} onClick={fromModel}>Open in canvas</button>
         : path === 'scratch' ? <button className="btn btn-primary" onClick={fromScratch}>Open empty canvas</button>
         : path === 'import' ? <button className="btn btn-primary" disabled={!json.trim()} onClick={fromJson}>Import</button> : undefined}>
-      {path !== 'choose' && <button className="linkbtn small" style={{ marginBottom: 12 }} onClick={() => setPath('choose')}>← Other ways to start</button>}
+      {path !== 'choose' && <button className="linkbtn small" style={{ marginBottom: 12 }} onClick={() => setPath('choose')}><ChevronLeft size={14} aria-hidden />Other ways to start</button>}
       {path === 'choose' && (
         <div className="grid g2">
           <button className="choice" onClick={() => setPath('agent')}><Bot /><h3>With the agent</h3><p className="small muted">Answer a few questions and the agent drafts it on the canvas.</p><span className="pill brass" style={{ alignSelf: 'flex-start' }}>Preview</span></button>
@@ -157,6 +157,9 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
       {path === 'recommended' && (
         <>
           {basics}
+          <div className="row wrap tiny muted" style={{ gap: 14, margin: '0 0 8px' }} aria-label="Bar colours">
+            {['Equity', 'Debt', 'Gold', 'Cash'].map((k) => <span key={k} className="row" style={{ gap: 5 }}><i style={{ width: 9, height: 9, borderRadius: 2, background: ASSET_COLORS[k] }} />{k}</span>)}
+          </div>
           <div className="col" style={{ gap: 8 }}>
             {models.map((m) => (
               <button key={m.id} className={`model-row ${model?.id === m.id ? 'on' : ''}`} onClick={() => setModel(m)}>

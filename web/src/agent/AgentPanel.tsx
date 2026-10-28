@@ -2,7 +2,7 @@ import { Fragment, ReactNode, useCallback, useEffect, useRef, useState } from 'r
 import { Link } from 'react-router-dom'
 import { Archive, ArrowLeft, ArrowUp, CalendarPlus, Check, FileText, HandCoins, Headset, Loader2, Mail, MessageSquare, Mic, NotebookPen, Paperclip, Pencil, Plus, Receipt, Send, Square, UserCog, X } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
-import { ago, inr, time, when } from '../lib/format'
+import { ago, date, inr, time, when } from '../lib/format'
 import { resizeImage } from '../shell/ProfileMenu'
 import { Drawer, Status, useToast } from '../ui'
 import { useSpeech } from './useSpeech'
@@ -213,7 +213,7 @@ function Chat({ sess, setSess, scope, allowBill, onBack, onArchive, names, initi
             <img src={bill.thumb} alt="" />
             <div className="grow small">
               <div className="strong">{bill.fields.merchant || 'Bill'} · {bill.fields.amount ? inr(bill.fields.amount, { compact: false }) : 'amount unclear'}</div>
-              <div className="tiny muted">{bill.fields.bill_date || 'date unclear'} · {bill.fields.category || 'category unclear'}{bill.fields.gst ? ` · GSTIN ${bill.fields.gst}` : ''}</div>
+              <div className="tiny muted">{bill.fields.bill_date ? date(bill.fields.bill_date) : 'date unclear'} · {bill.fields.category || 'category unclear'}{bill.fields.gst ? ` · GSTIN ${bill.fields.gst}` : ''}</div>
             </div>
             <button className="iconbtn" aria-label="Remove bill" onClick={() => setBill(null)}><X /></button>
           </div>

@@ -63,8 +63,7 @@ export const WIDGETS: WidgetDef[] = [
             <span className="display" style={{ fontSize: 22, color: 'var(--ink-strong)' }}>{inr(aum)}</span>
             <span className="delta up">▲ {ch.toFixed(1)}% in a year</span>
           </div>
-          <div style={{ marginTop: 'auto' }}><Area points={h.values} labels={h.labels} format={(v) => inr(v)} height={96} /></div>
-          <div className="spread tiny faint" style={{ marginTop: 4 }}><span>{h.labels[0]}</span><span>{h.labels[11]}</span></div>
+          <div style={{ marginTop: 'auto' }}><Area points={h.values} labels={h.labels} format={(v) => inr(v)} height={88} /></div>
         </>
       )
     },
@@ -156,7 +155,7 @@ export const WIDGETS: WidgetDef[] = [
         <>
           <Head title="Learning progress" href="/products?ld=1" sub={`${s.done} done · ${s.started} in progress · ${s.notStarted} not started`} />
           <div className="row" style={{ gap: 16, marginBottom: 12 }}>
-            <div className="ld-ring" style={{ ['--p' as any]: s.overall, width: 54, height: 54 }} data-label={`${s.overall}%`} />
+            <div className="ld-ring lg" style={{ ['--p' as any]: s.overall, width: 54, height: 54 }} data-label={`${s.overall}%`} />
             <div className="small muted">Across {products.length} products on the shelf.</div>
           </div>
           <div className="col" style={{ gap: 0 }}>
@@ -378,7 +377,7 @@ export const WIDGETS: WidgetDef[] = [
           <Head title={r.title} href={`/requests?r=${r.id}`} sub={`${r.id} · ${r.team}`} />
           <Status s={r.status} />
           <div className="tiny muted" style={{ marginTop: 10 }}>{last.by}: {last.text}</div>
-          {r.due && <div className="tiny" style={{ marginTop: 'auto' }}>Due {when(r.due)}{(daysFrom(r.due) ?? 0) < 0 ? ' (overdue)' : ''}</div>}
+          {r.due && <div className="tiny" style={{ marginTop: 'auto' }}>{(daysFrom(r.due) ?? 0) < 0 ? `Overdue · due ${when(r.due).toLowerCase()}` : `Due ${when(r.due).toLowerCase()}`}</div>}
         </>
       )
     },

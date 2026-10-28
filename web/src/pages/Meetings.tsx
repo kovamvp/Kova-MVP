@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, MapPin, NotebookPen, Users } from 'lucide-react'
 import { useClients, useMeetings, useProducts, useProspects } from '../lib/data'
-import { date, inr, nowISO, parse, time, todayISO, when } from '../lib/format'
+import { date, inr, nowISO, parse, time, todayISO, when, stripTitle } from '../lib/format'
 import { Avatar, Drawer, Panel, Stat, Status, SearchField } from '../ui'
 
 const TYPE_COLOR: Record<string, string> = { Review: '#1D3A2E', Proposal: '#848C70', 'First meeting': '#5F7D6E', Service: '#77736A', 'Family meeting': '#2C4E63' }
@@ -49,7 +49,7 @@ export default function Meetings() {
       <div className="page-head">
         <div>
           <h1>Meetings</h1>
-          <p className="lede">{upcoming.filter((m) => m.start.slice(0, 10) === todayISO()).length} today, {thisWeek.length} this week. {needMom.length ? `${needMom.length} meetings still need a MoM.` : 'All MoMs written.'}</p>
+          <p className="lede">{meetings.filter((m) => m.start.slice(0, 10) === todayISO() && m.status === 'scheduled').length} today, {upcoming.filter((m) => m.start.slice(0, 10) === todayISO()).length} still to come; {thisWeek.length} this week. {needMom.length ? `${needMom.length} meetings still need a MoM.` : 'All MoMs written.'}</p>
         </div>
       </div>
 
@@ -92,7 +92,7 @@ export default function Meetings() {
             {days.map((d) => (
               <button key={iso(d)} className={`month-cell ${d.getMonth() !== anchor.getMonth() ? 'out' : ''} ${iso(d) === todayISO() ? 'today' : ''}`} onClick={() => { setAnchor(d); setView('day') }} aria-label={`${d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}, ${inDay(d).length} meeting${inDay(d).length === 1 ? '' : 's'}. Open the day`}>
                 <span className="tiny" aria-hidden>{d.getDate()}</span>
-                {inDay(d).slice(0, 3).map((m) => <span key={m.id} className="month-ev" style={{ borderColor: TYPE_COLOR[m.type] }}>{time(m.start)} {who(m)?.name?.split(' ')[0]}</span>)}
+                {inDay(d).slice(0, 3).map((m) => <span key={m.id} className="month-ev" style={{ borderColor: TYPE_COLOR[m.type] }}>{time(m.start)} {stripTitle(who(m)?.name || '').split(' ')[0]}</span>)}
                 {inDay(d).length > 3 && <span className="tiny muted">+{inDay(d).length - 3} more</span>}
               </button>
             ))}

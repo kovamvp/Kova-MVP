@@ -100,3 +100,27 @@ What changed and why
 Checked
 - tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
   0 page overflow, and no state where an open panel covers the context bar (17–20 per width before).
+
+## 5 · `ui/numbers` — numbers, dates, charts and copy (N1–N3, N5–N8, ME1, W1–W15)
+
+What changed and why
+- **N1** Amount inputs group Indian digits as you type (75,00,000) and echo the compact value under them, so a
+  missing zero is visible: Studio lines and portfolio amount, the Studio create modal, the prospect form.
+- **N2** `inr()` and `<Num>` take a `fixed` option. Tables and lists keep two decimals for crores and one for lakhs
+  so digits line up; headlines and widgets stay compact.
+- **N3** One date language: search results, the bill chip and the timeline go through `format.ts`; the prospect
+  form's date field echoes the date in words.
+- **N5** The 12-month area chart has a scale (round ticks in a right lane), quarterly labels ending on the latest
+  month and a 2 px line. Column charts have square tops.
+- **N6** Donuts are thin rings; values live in the legend beside them, not in a hover.
+- **N7** One asset-class legend above the model list in Studio create. **N8** The learning ring scales its label.
+- **ME1** Preferences: "Large numbers" switches every figure between lakh/crore and full digits; "Show the live
+  transcript" turns live text on or off; notification settings are disabled until notifications exist.
+- **W1–W15** Copy: "in 8 months", plurals, honorifics in the month view, one count for today's meetings,
+  "Overdue · due yesterday", return labels, "Referral from Amit Kapadia, a client", no arrows glued to text, a lock
+  icon instead of an emoji, the outbox count shows every item with "To review (n)" as the filter, plain words for how
+  a portfolio started, "Reading · 6 min".
+
+Checked
+- tsc and build clean; feature regression 18/18; contrast scan 0 failing; walk of 234 states: 0 console errors,
+  0 page overflow.

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { pref } from '../lib/session'
 
 /* Hybrid speech-to-text.
    1. The browser's speech recognition shows words live while the RM speaks (Chrome/Edge).
@@ -69,7 +70,7 @@ export function useSpeech(onFinal: (text: string, meta: { live: string; whisper:
       media.current.start(1000)
     } catch { media.current = null }
     // live recognition
-    if (SR) {
+    if (SR && pref('prefs', { agentVoice: true }).agentVoice !== false) {
       const r = new SR()
       r.lang = 'en-IN'
       r.continuous = true
@@ -119,5 +120,5 @@ export function useSpeech(onFinal: (text: string, meta: { live: string; whisper:
     else onFinal(text, { live: liveText, whisper, source: whisper ? 'whisper' : 'browser' })
   }, [live, onFinal])
 
-  return { state, live, level, error, start, stop, liveSupported: !!SR, clearError: () => setError(null) }
+  return { state, live, level, error, start, stop, liveSupported: !!SR && pref('prefs', { agentVoice: true }).agentVoice !== false, clearError: () => setError(null) }
 }

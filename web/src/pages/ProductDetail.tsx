@@ -4,7 +4,7 @@ import { ArrowLeft, BookOpen, Check, CircleHelp, FileText, GraduationCap, PlayCi
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
 import { useClients, useGrowth, useLd } from '../lib/data'
-import { date, inr } from '../lib/format'
+import { date, inr, label } from '../lib/format'
 import { Avatar, Bar, DetailSkeleton, Drawer, Empty, Num, Panel, Stat, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ContextBar, FeedbackForm } from './shared'
@@ -34,9 +34,9 @@ export default function ProductDetail() {
   const contest = growth?.contests?.find((c: any) => c.id === p.rewards.contest)
   const ask = params.get('ask')
   const nums: [string, string][] = []
-  if (p.returns?.['1y']) nums.push(['1 year', `${p.returns['1y']}%`])
-  if (p.returns?.['3y']) nums.push(['3 years, a year', `${p.returns['3y']}%`])
-  if (p.returns?.['5y']) nums.push(['5 years, a year', `${p.returns['5y']}%`])
+  if (p.returns?.['1y']) nums.push(['1-year return', `${p.returns['1y']}%`])
+  if (p.returns?.['3y']) nums.push(['3-year return, a year', `${p.returns['3y']}%`])
+  if (p.returns?.['5y']) nums.push(['5-year return, a year', `${p.returns['5y']}%`])
   if (p.ytm) nums.push(['Yield to maturity', `${p.ytm}%`])
   if (p.coupon) nums.push(['Coupon', `${p.coupon}%`])
   if (p.rate) nums.push(['Rate', `${p.rate}%`])
@@ -117,12 +117,12 @@ export default function ProductDetail() {
 
           <Panel title="Your clients holding it" aside={holders.length ? inr(holders.reduce((a, x) => a + x.h.value, 0)) : undefined}>
             {holders.length === 0 && <p className="small muted">None yet.</p>}
-            {holders.map(({ c, h }) => <Link key={c.id} to={`/clients/${c.id}`} className="row small fam-member"><Avatar name={c.name} size={26} /><span className="grow">{c.name}</span><Num v={h.value} /></Link>)}
+            {holders.map(({ c, h }) => <Link key={c.id} to={`/clients/${c.id}`} className="row small fam-member"><Avatar name={c.name} size={26} /><span className="grow">{c.name}</span><Num v={h.value} fixed /></Link>)}
           </Panel>
 
           <Panel title="Clients it suits" aside="Risk profile and ticket size">
             {fits.length === 0 && <p className="small muted">No current client fits both risk and ticket size.</p>}
-            {fits.slice(0, 6).map((c) => <Link key={c.id} to={`/clients/${c.id}`} className="row small fam-member"><Avatar name={c.name} size={26} /><span className="grow">{c.name}<span className="tiny muted"> · {c.risk_profile}</span></span><span className="num muted">{inr(c.aum)}</span></Link>)}
+            {fits.slice(0, 6).map((c) => <Link key={c.id} to={`/clients/${c.id}`} className="row small fam-member"><Avatar name={c.name} size={26} /><span className="grow">{c.name}<span className="tiny muted"> · {c.risk_profile}</span></span><span className="num muted">{inr(c.aum, { fixed: true })}</span></Link>)}
           </Panel>
           <section className="reward-card" aria-label="Rewards">
             <div className="spread"><span className="row small strong" style={{ gap: 8 }}><span className="ring" aria-hidden />Rewards</span>{contest && <Link to="/growth" className="linkbtn small">{contest.name}, ends {date(contest.ends)}</Link>}</div>
@@ -169,7 +169,7 @@ function LearningPanel({ p, done, onClose }: { p: any; done: string[]; onClose: 
             <li key={m.id} className={`ld-step ${isDone ? 'done' : ''} ${open === m.id ? 'open' : ''}`}>
               <button className="ld-step-head" aria-expanded={open === m.id} onClick={() => setOpen(open === m.id ? null : m.id)}>
                 <span className="ld-num">{isDone ? <Check size={13} /> : i + 1}</span>
-                <span className="grow" style={{ textAlign: 'left' }}><span className="strong small">{m.title}</span><br /><span className="tiny muted row" style={{ gap: 4, display: 'inline-flex' }}><Icon size={12} />{m.type} · {m.minutes} min</span></span>
+                <span className="grow" style={{ textAlign: 'left' }}><span className="strong small">{m.title}</span><br /><span className="tiny muted row" style={{ gap: 4, display: 'inline-flex' }}><Icon size={12} />{label(m.type)} · {m.minutes} min</span></span>
               </button>
               {open === m.id && (
                 <div className="ld-step-body">

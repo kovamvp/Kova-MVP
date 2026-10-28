@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { CalendarDays, Gem, LayoutGrid, Search, User, UserRoundSearch } from 'lucide-react'
 import { api } from '../lib/api'
+import { datesInText } from '../lib/format'
 import { hrefFor, useEsc } from '../ui'
 
 const ICON: Record<string, any> = { client: User, prospect: UserRoundSearch, product: Gem, portfolio: LayoutGrid, meeting: CalendarDays }
@@ -55,7 +56,7 @@ export default function SearchPalette({ onClose }: { onClose: () => void }) {
               <button key={it.kind + it.id} id={`pi-${k}`} role="option" aria-selected={k === i} tabIndex={-1} className={`palette-item ${k === i ? 'on' : ''}`} onMouseEnter={() => setI(k)} onClick={() => go(it)}>
                 <Icon size={16} aria-hidden />
                 <span className="grow ellipsis">{it.title}</span>
-                <span className="tiny muted">{it.sub}</span>
+                <span className="tiny muted">{datesInText(it.sub)}</span>
               </button>
             )
           })}

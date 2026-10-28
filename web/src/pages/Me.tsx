@@ -3,7 +3,7 @@ import { Award, BookOpen, Camera, Download, Languages, RotateCcw } from 'lucide-
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
 import { useClients, useGrowth, useRm } from '../lib/data'
-import { date } from '../lib/format'
+import { date, setNumberStyle } from '../lib/format'
 import { pref, setPref } from '../lib/session'
 import { resizeImage } from '../shell/ProfileMenu'
 import { Avatar, DetailSkeleton, Num, Panel, Stat, useToast } from '../ui'
@@ -62,17 +62,18 @@ export function Preferences() {
     <main className="page">
       <div className="page-head"><div><h1>Preferences</h1><p className="lede">How Kova Work behaves for you. Saved on this device in this preview.</p></div></div>
       <div className="grid g2">
-        <Panel title="Updates & upcoming">
+        <Panel title="Updates & upcoming" aside="Coming in the next release">
           <div className="col" style={{ gap: 12 }}>
-            <label className="check"><input type="checkbox" checked={prefs.digest} onChange={(e) => set('digest', e.target.checked)} />Morning summary of the day at 8:30 am</label>
-            <label className="check"><input type="checkbox" checked={prefs.contests} onChange={(e) => set('contests', e.target.checked)} />Contest standings</label>
-            <label className="check"><input type="checkbox" checked={prefs.cio} onChange={(e) => set('cio', e.target.checked)} />CIO notes and product changes</label>
-            <label className="field" style={{ maxWidth: 220 }}><span>Quiet after</span><input className="input" type="time" value={prefs.quiet} onChange={(e) => set('quiet', e.target.value)} /></label>
+            <p className="small muted">Choose what reaches your Updates panel and when it goes quiet. These settings arrive with notifications in the full release.</p>
+            <label className="check toggle-off"><input type="checkbox" checked disabled readOnly />Morning summary of the day at 8:30 am</label>
+            <label className="check toggle-off"><input type="checkbox" checked disabled readOnly />Contest standings</label>
+            <label className="check toggle-off"><input type="checkbox" checked disabled readOnly />CIO notes and product changes</label>
+            <label className="field toggle-off" style={{ maxWidth: 220 }}><span>Quiet after</span><input className="input" type="time" value="21:00" disabled readOnly /></label>
           </div>
         </Panel>
         <Panel title="Display">
           <div className="col" style={{ gap: 12 }}>
-            <label className="field" style={{ maxWidth: 280 }}><span>Large numbers</span><select className="select" value={prefs.numbers} onChange={(e) => set('numbers', e.target.value)}><option value="lakh-crore">Lakh and crore (₹1.2 Cr)</option><option value="full">Full figures (₹1,20,00,000)</option></select></label>
+            <label className="field" style={{ maxWidth: 280 }}><span>Large numbers</span><select className="select" value={prefs.numbers} onChange={(e) => { set('numbers', e.target.value); setNumberStyle(e.target.value as 'lakh-crore' | 'full'); invalidate(''); toast(e.target.value === 'full' ? 'Large numbers now show in full' : 'Large numbers now show in lakh and crore') }}><option value="lakh-crore">Lakh and crore (₹1.2 Cr)</option><option value="full">Full figures (₹1,20,00,000)</option></select></label>
             <label className="check toggle-off"><input type="checkbox" disabled />Dark theme <span className="tiny muted">(coming later)</span></label>
             <label className="check"><input type="checkbox" checked={prefs.agentVoice} onChange={(e) => set('agentVoice', e.target.checked)} />Show the live transcript while I speak to the agent</label>
           </div>

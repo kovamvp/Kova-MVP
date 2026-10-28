@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { CalendarPlus, FileText, Headset, MessageSquare, NotebookPen, Receipt, Send, Sparkles, UserCog } from 'lucide-react'
+import { CalendarPlus, FileText, Lock, Headset, MessageSquare, NotebookPen, Receipt, Send, Sparkles, UserCog } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
+import { date, time } from '../lib/format'
 import { useProducts } from '../lib/data'
 import { useToast } from '../ui'
 
@@ -155,8 +156,8 @@ export function Timeline({ items }: { items: any[] }) {
             <div className="tl-dot" />
             <div className="tl-card">
               <div className="spread">
-                <span className="small strong">{e.kind === 'note' && '🔒 '}{e.title}{e.channel ? ` · ${e.channel}` : ''}</span>
-                <span className="tiny muted num">{new Date(e.at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}{e.at.length > 10 ? `, ${new Date(e.at).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })}` : ''}</span>
+                <span className="small strong row" style={{ gap: 6 }}>{e.kind === 'note' && <Lock size={12} aria-label="Internal" />}{e.title}{e.channel ? ` · ${e.channel}` : ''}</span>
+                <span className="tiny muted num">{date(e.at)}{e.at.length > 10 ? `, ${time(e.at.slice(0, 16))}` : ''}</span>
               </div>
               {e.body && <p className="small pre" style={{ marginTop: 4 }}>{e.body}</p>}
               {e.by && <div className="tiny muted" style={{ marginTop: 4 }}>{e.by}</div>}
