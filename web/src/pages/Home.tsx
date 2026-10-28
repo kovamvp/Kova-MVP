@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import ReactGridLayout, { WidthProvider } from 'react-grid-layout/legacy'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import ReactGridLayout from 'react-grid-layout/legacy'
 import 'react-grid-layout/css/styles.css'
 import { GripVertical, Plus, RotateCcw, SlidersHorizontal, X } from 'lucide-react'
 import { api } from '../lib/api'
@@ -9,7 +9,6 @@ import { Avatar, Modal, useToast, SearchField } from '../ui'
 import { Ctx, DEFAULT_LAYOUT, PickKind, WIDGET, WIDGETS } from '../widgets/registry'
 import Updates from './Updates'
 
-const Grid = WidthProvider(ReactGridLayout)
 type Item = { i: string; type: string; ref?: string; x: number; y: number; w: number; h: number }
 const LAYOUT_ID = 'RM-0042'
 
@@ -29,6 +28,25 @@ export default function Home() {
   const [libQuery, setLibQuery] = useState('')
   const toast = useToast()
   const saveT = useRef<number>(0)
+  /* The board's width is measured before the first paint, so the grid never renders at a default width and
+     then slides or jumps into place (the legacy WidthProvider starts at 1280 px). */
+  const [boardW, setBoardW] = useState(0)
+  const ro = useRef<ResizeObserver | null>(null)
+  const boardRef = useCallback((el: HTMLDivElement | null) => {
+    ro.current?.disconnect()
+    if (!el) return
+    setBoardW(el.clientWidth)
+    ro.current = new ResizeObserver((e) => setBoardW(Math.round(e[0].contentRect.width)))
+    ro.current.observe(el)
+  }, [])
+  /* phones get the board as one column in layout order; customising stays on larger screens */
+  const [narrow, setNarrow] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 719px)').matches)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 719px)')
+    const h = () => setNarrow(mq.matches)
+    mq.addEventListener('change', h)
+    return () => mq.removeEventListener('change', h)
+  }, [])
 
   useEffect(() => {
     api(`/c/layouts/${LAYOUT_ID}`).then((d: any) => setItems(d.items)).catch(() => setItems(DEFAULT_LAYOUT))
@@ -74,7 +92,7 @@ export default function Home() {
               <button className="btn btn-ghost" onClick={() => { const prev = items; update(DEFAULT_LAYOUT); toast(<>Back to the default layout. <button className="toast-undo" onClick={() => prev && update(prev)}>Undo</button></>) }}><RotateCcw />Reset to default</button>
               <button className="btn btn-primary" onClick={() => setEdit(false)}>Done</button>
             </>
-          ) : (
+          ) : !narrow && (
             <button className="btn btn-quiet" onClick={() => setEdit(true)}><SlidersHorizontal />Customise</button>
           )}
         </div>
@@ -105,12 +123,19 @@ export default function Home() {
           </aside>
         )}
 
-        <div className="board">
+        <div className="board" ref={boardRef}>
           {!ready || !items ? (
             <div className="grid g3">{[0, 1, 2, 3, 4, 5].map((i) => <div key={i} className="panel skeleton" style={{ height: 230 }} />)}</div>
-          ) : (
-            <Grid
-              className="layout"
+          ) : narrow && !edit ? (
+            <div className="board-list">
+              {[...items].filter((it) => WIDGET[it.type]).sort((a, b) => a.y - b.y || a.x - b.x).map((it) => (
+                <div key={it.i} className="widget panel"><div className="w-body">{WIDGET[it.type].render(ctx, it.ref)}</div></div>
+              ))}
+            </div>
+          ) : boardW > 0 && (
+            <ReactGridLayout
+              width={boardW}
+              className={`layout ${edit ? 'is-editing' : ''}`}
               layout={items.map(({ i, x, y, w, h, type }) => ({ i, x, y, w, h, minW: WIDGET[type]?.minW ?? 3, minH: WIDGET[type]?.minH ?? 2 }))}
               cols={12}
               rowHeight={52}
@@ -139,7 +164,7 @@ export default function Home() {
                   <div className="w-body">{WIDGET[it.type].render(ctx, it.ref)}</div>
                 </div>
               ))}
-            </Grid>
+            </ReactGridLayout>
           )}
           {edit && <div className="drop-hint tiny muted">Drag the grip to move a widget, the corner to resize it. Changes save as you go.</div>}
         </div>

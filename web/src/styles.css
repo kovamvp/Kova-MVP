@@ -791,3 +791,19 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 .suggest-chip[disabled]:hover { border-color: var(--line); background: var(--paper); }
 .acard-reject { align-items: center; }
 .acard-reject .input { min-width: 0; }
+
+/* Home (D5) */
+.updates { max-height: calc(100vh - var(--topbar) - var(--dock-space) - 16px); }
+.updates-body { position: relative; }
+.updates-body.has-more { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent); }
+.u-more { padding: 8px 18px 12px; color: rgba(243, 240, 232, .68); border-top: 1px solid rgba(243, 240, 232, .1); }
+.u-actions { opacity: .6; }
+.u-item:hover .u-actions, .u-item:focus-within .u-actions { opacity: 1; }
+.u-meta { flex-direction: column; align-items: flex-start; gap: 2px; }
+.w-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 24px; align-items: start; }
+.w-sub { padding: 2px 0 4px; }
+/* phones: the board is one column in layout order, cards at their own height */
+.board-list { display: flex; flex-direction: column; gap: 12px; }
+.board-list .widget { min-height: 0; }
+/* Widgets only animate while the RM is moving them, never on arrival. */
+.layout:not(.is-editing) > .react-grid-item { transition: none; }
