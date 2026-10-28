@@ -123,7 +123,8 @@ Three rules carry most of the look:
 - Bottom forest **dock** with eight sections (Home, Clients, Prospects, Meetings, Studio, Products, Growth, Requests); top bar with wordmark, search (⌘K) and profile photo. No bell: alerts live in Home's fixed **Updates & upcoming** panel.
 - Client, prospect and product pages carry the floating **context bar** (panel buttons, quick actions, the brass agent orb). Side panels (Portfolio, Actions, Agent, Learning, Proposal) open on the right **over** the page; they never push it with padding (the page's media queries are viewport-based, so a pushed client page would squeeze to about 770 px). While a panel is open the context bar re-centres in the free space to its left, so the orb and panel buttons are never covered. Nothing fixed may cover focused content: `scroll-padding-bottom` reserves the dock and context bar.
 - Page: max 1360px, 28px padding, one 16px gap between panels. Main + side column grids at 340 or 380px.
-- Cards that share a row end on one line; a card keeps its own height rather than stretching over empty space.
+- Cards that share a row end on one line (`.grid.row-even`): the shorter card stretches and its content stays at the top. Balance the content so the space left inside is small: cap long lists ("Show all n"), use one-line bars in narrow columns, and centre a chart in its card. Page layouts with a long main column and a side column keep their own heights.
+- List rows with several trailing fields (Requests) use fixed grid columns so each field lines up from row to row; nothing is aligned by the width of its neighbours.
 
 ## Elevation and shape
 
@@ -195,7 +196,7 @@ Around the cards
 
 - Gradients (except the ≤16% fade under the area chart), glows, glass, emoji, eyebrow labels, ALL CAPS.
 - Colour as the only signal.
-- Identical cards stretched to equal height with holes in them.
+- Ragged rows of cards, or cards stretched over large holes: fix the content balance instead.
 - Controls that do nothing; "coming soon" belongs in one muted line, not on every row.
 
 ## Responsive behaviour
@@ -204,7 +205,7 @@ Around the cards
 - < 1280: the context bar drops its quick icons (call, schedule) and keeps the panel buttons and the orb.
 - 1024–1279: grids drop to two columns. Growth goals are 3 + 2 up to 1100 px.
 - < 860: dock shows icons only (with accessible names); page head stacks.
-- < 720: the context bar is hidden while a panel fills the screen; Home renders its widgets as one list (no customising on a phone); tables become two-line lists; Studio lines stack the name above the amount inputs. Phone polish beyond "tidy" is out of scope for the MVP.
+- < 720: the context bar is hidden while a panel fills the screen; Home renders its widgets as one list (no customising on a phone); tables become lists (Products, Growth) and rows put the figure on a second line inside the card, never past the edge; tab bars scroll sideways; Studio lines stack the name above the amount inputs. Phone polish beyond "tidy" is out of scope for the MVP.
 
 ## Known gaps
 

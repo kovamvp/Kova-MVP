@@ -80,7 +80,7 @@ export default function Prospects() {
         </div>
       </section>
 
-      <div className="grid g-main" style={{ marginBottom: 16 }}>
+      <div className="grid g-main row-even" style={{ marginBottom: 16 }}>
         <Panel title="Opportunities" aside="Each one is a single click away">
           <div className="col" style={{ gap: 0 }}>
             {opps.map((o, i) => (
@@ -94,10 +94,10 @@ export default function Prospects() {
         </Panel>
         <div className="col" style={{ gap: 16 }}>
           <Panel title="Pipeline by stage" aside="Open prospects">
-            <HBars data={STAGES.filter((st) => st !== 'Closed').map((st) => ({ label: STAGE_SHORT[st] ?? st, value: open.filter((p) => p.stage === st).length }))} />
+            <HBars data={STAGES.filter((st) => st !== 'Closed').map((st) => ({ label: STAGE_SHORT[st] ?? st, value: open.filter((p) => p.stage === st).length }))} inline />
           </Panel>
           <Panel title="Where they come from">
-            <HBars data={sources.map(([k, v]) => ({ label: k, value: v }))} format={(v) => inr(v)} />
+            <HBars data={sources.map(([k, v]) => ({ label: k, value: v }))} format={(v) => inr(v)} inline />
           </Panel>
         </div>
       </div>

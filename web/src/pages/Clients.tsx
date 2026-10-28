@@ -130,7 +130,7 @@ export default function Clients() {
             <button className={`chip ${!seg ? 'on' : ''}`} aria-pressed={!seg} onClick={() => setParams({})}>All</button>
             {SEGMENTS.map((s) => <button key={s.key} className={`chip ${seg === s.key ? 'on' : ''}`} aria-pressed={seg === s.key} onClick={() => setParams({ segment: s.key })}>{s.label}</button>)}
           </div>
-          <div className="row" style={{ marginLeft: 'auto', gap: 8 }}>
+          <div className="row toolbar-selects" style={{ marginLeft: 'auto', gap: 8 }}>
             <select className="select sm" value={risk} onChange={(e) => setRisk(e.target.value)} aria-label="Risk profile" style={{ width: 190 }}>
               <option value="">Any risk profile</option>
               {RISK_ORDER.map((r) => <option key={r}>{r}</option>)}
