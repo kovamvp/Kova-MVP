@@ -25,7 +25,7 @@ def test_put_and_singleton_patch(client):
 
 
 def test_layout_round_trip(client):
-    assert client.get("/api/c/layouts/RM-0042").status_code == 404
+    assert client.get("/api/c/layouts/RM-0042").json()["items"] is None  # nothing saved yet: default board
     client.put("/api/c/layouts/RM-0042", json={"items": [{"i": "w1", "type": "book", "x": 0, "y": 0, "w": 4, "h": 4}]})
     assert client.get("/api/c/layouts/RM-0042").json()["items"][0]["type"] == "book"
 
@@ -81,3 +81,9 @@ def test_outbox_edit_keeps_original_and_review(client):
     assert o["edited"] and o["original"]["body"].startswith("Hi Rajesh")
     o = client.patch("/api/outbox/OB-9001", json={"review": "fix", "review_note": "tone"}).json()
     assert o["review"] == "fix" and o["review_note"] == "tone"
+
+
+def test_missing_layout_is_not_an_error(client):
+    r = client.get("/api/c/layouts/RM-9999")
+    assert r.status_code == 200 and r.json() == {"id": "RM-9999", "items": None}
+    assert client.get("/api/c/clients/CL-0000").status_code == 404  # other collections still 404

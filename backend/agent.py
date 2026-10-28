@@ -9,15 +9,17 @@ from __future__ import annotations
 import base64
 import datetime as dt
 import json
+import logging
 import re
 from typing import Any
 
 from fastapi import APIRouter, Body, File, HTTPException, UploadFile
 
-from . import actions, llm
+from . import actions, expenses, llm
 from .store import new_id, now_ist, singleton, store
 
 router = APIRouter(prefix="/api/agent")
+log = logging.getLogger("kova.agent")
 
 RISK_ORDER = ["Conservative", "Moderately conservative", "Moderate", "Moderately aggressive", "Aggressive"]
 PRODUCT_RISK = {"Low": 0, "Low to moderate": 1, "Moderate": 2, "Moderately high": 3, "High": 3, "Very high": 4, "—": 2}
@@ -28,10 +30,10 @@ def inr(x: float | int | None) -> str:
         return "-"
     x = float(x)
     if abs(x) >= 1e7:
-        return f"Rs {x / 1e7:.2f} Cr"
+        return f"₹{x / 1e7:.2f} Cr"
     if abs(x) >= 1e5:
-        return f"Rs {x / 1e5:.1f} L"
-    return f"Rs {x:,.0f}"
+        return f"₹{x / 1e5:.1f} L"
+    return expenses.rupees(round(x))
 
 
 # ------------------------------------------------------------------ compact context builders
@@ -253,6 +255,10 @@ def validate_proposal(name: str, a: dict, scope: dict, said: str = "") -> str | 
             return "Reimbursements must be linked to a client id."
         if float(a.get("amount") or 0) <= 0:
             return "Amount missing. Ask the RM or use the bill."
+        # the bill can be added on the card, so only the other blocking checks stop the card here
+        reason = expenses.blocking_reason(expenses.check(a, has_bill=True))
+        if reason:
+            return f"Can't propose this claim: {reason}. Tell the RM."
     if name == "propose_product_feedback" and a.get("product_id") and not st.get("products", a["product_id"]):
         return "Unknown product id."
     return None
@@ -304,7 +310,7 @@ How you work:
 - Suitability first: never push a product because it earns more points. Flag when a product's risk is above the client's profile.
 - Write client-facing text in a warm, professional Indian-English tone, short, signed "{rm.get('name')}". Internal notes are crisp.
 - Before you reply, check: if you prepared a MoM card and the RM didn't mention feedback, changes asked, how the proposal landed, or anything personal, end your reply with one or two short questions about exactly those.
-- Reply to the RM in 1-4 short sentences or a few bullets (a product brief can be longer, with short headings and bullets; avoid tables); don't sign replies to the RM or repeat card ids. Amounts in Indian format (Rs 12,34,567; Rs 1.2 Cr; Rs 45 L).
+- Reply to the RM in 1-4 short sentences or a few bullets (a product brief can be longer, with short headings and bullets; avoid tables); don't sign replies to the RM or repeat card ids. Amounts in Indian format with the rupee sign (₹12,34,567; ₹1.2 Cr; ₹45 L).
 """
     if scope["kind"] == "client":
         c = st.get("clients", scope["id"])
@@ -342,6 +348,54 @@ def history_messages(sess: dict, limit: int = 10) -> list[dict]:
     return out
 
 
+# ------------------------------------------------------------------ reimbursement cards: each card holds its own bill
+def refresh_checks(card: dict) -> None:
+    bill = card.get("bill") or {}
+    r = expenses.check(card["args"], has_bill=bool(bill.get("thumb")), bill_amount=(bill.get("fields") or {}).get("amount"))
+    card.update(checks=r["checks"], blocking=r["blocking"], needs_manager=r["needs_manager"])
+
+
+def assign_bill(cards: list[dict], bill: dict | None) -> None:
+    """A bill sent with a message goes to the claim it matches (same amount), else to the first claim without one."""
+    claims = [c for c in cards if c["action"] == "reimbursement"]
+    if bill and bill.get("thumb") and claims:
+        amt = (bill.get("fields") or {}).get("amount")
+        match = next((c for c in claims if amt is not None and float(c["args"].get("amount") or 0) == float(amt)), None)
+        target = match or next((c for c in claims if not c.get("bill")), None)
+        if target is not None:
+            target["bill"] = {"thumb": bill["thumb"], "fields": bill.get("fields") or {}}
+    for c in claims:
+        c.setdefault("bill", None)
+        refresh_checks(c)
+
+
+def find_card(s: dict, cid: str) -> tuple[int, dict]:
+    for i, m in enumerate(s["messages"]):
+        for c in m.get("cards", []):
+            if c["id"] == cid:
+                return i, c
+    raise HTTPException(404, "Card not found")
+
+
+def upgrade_claim_cards(s: dict) -> bool:
+    """Cards made before per-card bills have no `bill` key: give them the bill sent with the message that produced them
+    (or none), and fresh checks for pending ones. Returns True if anything changed."""
+    changed = False
+    for i, m in enumerate(s["messages"]):
+        for c in m.get("cards", []):
+            if c["action"] != "reimbursement":
+                continue
+            if "bill" not in c:
+                prev = next((x for x in reversed(s["messages"][:i]) if x["role"] == "rm"), None)
+                b = (prev or {}).get("bill") or {}
+                c["bill"] = {"thumb": b["thumb"], "fields": b.get("fields") or {}} if b.get("thumb") else None
+                changed = True
+            if c["status"] == "pending":
+                refresh_checks(c)
+                changed = True
+    return changed
+
+
 # ------------------------------------------------------------------ sessions
 def get_session(sid: str) -> dict:
     s = store().get("agent_sessions", sid)
@@ -370,7 +424,9 @@ def create_session(body: dict = Body(...)):
 
 @router.get("/sessions/{sid}")
 def read_session(sid: str):
-    return get_session(sid)
+    s = get_session(sid)
+    upgrade_claim_cards(s)  # checks are recomputed on every open (month totals move); not written back
+    return s
 
 
 @router.post("/sessions/{sid}/archive")
@@ -441,12 +497,38 @@ def send(sid: str, body: dict = Body(...)):
         else:
             final = final or "I've prepared what I could. Check the cards below."
     except llm.LLMError as e:
-        final = f"I couldn't reach the language model just now ({str(e)[:160]}). Your message is saved; try again in a minute."
+        log.warning("model unreachable in %s: %s", sid, e)  # details stay in the server log, not in the chat
+        final = "I couldn't reach the language model just now. Your message is saved; try again in a minute."
+        failed = True
+    else:
+        failed = False
     final = re.sub(r"<\|.*?\|>", "", final or "").strip()
     if not final and cards:
         final = "Prepared for your approval:"
-    s["messages"].append({"id": f"m{len(s['messages']) + 1}", "role": "agent", "text": final, "at": now_ist(), "cards": cards,
-                          "reads": sorted(set(reads)), "served_by": served})
+    assign_bill(cards, bill)
+    msg = {"id": f"m{len(s['messages']) + 1}", "role": "agent", "text": final, "at": now_ist(), "cards": cards,
+           "reads": sorted(set(reads)), "served_by": served}
+    if failed:
+        msg["error"] = True
+    s["messages"].append(msg)
+    s["updated"] = now_ist()
+    store().put("agent_sessions", sid, s)
+    return s
+
+
+@router.post("/sessions/{sid}/cards/{cid}/bill")
+def attach_card_bill(sid: str, cid: str, body: dict = Body(...)):
+    """Add or replace the bill on a pending reimbursement card. body: {thumb: data URL, fields?: what the bill reader found}."""
+    s = get_session(sid)
+    _, c = find_card(s, cid)
+    upgrade_claim_cards(s)
+    if c["action"] != "reimbursement" or c["status"] != "pending":
+        raise HTTPException(400, "Bills can only be added to a reimbursement card that is waiting for approval.")
+    thumb = body.get("thumb") or ""
+    if not thumb.startswith("data:image"):
+        raise HTTPException(400, "Send the bill as an image.")
+    c["bill"] = {"thumb": thumb, "fields": body.get("fields") or {}}
+    refresh_checks(c)
     s["updated"] = now_ist()
     store().put("agent_sessions", sid, s)
     return s
@@ -455,37 +537,39 @@ def send(sid: str, body: dict = Body(...)):
 @router.post("/sessions/{sid}/cards/{cid}")
 def decide(sid: str, cid: str, body: dict = Body(...)):
     s = get_session(sid)
-    for i, m in enumerate(s["messages"]):
-        for c in m.get("cards", []):
-            if c["id"] != cid:
-                continue
-            if c["status"] != "pending":
-                raise HTTPException(400, "This card was already decided.")
-            decision = body.get("decision")
-            said = next((x["text"] for x in reversed(s["messages"][:i]) if x["role"] == "rm"), "")
-            if decision == "reject":
-                c["status"] = "rejected"
-                c["reason"] = body.get("reason", "")
-                note = f"RM rejected card {cid} ({c['summary']})" + (f": {c['reason']}" if c["reason"] else "")
-            elif decision == "approve":
-                args = body.get("args") or c["args"]
-                edited = args != c["args"]
-                if c["action"] == "reimbursement" and s.get("last_bill"):
-                    args = {**args, "bill_image": s["last_bill"]}
-                try:
-                    result = actions.run(c["action"], args, {"session_id": sid, "card_id": cid, "said": said, "kind": s["scope"]["kind"], "id": s["scope"]["id"]})
-                except (ValueError, KeyError) as e:
-                    raise HTTPException(400, str(e)) from e
-                c.update(status="approved", args=args, edited=edited, decided_at=now_ist(),
-                         result={k: (v.get("id") if isinstance(v, dict) else v) for k, v in result.items()})
-                note = f"RM approved card {cid} ({c['summary']})" + (" with edits" if edited else "")
-            else:
-                raise HTTPException(400, "decision must be approve or reject")
-            s["messages"].append({"id": f"m{len(s['messages']) + 1}", "role": "event", "text": note, "at": now_ist()})
-            s["updated"] = now_ist()
-            store().put("agent_sessions", sid, s)
-            return s
-    raise HTTPException(404, "Card not found")
+    i, c = find_card(s, cid)
+    if c["status"] != "pending":
+        raise HTTPException(400, "This card was already decided.")
+    upgrade_claim_cards(s)
+    decision = body.get("decision")
+    said = next((x["text"] for x in reversed(s["messages"][:i]) if x["role"] == "rm"), "")
+    edited = False
+    if decision == "reject":
+        c["status"] = "rejected"
+        c["reason"] = body.get("reason", "")
+        note = f"RM rejected card {cid} ({c['summary']})" + (f": {c['reason']}" if c["reason"] else "")
+    elif decision == "approve":
+        args = body.get("args") or c["args"]
+        edited = args != c["args"]
+        if c["action"] == "reimbursement":
+            img = (c.get("bill") or {}).get("thumb")
+            args = {**args, "bill_image": img} if img else {k: v for k, v in args.items() if k != "bill_image"}
+        try:
+            result = actions.run(c["action"], args, {"session_id": sid, "card_id": cid, "said": said, "kind": s["scope"]["kind"], "id": s["scope"]["id"]})
+        except KeyError as e:
+            raise HTTPException(400, f"Missing {str(e).strip(chr(39)).replace('_', ' ')}") from e
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        c.update(status="approved", args={k: v for k, v in args.items() if k != "bill_image"}, edited=edited, decided_at=now_ist(),
+                 result={k: (v.get("id") if isinstance(v, dict) else v) for k, v in result.items()})
+        note = f"RM approved card {cid} ({c['summary']})" + (" with edits" if edited else "")
+    else:
+        raise HTTPException(400, "decision must be approve or reject")
+    s["messages"].append({"id": f"m{len(s['messages']) + 1}", "role": "event", "text": note, "at": now_ist(),
+                          "decision": {"decision": decision, "card_id": cid, "summary": c["summary"], "edited": edited, "reason": c.get("reason", "")}})
+    s["updated"] = now_ist()
+    store().put("agent_sessions", sid, s)
+    return s
 
 
 # ------------------------------------------------------------------ speech and bills

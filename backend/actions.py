@@ -72,6 +72,10 @@ def add_update(kind: str, title: str, body: str, link: dict | None, priority: in
 SIM = {
     "product_feedback": [(1.5, "in_review", "{pm}", "Read your note"), (4, "done", "{pm}", "Replied: thanks, a client-ready note goes out this week. I've added your clients' questions to the FAQ.")],
     "reimbursement": [(1, "in_review", "Accounts (Kiran)", "Picked up for verification"), (3, "approved", "Accounts (Kiran)", "Bill verified against policy; will be paid in the next cycle")],
+    "reimbursement_manager": [(1, "in_review", "{approver}", "Looking at the claim above your limit"),
+                              (3, "in_review", "{approver}", "Approved above the limit; passed to Accounts"),
+                              (5, "in_review", "Accounts (Kiran)", "Picked up for verification"),
+                              (7, "approved", "Accounts (Kiran)", "Bill verified; will be paid in the next cycle")],
     "service_request": [(1, "in_review", "CX (Asha)", "Acknowledged; working on it"), (5, "done", "CX (Asha)", "Completed and confirmed with the client")],
     "ticket": [(1, "in_review", "{team} team lead", "Assigned within the team"), (6, "done", "{team} team lead", "Resolved; please confirm")],
     "portfolio_approval": [(1.5, "in_review", "CIO Office (Anand Iyer)", "Under review"), (4, "{decision}", "CIO Office (Anand Iyer)", "{decision_text}")],
@@ -79,9 +83,9 @@ SIM = {
 }
 
 
-def attach_sim(req: dict, **fmt: str) -> None:
+def attach_sim(req: dict, script: str | None = None, **fmt: str) -> None:
     steps = []
-    for mins, status, by, text in SIM.get(req["type"], []):
+    for mins, status, by, text in SIM.get(script or req["type"], []):
         steps.append({"at": _plus(mins), "status": status.format(**fmt), "by": by.format(**fmt), "text": text.format(**fmt)})
     req["sim"] = steps
 
@@ -115,13 +119,13 @@ def advance(req: dict) -> bool:
 
 
 def new_request(type_: str, title: str, team: str, payload: dict, link: dict | None, priority: str = "normal", due: str | None = None,
-                direction: str = "waiting_on_others", **fmt: str) -> dict:
+                direction: str = "waiting_on_others", script: str | None = None, **fmt: str) -> dict:
     req = {
         "id": new_id("RQ-", "seq_request", 3200), "type": type_, "title": title, "team": team, "direction": direction,
         "status": "sent", "priority": priority, "created": now_ist(), "due": due, "link": link, "payload": payload,
         "trail": [{"at": now_ist(), "by": RM_NAME, "text": "Sent"}], "escalations": 0, "reminders": True,
     }
-    attach_sim(req, team=team, **fmt)
+    attach_sim(req, script, team=team, **fmt)
     store().put("requests", req["id"], req)
     return req
 
@@ -218,13 +222,25 @@ def log_mom(args: dict, source: dict | None = None) -> dict:
 
 
 def reimbursement(args: dict, source: dict | None = None) -> dict:
+    from . import expenses
+    result = expenses.check(args)
+    reason = expenses.blocking_reason(result)
+    if reason:
+        raise ValueError(reason)
     link = {"kind": "client", "id": args["client_id"]} if args.get("client_id") else None
     payload = {k: args.get(k) for k in ("category", "amount", "merchant", "bill_date", "gst", "bill_image", "purpose")}
+    payload |= {"checks": result["checks"], "needs_manager": result["needs_manager"], "month_total_before": result["month_total"]}
     title = f"{args.get('category', 'Expense')}: {entity_name(link) or args.get('merchant', '')}"
-    req = new_request("reimbursement", title, "Accounts", payload, link)
-    ob = add_outbox("reimbursement", "Kova Work", {"name": "Accounts team", "address": "accounts@kova.in"}, title,
-                    f"Reimbursement claim of Rs {args.get('amount')} at {args.get('merchant')} on {args.get('bill_date')} ({args.get('category')}). Purpose: {args.get('purpose', '')}",
-                    source, {"request_id": req["id"], **{k: v for k, v in payload.items() if k != "bill_image"}, "bill_attached": bool(payload.get("bill_image"))})
+    approver = result["approver"].split(",")[0]
+    req = new_request("reimbursement", title, "Branch head, then Accounts" if result["needs_manager"] else "Accounts", payload, link,
+                      script="reimbursement_manager" if result["needs_manager"] else None, approver=f"Branch head ({approver})")
+    when = dt.date.fromisoformat(str(args["bill_date"])[:10]).strftime("%d %b %Y")
+    body = (f"Reimbursement claim of {expenses.rupees(float(args['amount']))} at {args.get('merchant') or 'not given'} on {when} ({args.get('category')})."
+            + (f" For {entity_name(link)}." if link else "") + (f" Purpose: {args['purpose']}." if args.get("purpose") else "")
+            + (f" Above policy limits, so {approver} approves it first." if result["needs_manager"] else ""))
+    ob = add_outbox("reimbursement", "Kova Work", {"name": "Accounts team", "address": "accounts@kova.in"}, title, body,
+                    source, {"request_id": req["id"], **{k: v for k, v in payload.items() if k not in ("bill_image", "checks")},
+                             "bill_attached": bool(payload.get("bill_image"))})
     return {"request": req, "outbox": ob}
 
 

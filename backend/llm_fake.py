@@ -35,7 +35,8 @@ def chat(messages: list[dict], tools: list[dict] | None = None, **_: object) -> 
     last = messages[-1]
     # vision (bill reading): content is a list with an image
     if isinstance(last.get("content"), list):
-        return _reply({"role": "assistant", "content": json.dumps(SAMPLE_BILL)}, "fake-vision")
+        recent = (dt.date.fromisoformat(now_ist()[:10]) - dt.timedelta(days=2)).isoformat()  # keeps the sample inside the claim window
+        return _reply({"role": "assistant", "content": json.dumps(SAMPLE_BILL | {"bill_date": recent})}, "fake-vision")
     if last["role"] == "tool":
         return _reply({"role": "assistant", "content": "Prepared for your approval."})
     system = messages[0]["content"] if messages and messages[0]["role"] == "system" else ""
