@@ -57,7 +57,7 @@ export default function Studio() {
                 <div className="display strong" style={{ fontSize: 22, margin: '14px 0 8px' }}>{inr(pf.amount)}</div>
                 <AllocBar parts={Object.entries(al).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} />
                 <div className="spread tiny muted" style={{ marginTop: 10 }}><span>{pf.lines.length} products · {Math.round((used / Math.max(1, pf.amount)) * 100)}% allocated</span><span>Updated {ago(pf.updated)}</span></div>
-                {pf.note && <div className="tiny" style={{ marginTop: 8, color: pf.status === 'changes_requested' ? 'var(--loss)' : 'var(--muted)' }}>{pf.note}</div>}
+                {pf.note && <div className="tiny" style={{ marginTop: 8, color: pf.status === 'changes_requested' ? 'var(--loss-ink)' : 'var(--muted)' }}>{pf.note}</div>}
               </Link>
             )
           })}
@@ -175,7 +175,7 @@ function CreateFlow({ onClose }: { onClose: () => void }) {
         <>
           <label className="btn btn-quiet" style={{ marginBottom: 10 }}><Upload />Choose a .json file<input type="file" accept=".json,application/json" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (f) setJson(await f.text()) }} /></label>
           <textarea className="textarea mono" rows={10} value={json} onChange={(e) => { setJson(e.target.value); setErr('') }} placeholder={'{\n  "name": "Bond ladder",\n  "amount": 10000000,\n  "lines": [{ "product_id": "PD-403", "amount": 2500000 }]\n}'} />
-          {err && <p className="small" style={{ color: 'var(--loss)', marginTop: 8 }}>{err}</p>}
+          {err && <p className="small" style={{ color: 'var(--loss-ink)', marginTop: 8 }}>{err}</p>}
         </>
       )}
     </Modal>

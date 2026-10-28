@@ -302,7 +302,7 @@ function Card({ card, onDecide, names }: { card: any; onDecide: (c: any, d: 'app
         <div className="acard-actions">
           <button className="btn btn-primary btn-sm" disabled={working} onClick={() => go('approve')}><Check />{edit ? 'Approve edited' : 'Approve'}</button>
           <button className="btn btn-quiet btn-sm" disabled={working} onClick={() => setEdit((e) => !e)}><Pencil />{edit ? 'Stop editing' : 'Edit'}</button>
-          <button className="btn btn-ghost btn-sm" disabled={working} onClick={() => go('reject')} style={{ color: 'var(--loss)' }}><X />Reject</button>
+          <button className="btn btn-ghost btn-sm" disabled={working} onClick={() => go('reject')} style={{ color: 'var(--loss-ink)' }}><X />Reject</button>
         </div>
       ) : card.status === 'approved' && (
         <div className="acard-result tiny">

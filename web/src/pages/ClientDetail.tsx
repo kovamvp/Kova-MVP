@@ -80,7 +80,7 @@ export default function ClientDetail() {
             <div className="statline">
               <Stat label="Invested" value={<Num v={c.invested} src="Purchase cost" />} />
               <Stat label="Current value" value={<Num v={c.aum} />} />
-              <Stat label="Gain" value={<span style={{ color: gain >= 0 ? 'var(--gain)' : 'var(--loss)' }}><Num v={gain} src="Current value minus cost" /></span>} />
+              <Stat label="Gain" value={<span style={{ color: gain >= 0 ? 'var(--gain-ink)' : 'var(--loss-ink)' }}><Num v={gain} src="Current value minus cost" /></span>} />
               <Stat label="Revenue this year" value={<Num v={c.revenue_ytd} src="Trail and fees, mock" />} />
             </div>
           </section>

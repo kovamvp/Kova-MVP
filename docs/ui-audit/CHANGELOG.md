@@ -49,3 +49,19 @@ Checked
 - Not changed here: the side panels still cover part of the context bar (that is the D1-lite batch).
 
 Not done: **S9** (layout 404 for a new RM) needs the backend to return the default layout; it is with the other chat.
+
+## 2 · `ui/tokens-contrast` — text that passes 4.5:1 everywhere (D3)
+
+What changed and why
+- `--muted` is darker (`#6A665D`), so secondary text passes on cream, paper and stone, not only on paper.
+- `--faint` is no longer used for words (it failed at about 2.5:1); it stays for rules and decorative marks.
+- Words and pills in status colours use new ink tones (`--gain-ink`, `--loss-ink`, `--warn-ink`); bars and marks keep
+  the original hues. Brass buttons use `brass-deep`, so white text passes.
+- No opacity dimming of text: rejected cards, the timeline legend's off state, completed calendar events,
+  out-of-month days, products already in a portfolio ("Added") and handbook cards ("Coming soon") stay readable.
+- Updates panel meta text raised from 50% to 68% cream.
+
+Checked
+- Contrast scan of every visible text element on 23 routes: 381 failures at baseline, 6 after; all 6 are on the
+  full-brass rewards card, which batch 3 replaces.
+- tsc and build clean; feature regression 18/18; walk of 234 states: 0 console errors, 0 page overflow.

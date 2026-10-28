@@ -97,7 +97,8 @@ export function Handbook() {
           <section key={t.id} className="panel panel-pad handbook-card">
             <BookOpen size={18} color="var(--brass)" />
             <h3 style={{ margin: '10px 0 4px' }}>{t.title}</h3>
-            <p className="tiny muted">{t.minutes} min read · coming soon</p>
+            <p className="small muted">{t.minutes} min read</p>
+            <span className="pill outline" style={{ marginTop: 10 }}>Coming soon</span>
           </section>
         ))}
       </div>

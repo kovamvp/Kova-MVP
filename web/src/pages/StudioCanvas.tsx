@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Download, Plus, Send, Sparkles, Trash2 } from 'lucide-react'
+import { ArrowLeft, Check, Download, Plus, Send, Sparkles, Trash2 } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { assetClassOf, EQUITY_BAND, fitsProfile, RISK_ORDER, useClients, useModels, useProducts, useProspects } from '../lib/data'
 import { ago, inr } from '../lib/format'
@@ -153,7 +153,7 @@ export default function StudioCanvas() {
                         <div className="tiny muted ellipsis">{p.risk} · min {inr(p.min_investment)} · {p.returns?.['3y'] ? `${p.returns['3y']}% 3y` : p.ytm ? `${p.ytm}% YTM` : p.rate ? `${p.rate}%` : p.target_irr || ''}</div>
                       </div>
                       <Status s={p.cio_view.stance} />
-                      <button className="iconbtn" onClick={() => add(p.id)} disabled={inPf} aria-label={`Add ${p.name}`}><Plus /></button>
+                      {inPf ? <span className="shelf-added"><Check size={13} aria-hidden />Added</span> : <button className="iconbtn" onClick={() => add(p.id)} aria-label={`Add ${p.name}`}><Plus aria-hidden /></button>}
                     </div>
                   )
                 })}
@@ -176,7 +176,7 @@ export default function StudioCanvas() {
                       <div className="grow" style={{ minWidth: 0 }}>
                         <Link to={`/products/${p.id}`} className="small strong">{p.name}</Link>
                         <div className="tiny muted">{p.sub_category} · {p.liquidity}</div>
-                        {under && <div className="tiny" style={{ color: 'var(--loss)' }}>Minimum is {inr(p.min_investment)}</div>}
+                        {under && <div className="tiny" style={{ color: 'var(--loss-ink)' }}>Minimum is {inr(p.min_investment)}</div>}
                       </div>
                       <label className="amt"><span className="tiny muted">₹</span><input className="input sm num" type="number" step={10000} value={l.amount} disabled={locked} onChange={(e) => setLine(l.product_id, +e.target.value)} /></label>
                       <label className="amt pct"><input className="input sm num" type="number" step={0.5} value={+share.toFixed(1)} disabled={locked} onChange={(e) => setLine(l.product_id, (pf.amount * +e.target.value) / 100)} /><span className="tiny muted">%</span></label>
@@ -228,11 +228,11 @@ export default function StudioCanvas() {
           </div>
           <div className="master-sec">
             <h3 style={{ marginBottom: 8 }}>Suitability</h3>
-            {calc.flags.length === 0 ? <p className="small" style={{ color: 'var(--gain)' }}>No issues found{profile ? ` for a ${profile.toLowerCase()} profile` : ''}.</p>
+            {calc.flags.length === 0 ? <p className="small" style={{ color: 'var(--gain-ink)' }}>No issues found{profile ? ` for a ${profile.toLowerCase()} profile` : ''}.</p>
               : <div className="col" style={{ gap: 6 }}>{calc.flags.map((f, i) => <div key={i} className={`sev ${f.severity} small`}>{f.text}</div>)}</div>}
           </div>
           <div className="master-sec" style={{ borderBottom: 0 }}>
-            {pf.status === 'approved' ? <p className="small" style={{ color: 'var(--gain)' }}>Approved by the CIO Office.</p>
+            {pf.status === 'approved' ? <p className="small" style={{ color: 'var(--gain-ink)' }}>Approved by the CIO Office.</p>
               : pf.status === 'awaiting_approval' ? <p className="small muted">Waiting on the CIO Office. <Link to="/requests?tab=approvals" className="linkbtn">Track it</Link></p>
               : <>
                   <button className="btn btn-primary" style={{ width: '100%' }} disabled={!pf.tag || !pf.lines.length} onClick={submit}><Send />Send for approval</button>
