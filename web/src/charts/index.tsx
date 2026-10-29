@@ -31,21 +31,33 @@ export function Donut({ data, size = 150, thick = 10, center }: { data: Slice[];
   )
 }
 
-export function Legend({ data, format = (v: number) => String(v) }: { data: Slice[]; format?: (v: number) => string }) {
+export function Legend({ data, format = (v: number) => String(v), notes = false }: { data: Slice[]; format?: (v: number) => string; notes?: boolean }) {
   return (
-    <div className="col" style={{ gap: 7 }}>
+    <div className="col" style={{ gap: notes ? 11 : 7 }}>
       {data.map((d) => (
         <div key={d.label} className="spread small">
           <span className="row" style={{ gap: 8 }}><i style={{ width: 9, height: 9, borderRadius: 2, background: d.color }} />{d.label}</span>
-          <span className="num strong">{format(d.value)}</span>
+          <span className="row" style={{ gap: 10 }}>{notes && d.note && <span className="num muted">{d.note}</span>}<span className="num strong" style={{ minWidth: 32, textAlign: 'right' }}>{format(d.value)}</span></span>
         </div>
       ))}
     </div>
   )
 }
 
-export function HBars({ data, format = (v: number) => String(v), max }: { data: { label: ReactNode; value: number; color?: string; sub?: ReactNode }[]; format?: (v: number) => string; max?: number }) {
+export function HBars({ data, format = (v: number) => String(v), max, inline = false }: { data: { label: ReactNode; value: number; color?: string; sub?: ReactNode }[]; format?: (v: number) => string; max?: number; inline?: boolean }) {
   const m = max ?? Math.max(1, ...data.map((d) => d.value))
+  /* inline: label, bar and value on one line, for short labels in a narrow column */
+  if (inline) return (
+    <div className="hbars-inline">
+      {data.map((d, i) => (
+        <div key={i} className="hb-row small">
+          <span className="ellipsis">{d.label}</span>
+          <div className="bar"><i style={{ width: `${(d.value / m) * 100}%`, background: d.color }} /></div>
+          <span className="num strong">{format(d.value)}</span>
+        </div>
+      ))}
+    </div>
+  )
   return (
     <div className="col" style={{ gap: 10 }}>
       {data.map((d, i) => (

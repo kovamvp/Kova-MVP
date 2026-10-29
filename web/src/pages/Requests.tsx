@@ -73,8 +73,8 @@ export default function Requests() {
                 </span>
                 <span className="req-last tiny muted ellipsis">{last.by}: {last.text}</span>
                 <span className="req-due tiny">{r.due ? <span className={od ? 'u-overdue-l' : 'muted'}>{od ? 'Overdue · ' : 'Due '}{when(r.due)}</span> : <span className="faint">No due date</span>}</span>
-                {r.priority === 'high' && <span className="pill outline">High</span>}
-                <Status s={r.status} />
+                <span className="req-prio">{r.priority === 'high' && <span className="pill outline">High</span>}</span>
+                <span className="req-status"><Status s={r.status} /></span>
               </button>
             )
           })}

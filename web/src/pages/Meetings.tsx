@@ -21,6 +21,7 @@ function lanes(evs: any[]) {
   return out
 }
 const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+const MOM_ROWS = 5
 const HOURS = Array.from({ length: 11 }, (_, i) => 9 + i)
 
 export default function Meetings() {
@@ -32,6 +33,7 @@ export default function Meetings() {
   const [view, setView] = useState<'day' | 'week' | 'month'>('week')
   const [anchor, setAnchor] = useState(() => parse(todayISO()))
   const [q, setQ] = useState('')
+  const [allMom, setAllMom] = useState(false)
   const nav = useNavigate()
   const who = (m: any) => (m.with.kind === 'client' ? clients : prospects).find((x) => x.id === m.with.id)
   const P = Object.fromEntries(products.map((p) => [p.id, p]))
@@ -78,18 +80,19 @@ export default function Meetings() {
         </div>
       </section>
 
-      <div className="grid g-main mb16" style={{ alignItems: 'start' }}>
+      <div className="grid g-main row-even mb16">
         {next ? <PrepPack m={next} who={who(next)} P={P} meetings={meetings} onOpen={() => setParams({ m: next.id })} /> : <Panel title="Next up"><p className="small muted">Nothing scheduled.</p></Panel>}
         <Panel title="Needs a MoM" aside="One tap opens the agent">
           {needMom.length === 0 && <p className="small muted">All caught up.</p>}
           <div className="col" style={{ gap: 0 }}>
-            {needMom.map((m) => (
+            {(allMom ? needMom : needMom.slice(0, MOM_ROWS)).map((m) => (
               <div key={m.id} className="w-line">
                 <span className="grow small"><span className="strong">{m.title}</span><br /><span className="tiny muted">{who(m)?.name} · {when(m.start)}</span></span>
                 <button className="btn btn-quiet btn-sm" onClick={() => nav(`/${m.with.kind === 'client' ? 'clients' : 'prospects'}/${m.with.id}?panel=agent&mom=${m.id}`)}><NotebookPen />Write MoM</button>
               </div>
             ))}
           </div>
+          {needMom.length > MOM_ROWS && <button className="linkbtn small" style={{ marginTop: 10 }} aria-expanded={allMom} onClick={() => setAllMom((v) => !v)}>{allMom ? 'Show fewer' : `Show all ${needMom.length}`}</button>}
         </Panel>
       </div>
 

@@ -87,7 +87,7 @@ export default function Growth() {
         )}
       </section>
 
-      <div className="grid g-main" style={{ marginTop: 16 }}>
+      <div className="grid g-main row-even" style={{ marginTop: 16 }}>
         <Panel title="Points and slab" aside={`Totals and slabs only · ${p.payout_basis}`}>
           <div className="row" style={{ gap: 28, alignItems: 'flex-end', marginBottom: 18 }}>
             <div className="stat"><span className="label">This quarter</span><span className="value l">{p.this_quarter}<span className="small muted"> pts</span></span><span className="sub">{cur?.name} slab · {cur?.payout_pct}% of variable pay</span></div>
@@ -114,9 +114,9 @@ export default function Growth() {
         </Panel>
       </div>
 
-      <div className="grid g-main" style={{ marginTop: 16 }}>
+      <div className="grid g-main row-even" style={{ marginTop: 16 }}>
         <Panel title="What your points are made of" aside="Weights set for your grade">
-          <table className="table">
+          <table className="table kpi-table">
             <thead><tr><th>Measure</th><th className="r">Weight</th><th className="r">Actual</th><th className="r">Target</th><th style={{ width: '32%' }}>Progress</th></tr></thead>
             <tbody>
               {g.kpis.map((k: any) => {
