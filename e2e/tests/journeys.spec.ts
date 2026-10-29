@@ -169,6 +169,9 @@ test('requests: raise a ticket, nudge it, review an outbox item', async ({ app }
   await app.getByRole('button', { name: 'Nudge' }).click()
   await expect(app.getByText(/Nudged/).first()).toBeVisible()
   await app.goto('/requests?tab=outbox&o=OB-9001')
-  await app.getByRole('button', { name: 'Correct' }).last().click()
+  // the row's own label ends in "Correct" (its status pill), so click the review button inside the opened item
+  const review = app.locator('.ob.open .review')
+  await expect(review).toBeVisible()
+  await review.getByRole('button', { name: 'Correct', exact: true }).click()
   await expect(app.locator('.toast', { hasText: 'Marked correct' })).toBeVisible()
 })
