@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, MapPin, NotebookPen, Users } from 'lucide-react'
+import { CalendarClock, ChevronLeft, ChevronRight, MapPin, NotebookPen, Pencil, UserX, Users, XCircle } from 'lucide-react'
+import { api, invalidate } from '../lib/api'
+import { useAction } from '../lib/action'
 import { useClients, useMeetings, useProducts, useProspects } from '../lib/data'
 import { date, inr, nowISO, parse, time, todayISO, when, stripTitle } from '../lib/format'
-import { Avatar, Drawer, Panel, Stat, Status, SearchField } from '../ui'
+import { Avatar, Drawer, Panel, Stat, Status, SearchField, useToast } from '../ui'
 
 // Lay out overlapping events side by side: each event gets a lane and the lane count of its cluster (MT1)
 function lanes(evs: any[]) {
@@ -45,7 +47,7 @@ export default function Meetings() {
   const late = (m: any) => m.status === 'needs_mom' || (m.status === 'scheduled' && m.end < now)
   const needMom = meetings.filter(late)
   const promises = meetings.flatMap((m) => (m.promises || []).map((p: any) => ({ ...p, m }))).sort((a, b) => Number(a.done) - Number(b.done) || (a.due || '').localeCompare(b.due || ''))
-  const history = meetings.filter((m) => m.status === 'completed' || m.status === 'cancelled').filter((m) => !q || (m.title + (who(m)?.name || '')).toLowerCase().includes(q.toLowerCase())).sort((a, b) => b.start.localeCompare(a.start))
+  const history = meetings.filter((m) => ['completed', 'cancelled', 'no_show'].includes(m.status)).filter((m) => !q || (m.title + (who(m)?.name || '')).toLowerCase().includes(q.toLowerCase())).sort((a, b) => b.start.localeCompare(a.start))
 
   const days = useMemo(() => {
     if (view === 'day') return [anchor]
@@ -245,8 +247,92 @@ function MeetingDrawer({ m, who, P, meetings, onClose }: { m: any; who: any; P: 
             </div>
           </div>
         )}
+        {['scheduled', 'needs_mom'].includes(m.status) && !m.mom && <ChangeMeeting m={m} who={who} />}
+        {m.changes?.length > 0 && (
+          <div><h3>Changes</h3>
+            <ol className="changes small">
+              {[...m.changes].reverse().map((c: any, i: number) => (
+                <li key={i}>
+                  <span className="strong">{CHANGE_WORDS[c.what] || c.what}</span>{c.what === 'rescheduled' ? ` from ${when(c.from.start)} to ${when(c.to.start)}` : c.what === 'edited' ? `: ${Object.keys(c.to).join(', ')}` : ''}
+                  {c.reason && <span className="muted">. {c.reason}</span>}
+                  <div className="tiny muted">{when(c.at)} · {c.by}</div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
         {m.promises?.length > 0 && <div><h3>Promises</h3>{m.promises.map((p: any) => <div key={p.text} className="small w-line"><span className={`kyc-dot ${p.done ? 'done' : ''}`} /><span className="grow">{p.text}</span><span className="tiny muted">{p.due ? when(p.due) : ''}</span></div>)}</div>}
       </div>
     </Drawer>
+  )
+}
+
+const CHANGE_WORDS: Record<string, string> = { rescheduled: 'Moved', edited: 'Details changed', cancelled: 'Cancelled', no_show: 'Marked as didn’t attend' }
+const toLocal = (s: string) => s.slice(0, 16)
+
+/* Reschedule, edit, cancel or mark a no-show. Each runs the same server action an agent card would. */
+function ChangeMeeting({ m, who }: { m: any; who: any }) {
+  const [mode, setMode] = useState<null | 'move' | 'edit' | 'cancel' | 'noshow'>(null)
+  const mins = Math.round((parse(m.end).getTime() - parse(m.start).getTime()) / 60000) || 45
+  const [f, setF] = useState({ start: toLocal(m.start), duration_minutes: mins, location: m.location, agenda: (m.agenda || []).join('\n'), reason: '', notify_client: true })
+  const { busy, run } = useAction()
+  const toast = useToast()
+  const first = (who?.first_name || who?.name || 'the client').split(' ')[0]
+  const started = m.start <= nowISO()
+  const go = (action: string, body: any, done: string) => run(async () => {
+    await api(`/actions/${action}`, { body: { meeting_id: m.id, ...body } })
+    invalidate('/c/'); setMode(null); toast(done)
+  }, 'The meeting wasn’t changed')
+  if (!mode) return (
+    <div className="row wrap" style={{ gap: 8 }}>
+      <button className="btn btn-quiet btn-sm" onClick={() => setMode('move')}><CalendarClock aria-hidden />Reschedule</button>
+      <button className="btn btn-quiet btn-sm" onClick={() => setMode('edit')}><Pencil aria-hidden />Edit details</button>
+      {started && <button className="btn btn-quiet btn-sm" onClick={() => setMode('noshow')}><UserX aria-hidden />They didn’t attend</button>}
+      <button className="btn btn-ghost btn-sm danger" onClick={() => setMode('cancel')}><XCircle aria-hidden />Cancel meeting</button>
+    </div>
+  )
+  const notify = (
+    <label className="check small"><input type="checkbox" checked={f.notify_client} onChange={(e) => setF({ ...f, notify_client: e.target.checked })} />
+      {mode === 'cancel' ? `Tell ${first} it’s cancelled` : `Send ${first} the updated invite`}</label>
+  )
+  return (
+    <div className="change-box">
+      {mode === 'move' && <>
+        <h3>Reschedule</h3>
+        <div className="grid g2" style={{ gap: 10 }}>
+          <label className="field"><span>New time</span><input className="input" type="datetime-local" value={f.start} onChange={(e) => setF({ ...f, start: e.target.value })} /><span className="tiny muted">{when(f.start)}</span></label>
+          <label className="field"><span>Length</span><select className="select" value={f.duration_minutes} onChange={(e) => setF({ ...f, duration_minutes: +e.target.value })}>{[20, 30, 45, 60, 90].map((x) => <option key={x} value={x}>{x} minutes</option>)}</select></label>
+        </div>
+        <label className="field"><span>Where</span><input className="input" value={f.location} onChange={(e) => setF({ ...f, location: e.target.value })} /></label>
+        <label className="field"><span>Why it’s moving (only you see this)</span><input className="input" value={f.reason} onChange={(e) => setF({ ...f, reason: e.target.value })} /></label>
+        {notify}
+        <div className="row"><button className="btn btn-primary" disabled={busy || f.start === toLocal(m.start) && f.duration_minutes === mins && f.location === m.location}
+          onClick={() => go('reschedule_meeting', { start: f.start, duration_minutes: f.duration_minutes, location: f.location, reason: f.reason, notify_client: f.notify_client }, f.notify_client ? `Moved to ${when(f.start)}. The updated invite is in the outbox.` : `Moved to ${when(f.start)}`)}>Move meeting</button>
+          <button className="btn btn-ghost" onClick={() => setMode(null)}>Keep as is</button></div>
+      </>}
+      {mode === 'edit' && <>
+        <h3>Edit details</h3>
+        <label className="field"><span>Where</span><input className="input" value={f.location} onChange={(e) => setF({ ...f, location: e.target.value })} /></label>
+        <label className="field"><span>Agenda, one point per line</span><textarea className="textarea" rows={3} value={f.agenda} onChange={(e) => setF({ ...f, agenda: e.target.value })} /></label>
+        {f.location !== m.location && notify}
+        <div className="row"><button className="btn btn-primary" disabled={busy}
+          onClick={() => go('edit_meeting', { location: f.location, agenda: f.agenda.split('\n').map((x: string) => x.trim()).filter(Boolean), notify_client: f.notify_client }, 'Meeting details saved')}>Save details</button>
+          <button className="btn btn-ghost" onClick={() => setMode(null)}>Keep as is</button></div>
+      </>}
+      {mode === 'cancel' && <>
+        <h3>Cancel meeting</h3>
+        <label className="field"><span>Why (only you see this)</span><input className="input" autoFocus value={f.reason} onChange={(e) => setF({ ...f, reason: e.target.value })} /></label>
+        {notify}
+        <div className="row"><button className="btn btn-danger" disabled={busy || !f.reason.trim()} onClick={() => go('cancel_meeting', { reason: f.reason, notify_client: f.notify_client }, 'Meeting cancelled')}>Cancel meeting</button>
+          <button className="btn btn-ghost" onClick={() => setMode(null)}>Keep it</button></div>
+      </>}
+      {mode === 'noshow' && <>
+        <h3>They didn’t attend</h3>
+        <label className="field"><span>Note (optional)</span><input className="input" value={f.reason} placeholder="Phone off, will call tomorrow" onChange={(e) => setF({ ...f, reason: e.target.value })} /></label>
+        <p className="tiny muted">Nothing is sent to {first}. A follow-up appears in your Updates.</p>
+        <div className="row"><button className="btn btn-primary" disabled={busy} onClick={() => go('mark_no_show', { note: f.reason }, 'Marked as didn’t attend. Follow-up added to Updates.')}>Mark as didn’t attend</button>
+          <button className="btn btn-ghost" onClick={() => setMode(null)}>Keep as is</button></div>
+      </>}
+    </div>
   )
 }

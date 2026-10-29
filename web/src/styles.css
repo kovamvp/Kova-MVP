@@ -941,3 +941,11 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
   .kpi-table th:nth-child(2), .kpi-table td:nth-child(2), .kpi-table th:nth-child(4), .kpi-table td:nth-child(4) { display: none; }
   .kpi-table th:last-child { width: 40% !important; }
 }
+
+/* ---------- meetings: change a meeting, change history */
+.change-box { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--paper); }
+.change-box h3 { margin: 0; }
+.changes { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.changes li { padding-left: 12px; border-left: 2px solid var(--line-strong); }
+.btn.danger { color: var(--loss-ink); }
+.month-ev.no_show, .cal-ev.no_show { color: var(--muted); text-decoration: line-through; }

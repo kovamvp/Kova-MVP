@@ -143,6 +143,11 @@ PROPOSE_TOOLS = {
         "client_id": S, "title": S, "details": S, "priority": {"type": "string", "enum": ["normal", "high"]}}, ["client_id", "title", "details"]),
     "propose_add_note": T("propose_add_note", "Propose an internal note on the client's or prospect's record. Creates an approval card.", {
         "about_kind": {"type": "string", "enum": ["client", "prospect"]}, "about_id": S, "title": S, "text": S}, ["about_kind", "about_id", "text"]),
+    "propose_reschedule_meeting": T("propose_reschedule_meeting", "Propose moving an existing meeting to a new time (optionally a new place, length or agenda). Find its id with get_meetings. Creates an approval card; the client gets an updated invite only after approval.", {
+        "meeting_id": S, "start": {"type": "string", "description": "New local IST datetime YYYY-MM-DDTHH:MM"}, "duration_minutes": N, "location": S,
+        "agenda": ARR, "reason": {"type": "string", "description": "Internal reason; never shown to the client"}, "notify_client": {"type": "boolean"}}, ["meeting_id", "start"]),
+    "propose_cancel_meeting": T("propose_cancel_meeting", "Propose cancelling an existing meeting. Find its id with get_meetings. Needs a reason (kept internal). Creates an approval card.", {
+        "meeting_id": S, "reason": S, "notify_client": {"type": "boolean"}}, ["meeting_id", "reason"]),
     "propose_convert_prospect": T("propose_convert_prospect", "Propose making this prospect a client (only from Investing client or later). The RM records the client's consent on the card and confirms. Creates an approval card.", {
         "prospect_id": S}, ["prospect_id"]),
     "propose_update_prospect": T("propose_update_prospect", "Propose changes to a prospect's stage, next step, value or product interest. Creates an approval card.", {
@@ -153,9 +158,10 @@ PROPOSE_TOOLS = {
 SCOPE_TOOLS = {
     "client": ["get_holdings", "get_family", "get_meetings", "get_calendar", "find_products", "get_product", "get_open_requests",
                "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_reimbursement",
-               "propose_service_request", "propose_add_note"],
+               "propose_service_request", "propose_add_note", "propose_reschedule_meeting", "propose_cancel_meeting"],
     "prospect": ["get_meetings", "get_calendar", "find_products", "get_product", "get_open_requests",
-                 "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_add_note", "propose_update_prospect", "propose_convert_prospect"],
+                 "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_add_note", "propose_update_prospect", "propose_convert_prospect",
+                 "propose_reschedule_meeting", "propose_cancel_meeting"],
     "product": ["get_product", "clients_for_product", "get_holdings", "find_products", "get_open_requests", "get_calendar",
                 "propose_product_feedback", "propose_send_message", "propose_schedule_meeting", "propose_add_note"],
 }
@@ -164,6 +170,7 @@ ACTION_OF = {
     "propose_schedule_meeting": "schedule_meeting", "propose_send_message": "send_message", "propose_log_mom": "log_mom",
     "propose_product_feedback": "product_feedback", "propose_reimbursement": "reimbursement", "propose_service_request": "service_request",
     "propose_add_note": "add_note", "propose_update_prospect": "update_prospect", "propose_convert_prospect": "convert_prospect",
+    "propose_reschedule_meeting": "reschedule_meeting", "propose_cancel_meeting": "cancel_meeting",
 }
 
 
@@ -261,6 +268,31 @@ def validate_proposal(name: str, a: dict, scope: dict, said: str = "") -> str | 
         reason = expenses.blocking_reason(expenses.check(a, has_bill=True))
         if reason:
             return f"Can't propose this claim: {reason}. Tell the RM."
+    if name in ("propose_reschedule_meeting", "propose_cancel_meeting"):
+        m = st.get("meetings", a.get("meeting_id", ""))
+        if not m:
+            return "Unknown meeting id. Use get_meetings to find it."
+        if m["with"] != {"kind": scope["kind"], "id": scope["id"]}:
+            return "That meeting isn't with this client or prospect."
+        if m["status"] not in ("scheduled", "needs_mom") or m.get("mom"):
+            return f"That meeting is {m['status'].replace('_', ' ')}; it can't be changed."
+        if name == "propose_cancel_meeting" and not str(a.get("reason") or "").strip():
+            return "Ask the RM why it's cancelled (kept internal)."
+        if name == "propose_reschedule_meeting":
+            try:
+                s = dt.datetime.fromisoformat(str(a.get("start", ""))[:16])
+            except ValueError:
+                return "start must be YYYY-MM-DDTHH:MM"
+            days = [d for d in WEEKDAYS if re.search(rf"\b{d}\b", said.lower())]
+            wd = WEEKDAYS[s.weekday()]
+            if len(days) == 1 and wd != days[0]:
+                return f"{a['start'][:10]} is a {wd.capitalize()}, but the RM said {days[0].capitalize()}. Use the dates list in your instructions."
+            if a["start"][:16] < now:
+                return "That time is in the past. Ask the RM for a future time."
+            dur = int(a.get("duration_minutes") or (dt.datetime.fromisoformat(m["end"]) - dt.datetime.fromisoformat(m["start"])).seconds // 60 or 45)
+            other = actions.clash_with(a["start"][:16], (s + dt.timedelta(minutes=dur)).isoformat(timespec="minutes"), exclude=m["id"])
+            if other:
+                return f"Clashes with '{other['title']}' at {other['start']}. Suggest another time to the RM."
     if name in ("propose_update_prospect", "propose_convert_prospect"):
         from . import prospects
         p = st.get("prospects", a.get("prospect_id", ""))
@@ -300,6 +332,12 @@ def card_summary(action: str, a: dict) -> str:
         return f"Raise service request for {who}: {a.get('title')}"
     if action == "add_note":
         return f"Add internal note on {who}"
+    if action in ("reschedule_meeting", "cancel_meeting"):
+        m = store().get("meetings", a.get("meeting_id", "")) or {}
+        if action == "cancel_meeting":
+            return f"Cancel '{m.get('title')}' on {dt.datetime.fromisoformat(m['start']).strftime('%a %d %b, %I:%M %p')}" if m else "Cancel meeting"
+        to = dt.datetime.fromisoformat(a["start"][:16]).strftime("%a %d %b, %I:%M %p")
+        return f"Move '{m.get('title')}' to {to}"
     if action == "convert_prospect":
         return f"Make {who} a client"
     if action == "update_prospect":
@@ -320,7 +358,7 @@ Dates ahead: {', '.join((now + dt.timedelta(days=i)).strftime('%a %d %b') for i 
 How you work:
 - The RM speaks or types short instructions, often from voice, so expect informal phrasing and transcription slips (e.g. "MOM" = minutes of meeting).
 - Use read tools to check facts before acting. Never invent holdings, numbers, ids, emails or times.
-- To DO anything (schedule, message, MoM, feedback, reimbursement, service request, note, prospect update, making a prospect a client) call the matching propose_* tool. Each creates an approval card the RM approves, edits or rejects. Never say anything was sent, scheduled or booked: it is "ready for your approval" until the RM approves the card.
+- To DO anything (schedule, reschedule or cancel a meeting, message, MoM, feedback, reimbursement, service request, note, prospect update, making a prospect a client) call the matching propose_* tool. To move or cancel a meeting, find it with get_meetings first. Each creates an approval card the RM approves, edits or rejects. Never say anything was sent, scheduled or booked: it is "ready for your approval" until the RM approves the card.
 - One request can need several cards (e.g. log a MoM, schedule the follow-up, send feedback to the product team). Propose them all, calling the tools together in one step where you can.
 - Meeting attendees are other Kova colleagues joining (a head or specialist). The RM always attends and the client is implied: never list either. Leave attendees empty unless the RM names a colleague.
 - MoMs: fill summary, feedback, portfolio_reaction, changes_asked, promises from what the RM said. RMs tend to say little, so after preparing the card always end with one or two short, specific questions about what's missing (e.g. did the proposal land, any changes asked, anything personal worth noting) so the RM can add it.
