@@ -143,6 +143,8 @@ PROPOSE_TOOLS = {
         "client_id": S, "title": S, "details": S, "priority": {"type": "string", "enum": ["normal", "high"]}}, ["client_id", "title", "details"]),
     "propose_add_note": T("propose_add_note", "Propose an internal note on the client's or prospect's record. Creates an approval card.", {
         "about_kind": {"type": "string", "enum": ["client", "prospect"]}, "about_id": S, "title": S, "text": S}, ["about_kind", "about_id", "text"]),
+    "propose_convert_prospect": T("propose_convert_prospect", "Propose making this prospect a client (only from Investing client or later). The RM records the client's consent on the card and confirms. Creates an approval card.", {
+        "prospect_id": S}, ["prospect_id"]),
     "propose_update_prospect": T("propose_update_prospect", "Propose changes to a prospect's stage, next step, value or product interest. Creates an approval card.", {
         "prospect_id": S, "stage": {"type": "string", "enum": ["Lead", "Prospect", "Registered", "KYC in progress", "Investing client", "Investing and trading client"]},
         "next_step": S, "next_step_date": S, "estimated_investable": N, "interest_product_id": S}, ["prospect_id"]),
@@ -153,7 +155,7 @@ SCOPE_TOOLS = {
                "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_reimbursement",
                "propose_service_request", "propose_add_note"],
     "prospect": ["get_meetings", "get_calendar", "find_products", "get_product", "get_open_requests",
-                 "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_add_note", "propose_update_prospect"],
+                 "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_add_note", "propose_update_prospect", "propose_convert_prospect"],
     "product": ["get_product", "clients_for_product", "get_holdings", "find_products", "get_open_requests", "get_calendar",
                 "propose_product_feedback", "propose_send_message", "propose_schedule_meeting", "propose_add_note"],
 }
@@ -161,7 +163,7 @@ SCOPE_TOOLS = {
 ACTION_OF = {
     "propose_schedule_meeting": "schedule_meeting", "propose_send_message": "send_message", "propose_log_mom": "log_mom",
     "propose_product_feedback": "product_feedback", "propose_reimbursement": "reimbursement", "propose_service_request": "service_request",
-    "propose_add_note": "add_note", "propose_update_prospect": "update_prospect",
+    "propose_add_note": "add_note", "propose_update_prospect": "update_prospect", "propose_convert_prospect": "convert_prospect",
 }
 
 
@@ -259,6 +261,21 @@ def validate_proposal(name: str, a: dict, scope: dict, said: str = "") -> str | 
         reason = expenses.blocking_reason(expenses.check(a, has_bill=True))
         if reason:
             return f"Can't propose this claim: {reason}. Tell the RM."
+    if name in ("propose_update_prospect", "propose_convert_prospect"):
+        from . import prospects
+        p = st.get("prospects", a.get("prospect_id", ""))
+        if not p:
+            return "Unknown prospect id."
+        if name == "propose_update_prospect" and a.get("stage"):
+            err = prospects.check_move(p, a["stage"])
+            if err:
+                return err + " Tell the RM what's still needed instead of proposing the move."
+        if name == "propose_convert_prospect":
+            if p.get("converted"):
+                return f"{p['name']} is already a client."
+            if p.get("stage") not in ("Investing client", "Investing and trading client"):
+                miss = prospects.missing_for(p, "Investing client")
+                return f"{p['name']} can't become a client yet: still needed {', '.join(miss) or 'the move to Investing client'}."
     if name == "propose_product_feedback" and a.get("product_id") and not st.get("products", a["product_id"]):
         return "Unknown product id."
     return None
@@ -283,6 +300,8 @@ def card_summary(action: str, a: dict) -> str:
         return f"Raise service request for {who}: {a.get('title')}"
     if action == "add_note":
         return f"Add internal note on {who}"
+    if action == "convert_prospect":
+        return f"Make {who} a client"
     if action == "update_prospect":
         bits = [f"stage to {a['stage']}" if a.get("stage") else "", f"next step: {a['next_step']}" if a.get("next_step") else ""]
         return f"Update {who}: " + ", ".join(b for b in bits if b) if any(bits) else f"Update prospect {who}"
@@ -301,7 +320,7 @@ Dates ahead: {', '.join((now + dt.timedelta(days=i)).strftime('%a %d %b') for i 
 How you work:
 - The RM speaks or types short instructions, often from voice, so expect informal phrasing and transcription slips (e.g. "MOM" = minutes of meeting).
 - Use read tools to check facts before acting. Never invent holdings, numbers, ids, emails or times.
-- To DO anything (schedule, message, MoM, feedback, reimbursement, service request, note, prospect update) call the matching propose_* tool. Each creates an approval card the RM approves, edits or rejects. Never say anything was sent, scheduled or booked: it is "ready for your approval" until the RM approves the card.
+- To DO anything (schedule, message, MoM, feedback, reimbursement, service request, note, prospect update, making a prospect a client) call the matching propose_* tool. Each creates an approval card the RM approves, edits or rejects. Never say anything was sent, scheduled or booked: it is "ready for your approval" until the RM approves the card.
 - One request can need several cards (e.g. log a MoM, schedule the follow-up, send feedback to the product team). Propose them all, calling the tools together in one step where you can.
 - Meeting attendees are other Kova colleagues joining (a head or specialist). The RM always attends and the client is implied: never list either. Leave attendees empty unless the RM names a colleague.
 - MoMs: fill summary, feedback, portfolio_reaction, changes_asked, promises from what the RM said. RMs tend to say little, so after preparing the card always end with one or two short, specific questions about what's missing (e.g. did the proposal land, any changes asked, anything personal worth noting) so the RM can add it.
@@ -487,6 +506,9 @@ def send(sid: str, body: dict = Body(...)):
                     else:
                         action = ACTION_OF[name]
                         args.pop("purpose", None)
+                        if name == "propose_convert_prospect":  # the RM records consent; the agent never guesses it
+                            from . import prospects
+                            args["consent"] = {k: False for k in prospects.CONSENT_KEYS}
                         card = {"id": new_id("CD-", "seq_card", 7000), "action": action, "args": args, "summary": card_summary(action, args),
                                 "status": "pending", "at": now_ist()}
                         cards.append(card)

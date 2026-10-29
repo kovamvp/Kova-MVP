@@ -289,19 +289,38 @@ def prospect_create(body: dict = Body(...)):
     return store().put("prospects", pid, p)
 
 
-@app.post("/api/prospects/{id_}/{op}")
-def prospect_op(id_: str, op: str, body: dict = Body(default={})):
+@app.get("/api/prospects/{id_}/gates")
+def prospect_gates(id_: str):
+    from . import prospects
     p = store().get("prospects", id_)
     if not p:
         raise HTTPException(404)
+    return {"stage": p["stage"], "converted": p.get("converted"), "stages": prospects.gates(p)}
+
+
+@app.post("/api/prospects/{id_}/{op}")
+def prospect_op(id_: str, op: str, body: dict = Body(default={})):
+    from . import prospects
+    p = store().get("prospects", id_)
+    if not p:
+        raise HTTPException(404)
+    try:
+        if op == "stage":
+            return store().put("prospects", id_, prospects.move(p, body.get("stage", "")))
+        if op == "kyc_step":
+            return store().put("prospects", id_, prospects.mark_step(p, body.get("step", ""), bool(body.get("done", True)), body.get("risk_profile")))
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    if p.get("converted") and op in ("reopen", "close"):
+        raise HTTPException(400, f"{p['name']} is already a client; the prospect record is kept as history.")
     if op == "close":
         p["closed"] = {"reason": body.get("reason", ""), "date": now_ist()[:10], "learning": body.get("learning", ""), "previous_stage": p["stage"]}
         p["stage"] = "Closed"
     elif op == "reopen":
         p["stage"] = (p.get("closed") or {}).get("previous_stage") or "Prospect"
         p["closed"] = None
-    elif op == "stage":
-        p["stage"] = body["stage"]
+    else:
+        raise HTTPException(400, f"Unknown operation {op}")
     p.setdefault("timeline", []).insert(0, {"id": f"e{len(p['timeline']) + 1}", "kind": "system", "at": now_ist(), "title": f"Prospect {op}", "body": body.get("reason") or body.get("stage", "")})
     return store().put("prospects", id_, p)
 

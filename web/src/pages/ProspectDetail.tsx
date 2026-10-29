@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, Check, LayoutGrid, ListChecks, Phone, CalendarPlus, XCircle, RotateCcw } from 'lucide-react'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { ArrowLeft, Check, LayoutGrid, ListChecks, Lock, Phone, CalendarPlus, UserCheck, XCircle, RotateCcw } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { pushRecent } from '../lib/session'
 import { useAction } from '../lib/action'
-import { STAGES, STAGE_INFO, useMeetings, usePortfolios, useProducts } from '../lib/data'
+import { RISK_ORDER, STAGES, STAGE_INFO, useMeetings, usePortfolios, useProducts } from '../lib/data'
 import { ago, date, inr, when, sourceText, label } from '../lib/format'
 import { Avatar, DetailSkeleton, Drawer, Empty, Modal, Num, Panel, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
@@ -14,6 +14,9 @@ export default function ProspectDetail() {
   const { id = '' } = useParams()
   const [params, setParams] = useSearchParams()
   const { data: p, error } = useApi<any>(`/c/prospects/${id}`)
+  const { data: gate, reload: reloadGates } = useApi<any>(`/prospects/${id}/gates`)
+  const [converting, setConverting] = useState(false)
+  const navigate = useNavigate()
   useEffect(() => { if (p) pushRecent({ kind: 'prospect', id: p.id, title: p.name, sub: `Prospect · ${p.stage}` }) }, [p?.id])
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()
@@ -34,15 +37,26 @@ export default function ProspectDetail() {
   const mine = meetings.filter((m) => m.with.id === p.id).sort((a, b) => b.start.localeCompare(a.start))
   const pfs = portfolios.filter((x) => x.tag?.id === p.id)
   const stageIdx = STAGES.indexOf(p.stage)
+  const G: Record<string, any> = Object.fromEntries((gate?.stages || []).map((g: any) => [g.stage, g]))
+  const ahead = (i: number) => i > stageIdx
+  const blocked = (s: string, i: number) => ahead(i) && G[s] && !G[s].ok
   const setStage = (s: string) => {
     if (s === p.stage) return
+    const i = STAGES.indexOf(s)
+    if (blocked(s, i)) { toast(<>{s} needs: {G[s].missing.join(', ')}.</>); return }
     const prev = p.stage
-    const move = async (to: string) => { await api(`/prospects/${p.id}/stage`, { body: { stage: to } }); invalidate('/c/prospects') }
+    const move = async (to: string) => { await api(`/prospects/${p.id}/stage`, { body: { stage: to } }); invalidate('/c/prospects'); reloadGates() }
     run(async () => {
       await move(s)
       toast(<>Moved to {s}. <button className="toast-undo" onClick={() => run(async () => { await move(prev); toast(`Back to ${prev}`) }, 'Couldn’t undo the stage change')}>Undo</button></>)
     }, 'Couldn’t change the stage')
   }
+  const markStep = (step: string, risk_profile?: string) => run(async () => {
+    await api(`/prospects/${p.id}/kyc_step`, { body: { step, done: true, risk_profile } })
+    invalidate('/c/prospects'); reloadGates()
+    toast(`${step} marked done`)
+  }, 'The step wasn’t updated')
+  const canConvert = !p.converted && ['Investing client', 'Investing and trading client'].includes(p.stage)
   const reopen = () => run(async () => { await api(`/prospects/${p.id}/reopen`, { method: 'POST' }); invalidate('/c/prospects'); toast('Reopened') }, 'Couldn’t reopen the prospect')
   const names = { [p.id]: p.name, ...Object.fromEntries(products.map((x) => [x.id, x.name])) }
 
@@ -63,7 +77,13 @@ export default function ProspectDetail() {
             <span className="sub">{p.probability}% likely at this stage</span>
           </div>
         </div>
-        {p.stage === 'Closed' ? (
+        {p.converted ? (
+          <div className="closed-banner converted">
+            <UserCheck size={18} aria-hidden />
+            <div className="grow small"><span className="strong">Became a client on {date(p.converted.date, true)}.</span> This prospect record is kept as history.</div>
+            <Link className="btn btn-quiet btn-sm" to={`/clients/${p.converted.client_id}`}>Open client page</Link>
+          </div>
+        ) : p.stage === 'Closed' ? (
           <div className="closed-banner">
             <XCircle size={18} />
             <div className="grow small"><span className="strong">Closed {date(p.closed?.date)}.</span> {p.closed?.reason} {p.closed?.learning && <span className="muted">Learning: {p.closed.learning}</span>}</div>
@@ -72,14 +92,23 @@ export default function ProspectDetail() {
         ) : (
           <ol className="stage-track" aria-label="Stage">
             {STAGES.map((s, i) => (
-              <li key={s} className={`stage ${i < stageIdx ? 'done' : i === stageIdx ? 'on' : ''}`}>
-                <button className="stage-btn" onClick={() => setStage(s)} disabled={busy} title={i === stageIdx ? STAGE_INFO[s] : `Move to ${s}: ${STAGE_INFO[s]}`} aria-current={i === stageIdx ? 'step' : undefined}>
-                  <span className="stage-dot" aria-hidden>{i < stageIdx ? <Check size={11} /> : null}</span>
+              <li key={s} className={`stage ${i < stageIdx ? 'done' : i === stageIdx ? 'on' : ''} ${blocked(s, i) ? 'locked' : ''}`}>
+                <button className="stage-btn" onClick={() => setStage(s)} disabled={busy}
+                  title={i === stageIdx ? STAGE_INFO[s] : blocked(s, i) ? `${s} needs: ${G[s].missing.join(', ')}` : `Move to ${s}: ${STAGE_INFO[s]}`}
+                  aria-current={i === stageIdx ? 'step' : undefined}>
+                  <span className="stage-dot" aria-hidden>{i < stageIdx ? <Check size={11} /> : blocked(s, i) ? <Lock size={9} /> : null}</span>
                   <span className="stage-name">{s}</span>
+                  {blocked(s, i) && <span className="sr-only">, needs {G[s].missing.length} more {G[s].missing.length === 1 ? 'step' : 'steps'}</span>}
                 </button>
               </li>
             ))}
           </ol>
+        )}
+        {canConvert && (
+          <div className="convert-row">
+            <p className="small grow">{p.name.split(' ')[0]} has everything needed to invest. Make them a client once they’ve given their consent.</p>
+            <button className="btn btn-primary" onClick={() => setConverting(true)}><UserCheck aria-hidden />Make {p.name.split(' ')[0]} a client</button>
+          </div>
         )}
       </header>
 
@@ -93,12 +122,18 @@ export default function ProspectDetail() {
             <Panel title="Account readiness" aside={`${p.kyc_steps.filter((s: any) => s.done).length} of ${p.kyc_steps.length} done`}>
               <div className="col" style={{ gap: 5 }}>
                 {p.kyc_steps.map((s: any) => (
-                  <div key={s.step} className="row small" style={{ gap: 8 }}>
+                  <div key={s.step} className="row small kyc-row" style={{ gap: 8 }}>
                     <span className={`kyc-dot ${s.done ? 'done' : ''}`}>{s.done && <Check size={10} />}</span>
-                    <span className={s.done ? '' : 'muted'}>{s.step}</span>
+                    <span className={`grow ${s.done ? '' : 'muted'}`}>{s.step}{s.step === 'Risk profile' && s.done && p.risk_profile ? `: ${p.risk_profile}` : ''}</span>
+                    {!s.done && !p.converted && (s.step === 'Risk profile'
+                      ? <select className="select sm" aria-label="Risk profile result" value="" disabled={busy} onChange={(e) => e.target.value && markStep(s.step, e.target.value)}>
+                          <option value="">Record result</option>{RISK_ORDER.map((r) => <option key={r}>{r}</option>)}
+                        </select>
+                      : <button className="linkbtn tiny" disabled={busy} onClick={() => markStep(s.step)}>Mark done</button>)}
                   </div>
                 ))}
               </div>
+              {!p.converted && <p className="tiny muted" style={{ marginTop: 10 }}>Operations confirms these in the full product. In this demo you mark them yourself.</p>}
             </Panel>
           </div>
 
@@ -143,6 +178,7 @@ export default function ProspectDetail() {
         </div>
       </div>
 
+      {converting && <ConvertModal p={p} onClose={() => setConverting(false)} onDone={(cid) => { setConverting(false); invalidate('/c/'); navigate(`/clients/${cid}`) }} />}
       <ContextBar agentOn={panel === 'agent'} onAgent={() => setPanel(panel === 'agent' ? null : 'agent')}>
         <button className={`cb ${panel === 'proposal' ? 'on' : ''}`} onClick={() => setPanel(panel === 'proposal' ? null : 'proposal')}><LayoutGrid />Proposal</button>
         <button className={`cb ${panel === 'actions' ? 'on' : ''}`} onClick={() => setPanel(panel === 'actions' ? null : 'actions')}><ListChecks />Actions</button>
@@ -194,6 +230,40 @@ function CloseProspect({ p, onClose }: { p: any; onClose: () => void }) {
         <label className="field"><span>Why</span><select className="select" value={reason} onChange={(e) => setReason(e.target.value)}>{['Chose another firm', 'Not ready yet; revisit later', 'Fees', 'Investable amount too small', 'Unreachable', 'Other'].map((r) => <option key={r}>{r}</option>)}</select></label>
         <label className="field"><span>What would you do differently?</span><textarea className="textarea" value={learning} onChange={(e) => setLearning(e.target.value)} /></label>
       </div>
+    </Modal>
+  )
+}
+
+/* The RM confirms; the client's consent is recorded as they gave it, nothing is assumed */
+const CONSENTS: [string, string][] = [
+  ['email', 'Email for statements and updates'],
+  ['whatsapp', 'WhatsApp messages'],
+  ['profile_enrichment', 'Using personal details they share to personalise advice'],
+  ['marketing', 'Offers and product news'],
+  ['data_sharing_with_partners', 'Sharing data with partner firms'],
+]
+function ConvertModal({ p, onClose, onDone }: { p: any; onClose: () => void; onDone: (clientId: string) => void }) {
+  const [consent, setConsent] = useState<Record<string, boolean>>({ email: false, whatsapp: false, profile_enrichment: false, marketing: false, data_sharing_with_partners: false })
+  const { busy, run } = useAction()
+  const toast = useToast()
+  const first = p.name.split(' ')[0]
+  const go = () => run(async () => {
+    const r = await api('/actions/convert_prospect', { body: { prospect_id: p.id, consent } })
+    toast(r.outbox ? `${first} is now a client. A welcome email is in the outbox.` : `${first} is now a client.`)
+    onDone(r.client.id)
+  }, `${first} wasn’t made a client`)
+  return (
+    <Modal title={`Make ${first} a client`} sub={`${p.stage} · risk profile ${p.risk_profile || p.risk_indication}`} onClose={onClose}
+      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={busy} onClick={go}><UserCheck aria-hidden />Make {first} a client</button></>}>
+      <p className="small">This creates {first}’s client record and a new family with them as head, and keeps everything from the prospect record on their timeline.</p>
+      <fieldset className="consent-set">
+        <legend className="small strong">What {first} consented to</legend>
+        <p className="tiny muted">Tick only what they agreed to on the consent form. You can change consent later on the client page.</p>
+        {CONSENTS.map(([k, label]) => (
+          <label key={k} className="check small"><input type="checkbox" checked={consent[k]} onChange={(e) => setConsent({ ...consent, [k]: e.target.checked })} />{label}</label>
+        ))}
+      </fieldset>
+      {!consent.email && <p className="tiny muted">Without email consent the welcome email isn’t sent.</p>}
     </Modal>
   )
 }

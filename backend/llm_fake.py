@@ -63,6 +63,8 @@ def chat(messages: list[dict], tools: list[dict] | None = None, **_: object) -> 
         calls.append(_call("propose_reimbursement", {"client_id": scope_id, "category": fields.get("category", "Client meeting meals"),
                                                      "amount": fields.get("amount", 1200), "merchant": fields.get("merchant", "Cafe"),
                                                      "bill_date": fields.get("bill_date", now_ist()[:10])}, len(calls) + 1))
+    if "make" in text and "client" in text and "propose_convert_prospect" in names:
+        calls.append(_call("propose_convert_prospect", {"prospect_id": scope_id}, len(calls) + 1))
     if "whatsapp" in text and "propose_send_message" in names:
         calls.append(_call("propose_send_message", {"to_kind": kind, "to_id": scope_id, "channel": "WhatsApp",
                                                     "body": "Hello, a quick note from Kova."}, len(calls) + 1))
