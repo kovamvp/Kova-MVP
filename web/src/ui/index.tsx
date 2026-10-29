@@ -39,11 +39,11 @@ const STATUS: Record<string, string> = {
   active: 'gain', engaged: 'forest', dormant: 'warn', lost: 'loss',
   draft: 'outline', awaiting_approval: '', approved: 'gain', changes_requested: 'attn', practice: '', live: 'forest',
   sent: 'outline', in_review: '', done: 'gain', rejected: 'outline', needs_info: 'attn', superseded: 'outline', pending: '',
-  scheduled: 'forest', needs_mom: 'brass', completed: 'gain', cancelled: 'outline',
+  scheduled: 'forest', needs_mom: 'brass', completed: 'gain', cancelled: 'outline', no_show: 'outline',
   Preferred: 'gain', Neutral: '', 'Under review': 'warn',
   high: 'outline', normal: 'outline',
 }
-const STATUS_TEXT: Record<string, string> = { needs_mom: 'Needs MoM', in_review: 'In review', awaiting_approval: 'Awaiting approval', changes_requested: 'Changes requested', needs_info: 'Needs your input' }
+const STATUS_TEXT: Record<string, string> = { needs_mom: 'Needs MoM', in_review: 'In review', awaiting_approval: 'Awaiting approval', changes_requested: 'Changes requested', needs_info: 'Needs your input', no_show: 'Didn’t attend' }
 export function Status({ s, children }: { s?: string | null; children?: ReactNode }) {
   if (!s && !children) return null
   const k = s || ''

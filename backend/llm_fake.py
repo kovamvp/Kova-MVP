@@ -63,6 +63,17 @@ def chat(messages: list[dict], tools: list[dict] | None = None, **_: object) -> 
         calls.append(_call("propose_reimbursement", {"client_id": scope_id, "category": fields.get("category", "Client meeting meals"),
                                                      "amount": fields.get("amount", 1200), "merchant": fields.get("merchant", "Cafe"),
                                                      "bill_date": fields.get("bill_date", now_ist()[:10])}, len(calls) + 1))
+    if ("reschedule" in text or "move the meeting" in text) and "propose_reschedule_meeting" in names:
+        from .actions import clash_with
+        from .store import store
+        mine = sorted((m for m in store().list("meetings") if m["with"] == {"kind": kind, "id": scope_id} and m["status"] == "scheduled"
+                       and m["start"] > now_ist()), key=lambda m: m["start"])
+        if mine:
+            d = dt.datetime.fromisoformat(_next_slot()) + dt.timedelta(days=2)
+            while clash_with(d.isoformat(timespec="minutes"), (d + dt.timedelta(hours=2)).isoformat(timespec="minutes")) or d.weekday() == 6:
+                d += dt.timedelta(hours=1) if d.hour < 18 else dt.timedelta(hours=15)
+            calls.append(_call("propose_reschedule_meeting", {"meeting_id": mine[0]["id"], "start": d.isoformat(timespec="minutes"),
+                                                              "reason": "Client asked to move it"}, len(calls) + 1))
     if "make" in text and "client" in text and "propose_convert_prospect" in names:
         calls.append(_call("propose_convert_prospect", {"prospect_id": scope_id}, len(calls) + 1))
     if "whatsapp" in text and "propose_send_message" in names:

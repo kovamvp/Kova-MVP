@@ -288,6 +288,136 @@ def create_ticket(args: dict, source: dict | None = None) -> dict:
     return {"request": req}
 
 
+# ---------------------------------------------------------------- changing a meeting
+def _when(s: str) -> str:
+    return dt.datetime.fromisoformat(s[:16]).strftime("%a %d %b, %I:%M %p")
+
+
+def clash_with(start: str, end: str, exclude: str | None = None) -> dict | None:
+    """The first scheduled meeting that overlaps start-end, other than `exclude`."""
+    s, e = dt.datetime.fromisoformat(start[:16]), dt.datetime.fromisoformat(end[:16])
+    for m in store().list("meetings"):
+        if m["id"] == exclude or m["status"] != "scheduled":
+            continue
+        if dt.datetime.fromisoformat(m["start"]) < e and dt.datetime.fromisoformat(m["end"]) > s:
+            return m
+    return None
+
+
+def _changeable(mid: str) -> dict:
+    m = store().get("meetings", mid or "")
+    if not m:
+        raise ValueError("Meeting not found")
+    if m["status"] == "cancelled":
+        raise ValueError("This meeting was cancelled; schedule a new one instead.")
+    if m["status"] in ("completed", "no_show") or m.get("mom"):
+        raise ValueError("This meeting already happened; it can't be changed.")
+    return m
+
+
+def _record(m: dict, what: str, before: dict, after: dict, reason: str | None, source: dict | None) -> None:
+    by = "Agent card, approved by " + RM_NAME if source and source.get("card_id") else RM_NAME
+    m.setdefault("changes", []).append({"at": now_ist(), "what": what, "by": by, "from": before, "to": after, "reason": reason or ""})
+
+
+def _tell(m: dict, kind: str, source: dict | None) -> dict:
+    """Updated invite or cancellation to the client or prospect. Internal reasons are never included."""
+    who = entity(m["with"]["kind"], m["with"]["id"]) or {}
+    first = who.get("first_name") or (who.get("name") or "").split(" ")[0]
+    if kind == "cancelled":
+        subject = f"Cancelled: {m['title']}"
+        body = (f"Hi {first},\n\nI need to cancel our meeting on {_when(m['start'])}. I'm sorry for the change; "
+                f"I'll be in touch to find a new time that suits you.\n\nRegards,\n{RM_NAME}")
+    else:
+        subject = f"Updated: {m['title']}"
+        body = (f"Hi {first},\n\nA small change to our meeting. It's now on {_when(m['start'])} at {m['location']}."
+                + ("\n\nAgenda:\n" + "\n".join(f"- {a}" for a in m["agenda"]) if m.get("agenda") else "")
+                + f"\n\nRegards,\n{RM_NAME}")
+    return add_outbox(f"{kind}_meeting", "Calendar invite", {"name": who.get("name"), "address": who.get("email")}, subject, body,
+                      {**(source or {}), "kind": m["with"]["kind"], "id": m["with"]["id"]},
+                      {"meeting_id": m["id"], "start": m["start"], "end": m["end"], "location": m["location"], "status": m["status"]})
+
+
+def reschedule_meeting(args: dict, source: dict | None = None) -> dict:
+    m = _changeable(args.get("meeting_id"))
+    start = str(args["start"])[:16]
+    try:
+        dt.datetime.fromisoformat(start)
+    except ValueError as e:
+        raise ValueError("start must be YYYY-MM-DDTHH:MM") from e
+    if start < now_ist():
+        raise ValueError("That time is in the past. Pick a future time.")
+    dur = int(args.get("duration_minutes") or (dt.datetime.fromisoformat(m["end"]) - dt.datetime.fromisoformat(m["start"])).seconds // 60 or 45)
+    end = (dt.datetime.fromisoformat(start) + dt.timedelta(minutes=dur)).isoformat(timespec="minutes")
+    other = clash_with(start, end, exclude=m["id"])
+    if other:
+        raise ValueError(f"Clashes with '{other['title']}' at {_when(other['start'])}.")
+    before = {"start": m["start"], "end": m["end"], "location": m["location"]}
+    m.update(start=start, end=end)
+    for k in ("location", "title"):
+        if args.get(k):
+            m[k] = args[k]
+    if args.get("agenda"):
+        m["agenda"] = args["agenda"]
+    if m["status"] == "needs_mom":
+        m["status"] = "scheduled"
+    _record(m, "rescheduled", before, {"start": start, "end": end, "location": m["location"]}, args.get("reason"), source)
+    store().put("meetings", m["id"], m)
+    add_timeline(m["with"], {"kind": "agent" if source and source.get("card_id") else "system", "title": f"Meeting moved to {_when(start)}",
+                             "body": f"{m['title']} (was {_when(before['start'])})" + (f". Reason: {args['reason']}" if args.get("reason") else "")})
+    out: dict = {"meeting": m}
+    if args.get("notify_client", True):
+        out["outbox"] = _tell(m, "updated", source)
+    return out
+
+
+def edit_meeting(args: dict, source: dict | None = None) -> dict:
+    m = _changeable(args.get("meeting_id"))
+    before, after = {}, {}
+    for k in ("title", "location", "agenda", "attendees", "type"):
+        if k in args and args[k] not in (None, "") and args[k] != m.get(k):
+            before[k], after[k] = m.get(k), args[k]
+            m[k] = args[k]
+    if not after:
+        raise ValueError("Nothing to change.")
+    _record(m, "edited", before, after, args.get("reason"), source)
+    store().put("meetings", m["id"], m)
+    add_timeline(m["with"], {"kind": "system", "title": "Meeting details changed", "body": f"{m['title']}: " + ", ".join(after)})
+    out: dict = {"meeting": m}
+    if "location" in after and args.get("notify_client", True):  # only a new place is worth telling the client
+        out["outbox"] = _tell(m, "updated", source)
+    return out
+
+
+def cancel_meeting(args: dict, source: dict | None = None) -> dict:
+    m = _changeable(args.get("meeting_id"))
+    reason = str(args.get("reason") or "").strip()
+    if not reason:
+        raise ValueError("Say why the meeting is cancelled (kept internal).")
+    _record(m, "cancelled", {"status": m["status"]}, {"status": "cancelled"}, reason, source)
+    m["status"] = "cancelled"
+    store().put("meetings", m["id"], m)
+    add_timeline(m["with"], {"kind": "system", "title": "Meeting cancelled", "body": f"{m['title']}, {_when(m['start'])}. Reason: {reason}"})
+    out: dict = {"meeting": m}
+    if args.get("notify_client", True):
+        out["outbox"] = _tell(m, "cancelled", source)
+    return out
+
+
+def mark_no_show(args: dict, source: dict | None = None) -> dict:
+    m = _changeable(args.get("meeting_id"))
+    if m["start"] > now_ist():
+        raise ValueError("This meeting hasn't started yet.")
+    _record(m, "no_show", {"status": m["status"]}, {"status": "no_show"}, args.get("note"), source)
+    m["status"] = "no_show"
+    store().put("meetings", m["id"], m)
+    who = entity(m["with"]["kind"], m["with"]["id"]) or {}
+    add_timeline(m["with"], {"kind": "system", "title": "Didn't attend", "body": f"{m['title']}, {_when(m['start'])}" + (f". {args['note']}" if args.get("note") else "")})
+    add_update("followup", f"Follow up with {who.get('name', 'them')}", f"They missed {m['title']}. Find a new time.", m["with"], 2,
+               (dt.datetime.fromisoformat(now_ist()) + dt.timedelta(days=2)).isoformat(timespec="minutes"), "Meetings")
+    return {"meeting": m}
+
+
 def convert_prospect(args: dict, source: dict | None = None) -> dict:
     from .prospects import convert  # prospects imports this module, so import late
     return convert(args, source)
@@ -304,6 +434,10 @@ ACTIONS = {
     "update_prospect": update_prospect,
     "create_ticket": create_ticket,
     "convert_prospect": convert_prospect,
+    "reschedule_meeting": reschedule_meeting,
+    "edit_meeting": edit_meeting,
+    "cancel_meeting": cancel_meeting,
+    "mark_no_show": mark_no_show,
 }
 
 
