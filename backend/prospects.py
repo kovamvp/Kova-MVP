@@ -137,13 +137,14 @@ def convert(args: dict, source: dict | None = None) -> dict:
         "last_transaction": None, "photo": None, "tags": ["New client"], "goals": [], "interests": [],
         "product_interests": p.get("interests", []), "estimated_investable": p.get("estimated_investable"),
         "notes_summary": p.get("need") or "", "revenue_ytd": 0.0, "cash_flows": [], "red_flags": [],
-        "converted_from": p["id"],
+        "converted_from": p["id"], "tier": "rise", "history": [],
+        "holding_accounts": [{"id": f"AC-{cid}-K", "provider": "Kova", "held_at": "Kova", "kind": "kova", "label": "Kova account", "opened": today}],
         "timeline": [{"id": f"c1-{now_ist()}", "kind": "agent" if source and source.get("card_id") else "system", "at": now_ist(),
                       "title": "Became a client", "body": f"Converted from prospect {p['id']} at {p['stage']}. Consent recorded on {dt.date.fromisoformat(today).strftime('%d %b %Y').lstrip('0')}."}] + carried,
     }
     st.put("clients", cid, client)
     st.put("families", fid, {"id": fid, "name": f"{surname} family", "locality": client["locality"], "head": cid, "members": [cid],
-                             "aum": 0, "business": client["occupation"]})
+                             "aum": 0, "business": client["occupation"], "tier": "rise"})
     p["converted"] = {"client_id": cid, "date": today}
     _log(p, "Became a client", f"Now client {cid}. This prospect record is kept as history.")
     st.put("prospects", p["id"], p)

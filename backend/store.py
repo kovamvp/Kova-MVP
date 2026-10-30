@@ -23,7 +23,7 @@ IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
 # collections stored as lists of documents with an "id"
 LIST_COLLECTIONS = [
     "clients", "families", "prospects", "products", "model_portfolios", "portfolios", "meetings",
-    "requests", "updates", "research", "ld_progress", "outbox", "agent_sessions", "handbook",
+    "requests", "updates", "research", "ld_progress", "outbox", "agent_sessions", "handbook", "benchmarks",
 ]
 # single documents
 SINGLETONS = ["rm", "growth"]

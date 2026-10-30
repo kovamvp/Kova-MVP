@@ -949,3 +949,14 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 .changes li { padding-left: 12px; border-left: 2px solid var(--line-strong); }
 .btn.danger { color: var(--loss-ink); }
 .month-ev.no_show, .cal-ev.no_show { color: var(--muted); text-decoration: line-through; }
+
+/* ---------- client tiers and codes */
+.pill.tier { background: var(--paper); border-color: var(--line); color: var(--forest); gap: 6px; }
+.tier-steps { display: inline-flex; align-items: flex-end; gap: 1.5px; height: 10px; }
+.tier-steps i { display: block; width: 2.5px; background: var(--line); border-radius: 1px; }
+.tier-steps i:nth-child(1) { height: 4px; } .tier-steps i:nth-child(2) { height: 6px; }
+.tier-steps i:nth-child(3) { height: 8px; } .tier-steps i:nth-child(4) { height: 10px; }
+.tier-steps i.on { background: var(--forest); }
+.pill.tier-zenith .tier-steps i.on:last-child { background: var(--brass); }
+.client-code { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .02em; font-variant-numeric: tabular-nums; margin-left: 4px; }
+.client-code.lg { font-size: 13px; vertical-align: middle; }

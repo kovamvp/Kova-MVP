@@ -16,12 +16,25 @@ const inDays = (d: number, hh: number) => {
   return `${t.toISOString().slice(0, 10)}T${String(hh).padStart(2, '0')}:15`
 }
 
+/* a time on day d at or after hh with no meeting within 2 hours either side (sample meetings shift with the date) */
+async function freeSlot(request: APIRequestContext, d: number, hh: number) {
+  const all = await (await request.get(`${API}/c/meetings`)).json()
+  for (let k = 0; k < 6; k++) {
+    for (const h of [hh, 10, 11, 12, 15, 16, 17, 18]) {
+      const s = inDays(d + k, h)
+      const t = Date.parse(s + ':00Z')
+      if (!all.some((m: any) => m.status === 'scheduled' && Math.abs(Date.parse(m.start + ':00Z') - t) < 2 * 3600e3)) return s
+    }
+  }
+  throw new Error('no free slot')
+}
+
 test('reschedule a meeting: it moves, the history says so, the invite is in the outbox', async ({ app, request }) => {
   const m = await nextMeeting(request)
   await app.goto(`/meetings?m=${m.id}`)
   const drawer = app.getByRole('dialog')
   await drawer.getByRole('button', { name: 'Reschedule' }).click()
-  await drawer.getByLabel('New time').fill(inDays(9, 19))
+  await drawer.getByLabel('New time').fill(await freeSlot(request, 9, 19))
   await drawer.getByLabel('Why it’s moving (only you see this)').fill('Client travelling')
   await drawer.getByRole('button', { name: 'Move meeting' }).click()
   await expect(app.locator('.toast').last()).toContainText('updated invite is in the outbox')

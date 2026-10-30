@@ -2,10 +2,10 @@ import { useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Check, ChevronRight, UserPlus, Users } from 'lucide-react'
 import { useClients, useFamilies, useMeetings, useProducts, useProspects } from '../lib/data'
-import { SEGMENTS, RISK_ORDER, EQUITY_BAND } from '../lib/data'
+import { SEGMENTS, RISK_ORDER, EQUITY_BAND, TIERS } from '../lib/data'
 import { ago, inr, label, when, sinceText, sourceText } from '../lib/format'
 import { Donut, HBars, AllocBar } from '../charts'
-import { ASSET_COLORS, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Status, Stat, SearchField } from '../ui'
+import { ASSET_COLORS, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Status, Stat, SearchField, TierPill } from '../ui'
 
 export default function Clients() {
   const { data: clients = [], loading, error, reload } = useClients()
@@ -20,6 +20,8 @@ export default function Clients() {
   const [view, setView] = useState<'people' | 'families'>('people')
   const [onboard, setOnboard] = useState(params.get('onboard') === '1')
   const seg = params.get('segment') || ''
+  const tier = params.get('tier') || ''
+  const setFilter = (k: string, v: string) => { const n = new URLSearchParams(params); if (v) n.set(k, v); else n.delete(k); setParams(n) }
   const nav = useNavigate()
 
   const nextMeeting = (id: string) => meetings.filter((m) => m.with.id === id && m.status === 'scheduled').sort((a, b) => a.start.localeCompare(b.start))[0]
@@ -30,11 +32,11 @@ export default function Clients() {
   const flagged = clients.filter((c) => c.red_flags.some((f: any) => f.severity === 'high'))
 
   const list = useMemo(() => {
-    let l = clients.filter((c) => (!seg || c.segment === seg) && (!risk || c.risk_profile === risk) && (!q || (c.name + c.locality + c.occupation).toLowerCase().includes(q.toLowerCase())))
+    let l = clients.filter((c) => (!seg || c.segment === seg) && (!tier || c.tier === tier) && (!risk || c.risk_profile === risk) && (!q || (c.name + c.id + c.locality + c.occupation).toLowerCase().includes(q.toLowerCase())))
     const nm = (c: any) => nextMeeting(c.id)?.start || '9999'
     l = [...l].sort((a, b) => sort === 'aum' ? b.aum - a.aum : sort === 'name' ? a.name.localeCompare(b.name) : sort === 'contact' ? a.last_contact.localeCompare(b.last_contact) : sort === 'next' ? nm(a).localeCompare(nm(b)) : b.red_flags.length - a.red_flags.length)
     return l
-  }, [clients, seg, risk, q, sort, meetings])
+  }, [clients, seg, tier, risk, q, sort, meetings])
 
   const suggestions = useMemo(() => {
     if (!clients.length) return []
@@ -127,10 +129,14 @@ export default function Clients() {
           </div>
           <SearchField value={q} onChange={setQ} placeholder="Name, area or occupation…" label="Search clients" width={280} />
           <div className="row wrap" style={{ gap: 6 }}>
-            <button className={`chip ${!seg ? 'on' : ''}`} aria-pressed={!seg} onClick={() => setParams({})}>All</button>
-            {SEGMENTS.map((s) => <button key={s.key} className={`chip ${seg === s.key ? 'on' : ''}`} aria-pressed={seg === s.key} onClick={() => setParams({ segment: s.key })}>{s.label}</button>)}
+            <button className={`chip ${!seg ? 'on' : ''}`} aria-pressed={!seg} onClick={() => setFilter('segment', '')}>All</button>
+            {SEGMENTS.map((s) => <button key={s.key} className={`chip ${seg === s.key ? 'on' : ''}`} aria-pressed={seg === s.key} title={s.rule} onClick={() => setFilter('segment', s.key)}>{s.label}</button>)}
           </div>
           <div className="row toolbar-selects" style={{ marginLeft: 'auto', gap: 8 }}>
+            <select className="select sm" value={tier} onChange={(e) => setFilter('tier', e.target.value)} aria-label="Tier" style={{ width: 130 }}>
+              <option value="">Any tier</option>
+              {[...TIERS].reverse().map((t) => <option key={t.key} value={t.key} title={t.rule}>{t.label}</option>)}
+            </select>
             <select className="select sm" value={risk} onChange={(e) => setRisk(e.target.value)} aria-label="Risk profile" style={{ width: 190 }}>
               <option value="">Any risk profile</option>
               {RISK_ORDER.map((r) => <option key={r}>{r}</option>)}
@@ -153,9 +159,9 @@ export default function Clients() {
                 <Link key={c.id} to={`/clients/${c.id}`} className="client-row">
                   <Avatar name={c.name} photo={c.photo} size={46} />
                   <div className="cr-name">
-                    <div className="strong">{c.name}</div>
+                    <div className="strong">{c.name} <span className="client-code">{c.id}</span></div>
                     <div className="tiny muted">{c.family_role} · {c.occupation} · {c.locality}</div>
-                    <div className="row" style={{ gap: 6, marginTop: 6 }}><Status s={c.segment} /><span className="pill outline">{c.risk_profile}</span></div>
+                    <div className="row" style={{ gap: 6, marginTop: 6 }}><TierPill t={c.tier} /><Status s={c.segment} /><span className="pill outline">{c.risk_profile}</span></div>
                   </div>
                   <div className="cr-aum">
                     <div className="display strong" style={{ fontSize: 17 }}><Num v={c.aum} fixed /></div>
@@ -182,12 +188,13 @@ export default function Clients() {
               return (
                 <div key={f.id} className="sunk" style={{ padding: 16, background: 'var(--cream)' }}>
                   <div className="spread"><h3>{f.name}</h3><span className="display strong"><Num v={f.aum} /></span></div>
+                  <div style={{ margin: '6px 0 4px' }}><TierPill t={f.tier} /></div>
                   <div className="tiny muted" style={{ marginBottom: 12 }}>{f.business} · {f.locality}</div>
                   <div className="col" style={{ gap: 6 }}>
                     {members.map((m) => (
                       <Link key={m.id} to={`/clients/${m.id}`} className="row small fam-member">
                         <Avatar name={m.name} size={26} />
-                        <span className="grow">{m.name} <span className="muted tiny">· {m.family_role}</span></span>
+                        <span className="grow">{m.name} <span className="client-code">{m.id}</span> <span className="muted tiny">· {m.family_role}</span></span>
                         <span className="num">{inr(m.aum, { fixed: true })}</span>
                       </Link>
                     ))}

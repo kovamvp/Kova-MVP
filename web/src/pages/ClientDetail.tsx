@@ -6,7 +6,7 @@ import { pushRecent } from '../lib/session'
 import { EQUITY_BAND, fitsProfile, useClients, useMeetings, useProducts } from '../lib/data'
 import { ago, date, inr, label, when } from '../lib/format'
 import { AllocBar, Donut } from '../charts'
-import { ASSET_COLORS, Avatar, Delta, DetailSkeleton, Drawer, Empty, SkeletonRows, Num, Panel, Stat, Status, useToast } from '../ui'
+import { ASSET_COLORS, Avatar, Delta, DetailSkeleton, Drawer, Empty, SkeletonRows, Num, Panel, Stat, Status, TierPill, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
 
@@ -49,9 +49,10 @@ export default function ClientDetail() {
         <div className="row" style={{ gap: 18, alignItems: 'flex-start' }}>
           <Avatar name={c.name} photo={c.photo} size={68} />
           <div className="grow" style={{ minWidth: 0 }}>
-            <h1>{c.name}</h1>
+            <h1>{c.name} <span className="client-code lg" title="Client code">{c.id}</span></h1>
             <p className="muted" style={{ marginTop: 4 }}>{c.family_role} in the <Link className="linkbtn" to={`/clients?view=families`}>{c.name.split(' ').slice(-1)[0]} family</Link>{[c.occupation, c.locality, `client since ${date(c.client_since, true)}`].filter(Boolean).map((x) => ` · ${x}`).join('')}</p>
             <div className="row wrap" style={{ gap: 6, marginTop: 10 }}>
+              <TierPill t={c.tier} />
               <Status s={c.segment} />
               <span className="pill outline" title={`Risk profile: ${c.risk_profile}, profiled on ${date(c.risk_profile_date, true)}`}>{c.risk_profile} · {date(c.risk_profile_date, true).replace(/^\d+ /, '')}</span>
               <span className="pill gain"><ShieldCheck size={12} />KYC {c.kyc.status}</span>

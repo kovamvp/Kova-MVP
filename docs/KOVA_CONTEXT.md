@@ -129,6 +129,14 @@ W = working · D = designed with mock data (inner pages light) · O = out of thi
 
 **Meetings (Phase 3, built 29 Oct).** Actions `reschedule_meeting`, `edit_meeting`, `cancel_meeting`, `mark_no_show` in `actions.py`; `clash_with()` is the one overlap check. Completed, cancelled and no-show meetings can't be changed. Each change appends `{at, what, by, from, to, reason}` to `meeting.changes`. Reasons never reach the client. The agent has `propose_reschedule_meeting` and `propose_cancel_meeting` (client and prospect pages), validated for ownership, weekday, past time and clashes.
 
+**Cycle 2, Sprint 1: foundations (built 30 Oct).** From the feedback meeting with Krishna, a new cycle of 14 sprints (foundations → drill-down cards → client page → prospects → meetings plan/list → meeting summary/MoM/chains → pipeline → approval matrix → Studio ×3 → products → learning → home). Sprint 1 adds shared data only:
+- `backend/taxonomy.py`: one classification, asset class (Equity, Debt, Gold, Cash) → product type → subcategory → product, including types Kova doesn't sell (SIF, direct equity, ETF, REIT/InvIT…) for outside holdings later. Products carry `asset_class`, `product_type`, `subcategory`, `benchmark_id`. `GET /api/taxonomy`.
+- Holdings carry `account_id`, `held_at` ("Kova") and `on_shelf`; clients carry `holding_accounts` (one Kova account each for now; outside accounts come with Studio statement import).
+- `backend/tiers.py`: client tiers by **household** assets with Kova, beside the activity segments. **Rise** below ₹5 Cr · **Ascent** ₹5–10 Cr · **Summit** ₹10–20 Cr · **Zenith** ₹20 Cr and above (Divyansh chose the names; thresholds set from the sample book: 3 Zenith, 2 Summit, 4 Ascent, 3 Rise families). Stored as `tier` on families and every member; `tiers.refresh()` recomputes. New clients start in Rise. `GET /api/tiers`.
+- `backend/history.py`: illustrative month-end `history` on every client from two fiscal years back (`{month, value, invested, revenue, by_class}`), ending exactly at today's AUM, invested and `revenue_ytd`; a `benchmarks` collection of 13 indices (150 months each). Fiscal year April–March (`fy_start`, `fy_label`). `GET /api/book/history` sums the book.
+- UI: tier pill (four steps filled to the tier, plus the name) on the client list, families and client page; tier filter that combines with segments; client code beside every client name and searchable.
+- "Active" still means transacted in 6 months (redefinition not confirmed).
+
 ## 7. How the agent works (the core working feature)
 
 **Flow.** RM opens a client/prospect/product page → brass orb in the floating bar → session list (past sessions + "New session"; archived toggle) → chat. The RM types, or taps the mic (live words appear; on stop Whisper's transcript replaces them; the text is editable) → `POST /api/agent/sessions/{sid}/message`.
@@ -186,6 +194,9 @@ The real MVP will move to: Python/FastAPI modular monolith, Postgres + pgvector,
 
 | Id | What |
 |---|---|
+| `2026-10-30-product-taxonomy` | Products get asset class / product type / subcategory / benchmark id; holdings get account, held at, on shelf; clients get `holding_accounts`. |
+| `2026-10-30-client-tiers` | Families and clients get `tier` (Rise / Ascent / Summit / Zenith); family `aum` recomputed from members. |
+| `2026-10-30-history` | Clients get monthly `history`; new `benchmarks` collection. |
 | `2026-10-28-rupee-sign` | "Rs 5,000" / "Rs 10,000,000" in sample text → "₹5,000" / "₹1,00,00,000". Agent sessions and outbox are left exactly as they were (audit trail). Snapshot: `kova_docs_snap_before_2026_10_28_rupee_sign`. |
 
 ## 11. Known issues and open questions

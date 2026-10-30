@@ -40,7 +40,7 @@ def inr(x: float | int | None) -> str:
 def client_brief(c: dict, full: bool = False) -> dict:
     out = {
         "id": c["id"], "name": c["name"], "age": c.get("age"), "family": c.get("family_id"), "role_in_family": c.get("family_role"),
-        "occupation": c.get("occupation"), "segment": c["segment"], "risk_profile": c["risk_profile"], "client_since": c.get("client_since"),
+        "occupation": c.get("occupation"), "segment": c["segment"], "tier": c.get("tier"), "risk_profile": c["risk_profile"], "client_since": c.get("client_since"),
         "aum": inr(c.get("aum")), "allocation_pct": c.get("allocation"), "xirr_pct": c.get("xirr"),
         "consent": {k: v for k, v in c.get("consent", {}).items() if k in ("whatsapp", "email", "profile_enrichment", "marketing")},
         "email": c.get("email"), "phone": c.get("phone"), "last_contact": c.get("last_contact"),
