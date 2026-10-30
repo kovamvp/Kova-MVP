@@ -96,6 +96,7 @@ npm run dev          # http://localhost:5173 ; /api is proxied to :8000
 | `backend/profile.py` | Client profile sections, locked fields, custom fields and the field library; service request categories |
 | `backend/insights.py` | Client flags (why + next step), actionables and comparisons for the client page |
 | `backend/meetings.py` | Meeting plans (products, portfolio intent, service items), checks and the roll-up for CIO/product teams |
+| `backend/summaries.py` | Meeting summaries: six sections routed to pipeline, product team, service, tasks, what the client owes, profile and a chained follow-up; edits flow on; MoM draft |
 | `backend/migrations.py` | Additive data migrations (snapshot first); list of applied ones in `docs/KOVA_CONTEXT.md` 10b |
 | `backend/agent.py` | Page agents (client, prospect, product): system prompt, read tools, propose tools → approval cards, validation, sessions, decide, transcribe, read-bill, dev test routes |
 | `backend/llm.py` | Groq gateway: two keys with fallback, model fallback, rate-limit wait, call log |

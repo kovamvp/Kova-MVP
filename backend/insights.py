@@ -77,6 +77,10 @@ def actionables(c: dict, products: dict[str, dict], meetings: list[dict], now: d
             p = products.get(f["product_id"]) or {}
             out.append({"kind": "maturity", "title": f"{p.get('name', 'Holding')} matures", "date": f["date"], "amount": f["amount"],
                         "cta": {"label": "Plan the reinvestment", "href": f"/studio?new=1&tag=client:{c['id']}"}})
+    for o in c.get("owed", []):
+        if o["status"] == "open":
+            out.append({"kind": "owed", "title": o["text"], "owed_id": o["id"], "date": o.get("due"), "detail": "Still to get from them",
+                        "from_meeting": o.get("from_meeting")})
     year = [f for f in c.get("cash_flows", []) if (d := _d(f["date"])) and today <= d <= add_months(today, 12)]
     if year:
         inflow = sum(f["amount"] for f in year if f["amount"] > 0)

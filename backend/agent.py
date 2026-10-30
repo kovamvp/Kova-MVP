@@ -130,6 +130,21 @@ PROPOSE_TOOLS = {
         "plan": {"type": "object", "description": "Internal plan, never sent to the client: product ids to discuss, portfolio intent, service items", "properties": {
             "products": ARR, "portfolio": {"type": "string", "enum": ["Review", "Rebalance", "New portfolio", "Maturity reinvestment"]},
             "service": ARR, "notes": S}}}, ["with_kind", "with_id", "title", "start"]),
+    "propose_meeting_summary": T("propose_meeting_summary", "Propose the summary of a meeting that has happened. Fill only the sections the RM talked about. "
+                                 "On approval each part is filed where it belongs: product interest to the pipeline, feedback to the product manager, service items as requests, "
+                                 "regulatory items as tasks, what the client still has to give as tracked items, profile fields, and a follow-up meeting. Creates an approval card.", {
+        "meeting_id": S,
+        "portfolio": {"type": "object", "properties": {"discussed": S, "reaction": S, "changes": ARR}},
+        "products": {"type": "array", "items": {"type": "object", "properties": {"product_id": S, "interest": {"type": "string", "enum": ["Interested", "Follow up", "Not interested"]},
+                                                                                "amount": N, "feedback": {"type": "string", "description": "Feedback for the product manager, internal"}}}},
+        "service": {"type": "array", "items": {"type": "object", "properties": {"category": {"type": "string", "enum": ["Demographic update", "Family details update", "Nominee update",
+                    "Bank account change", "KYC re-verification", "Statement or certificate", "Transaction issue", "SIP or STP change", "Other"]}, "details": S}}},
+        "engagement": {"type": "object", "properties": {"notes": S, "profile": {"type": "object", "description": "Profile fields by section, e.g. {\"family\": {\"children\": \"...\"}}"}}},
+        "regulatory": {"type": "array", "items": {"type": "object", "properties": {"kind": {"type": "string", "enum": ["Risk profile review", "KYC update", "Nominee", "Consent", "FATCA", "Other"]}, "note": S}}},
+        "to_get": {"type": "array", "items": {"type": "object", "properties": {"text": S, "due": S}}},
+        "outcome": {"type": "string", "enum": ["Positive", "Neutral", "Needs follow-up", "Proposal requested", "Transaction agreed", "Not interested"]},
+        "next_meeting": {"type": "object", "properties": {"start": {"type": "string", "description": "Local IST datetime YYYY-MM-DDTHH:MM, if agreed"}, "title": S, "agenda": ARR}}},
+        ["meeting_id", "outcome"]),
     "propose_send_message": T("propose_send_message", "Propose a WhatsApp or email message to the client or prospect. Creates an approval card.", {
         "to_kind": {"type": "string", "enum": ["client", "prospect"]}, "to_id": S, "channel": {"type": "string", "enum": ["WhatsApp", "Email"]},
         "subject": S, "body": S, "purpose": S}, ["to_kind", "to_id", "channel", "body"]),
@@ -166,16 +181,16 @@ PROPOSE_TOOLS = {
 SCOPE_TOOLS = {
     "client": ["get_holdings", "get_family", "get_meetings", "get_calendar", "find_products", "get_product", "get_open_requests",
                "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_reimbursement",
-               "propose_service_request", "propose_add_note", "propose_reschedule_meeting", "propose_cancel_meeting"],
+               "propose_service_request", "propose_add_note", "propose_reschedule_meeting", "propose_cancel_meeting", "propose_meeting_summary"],
     "prospect": ["get_meetings", "get_calendar", "find_products", "get_product", "get_open_requests",
                  "propose_schedule_meeting", "propose_send_message", "propose_log_mom", "propose_product_feedback", "propose_add_note", "propose_update_prospect", "propose_convert_prospect",
-                 "propose_reschedule_meeting", "propose_cancel_meeting"],
+                 "propose_reschedule_meeting", "propose_cancel_meeting", "propose_meeting_summary"],
     "product": ["get_product", "clients_for_product", "get_holdings", "find_products", "get_open_requests", "get_calendar",
                 "propose_product_feedback", "propose_send_message", "propose_schedule_meeting", "propose_add_note"],
 }
 
 ACTION_OF = {
-    "propose_schedule_meeting": "schedule_meeting", "propose_send_message": "send_message", "propose_log_mom": "log_mom",
+    "propose_schedule_meeting": "schedule_meeting", "propose_send_message": "send_message", "propose_meeting_summary": "record_summary", "propose_log_mom": "log_mom",
     "propose_product_feedback": "product_feedback", "propose_reimbursement": "reimbursement", "propose_service_request": "service_request",
     "propose_add_note": "add_note", "propose_update_prospect": "update_prospect", "propose_convert_prospect": "convert_prospect",
     "propose_reschedule_meeting": "reschedule_meeting", "propose_cancel_meeting": "cancel_meeting",
@@ -276,6 +291,19 @@ def validate_proposal(name: str, a: dict, scope: dict, said: str = "") -> str | 
         reason = expenses.blocking_reason(expenses.check(a, has_bill=True))
         if reason:
             return f"Can't propose this claim: {reason}. Tell the RM."
+    if name == "propose_meeting_summary":
+        m = st.get("meetings", a.get("meeting_id", ""))
+        if not m:
+            return "Unknown meeting id. Use get_meetings to find it."
+        if m["with"] != {"kind": scope["kind"], "id": scope["id"]}:
+            return "That meeting isn't with this client or prospect."
+        if m["start"] > now_ist():
+            return "That meeting hasn't happened yet; a summary comes after it."
+        if a.get("products"):
+            prods = {p["id"] for p in st.list("products")}
+            bad = [p.get("product_id") for p in a["products"] if p.get("product_id") not in prods]
+            if bad:
+                return f"Unknown product id {bad[0]}. Use find_products."
     if name in ("propose_reschedule_meeting", "propose_cancel_meeting"):
         m = st.get("meetings", a.get("meeting_id", ""))
         if not m:
@@ -336,6 +364,10 @@ def card_summary(action: str, a: dict) -> str:
         return f"Send feedback to {(p or {}).get('product_manager', {}).get('name', 'the product team')}"
     if action == "reimbursement":
         return f"Claim {inr(a.get('amount'))} ({a.get('category')}) linked to {who}"
+    if action == "record_summary":
+        m = store().get("meetings", a.get("meeting_id", "")) or {}
+        parts = [k for k in ("portfolio", "products", "service", "engagement", "regulatory", "to_get") if a.get(k)]
+        return f"Record the summary of '{m.get('title', 'the meeting')}': {', '.join(p.replace('_', ' ') for p in parts) or 'outcome only'}"
     if action == "service_request":
         return f"Raise service request for {who}: {a.get('title')}"
     if action == "add_note":
@@ -355,7 +387,20 @@ def card_summary(action: str, a: dict) -> str:
 
 
 # ------------------------------------------------------------------ prompts
-def system_prompt(scope: dict) -> str:
+def meeting_context(meeting_id: str) -> str:
+    m = store().get("meetings", meeting_id)
+    if not m:
+        return ""
+    brief = {k: m.get(k) for k in ("id", "title", "type", "start", "location", "agenda", "plan", "status", "previous_meeting_id")}
+    brief["summary_so_far"] = m.get("summary")
+    return ("\n\nThis session is about one meeting (JSON below). The RM is telling you what happened in it. Turn that into one propose_meeting_summary card "
+            "with only the sections they talked about (portfolio, products, service, engagement, regulatory, to_get) plus the outcome and any next meeting. "
+            "Product feedback for the product team goes in products[].feedback; things the client still has to give go in to_get. If a summary already exists, "
+            "propose the full updated summary (it replaces the old one and the changes flow on). Then ask one or two short questions about what's missing.\n"
+            + json.dumps(brief, ensure_ascii=False))
+
+
+def system_prompt(scope: dict, anchor: dict | None = None) -> str:
     rm = singleton("rm")
     now = dt.datetime.fromisoformat(now_ist())
     st = store()
@@ -392,6 +437,8 @@ How you work:
                  "returns and costs, risks, how to pitch, objections and answers; link the product manager's video if video_url is set), want clients who fit, or want to send feedback to the product manager.\n"
                  + json.dumps(product_brief(p, True), ensure_ascii=False)
                  + f"\nRM's L&D on this product: {len(ld['completed'])} of {len(mods)} modules done.")
+    if anchor and anchor.get("kind") == "meeting":
+        base += meeting_context(anchor["id"])
     return base
 
 
@@ -481,9 +528,21 @@ def list_sessions(kind: str, id: str, archived: bool = False):
 
 @router.post("/sessions")
 def create_session(body: dict = Body(...)):
+    anchor = body.get("anchor")
+    scope = {"kind": body["kind"], "id": body["id"]}
+    title = "New session"
+    if anchor:  # a meeting reopens its own session, so its context stays in one place
+        if anchor.get("kind") != "meeting":
+            raise HTTPException(400, "Sessions can be anchored to a meeting")
+        m = store().get("meetings", anchor.get("id", ""))
+        if not m or m["with"] != scope:
+            raise HTTPException(400, "That meeting isn't with this client or prospect")
+        same = [s for s in store().list("agent_sessions") if s.get("anchor") == anchor and not s.get("archived")]
+        if same:
+            return sorted(same, key=lambda s: s["updated"])[-1]
+        title = f"Summary of {m['title']} · {dt.datetime.fromisoformat(m['start']).strftime('%d %b').lstrip('0')}"
     sid = new_id("AS-", "seq_session", 4000)
-    s = {"id": sid, "scope": {"kind": body["kind"], "id": body["id"]}, "title": "New session", "created": now_ist(), "updated": now_ist(),
-         "archived": False, "messages": []}
+    s = {"id": sid, "scope": scope, "title": title, "anchor": anchor, "created": now_ist(), "updated": now_ist(), "archived": False, "messages": []}
     return store().put("agent_sessions", sid, s)
 
 
@@ -521,7 +580,7 @@ def send(sid: str, body: dict = Body(...)):
 
     tool_names = SCOPE_TOOLS[scope["kind"]]
     tools = [READ_TOOLS.get(n) or PROPOSE_TOOLS[n] for n in tool_names]
-    msgs = [{"role": "system", "content": system_prompt(scope)}] + history_messages(s)
+    msgs = [{"role": "system", "content": system_prompt(scope, s.get("anchor"))}] + history_messages(s)
     cards: list[dict] = []
     reads: list[str] = []
     final = ""

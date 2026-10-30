@@ -62,10 +62,11 @@ def add_outbox(action: str, channel: str, to: dict, subject: str | None, body: s
     return ob
 
 
-def add_update(kind: str, title: str, body: str, link: dict | None, priority: int = 2, due: str | None = None, source: str = "Agent") -> None:
+def add_update(kind: str, title: str, body: str, link: dict | None, priority: int = 2, due: str | None = None, source: str = "Agent") -> dict:
     u = {"id": new_id("UP-", "seq_update", 100), "kind": kind, "priority": priority, "title": title, "body": body,
          "due": due, "link": link, "source": source, "done": False, "snoozed_until": None, "created": now_ist()}
     store().put("updates", u["id"], u)
+    return u
 
 
 # ---------------------------------------------------------------- simulation
@@ -167,7 +168,7 @@ def product_feedback(args: dict, source: dict | None = None) -> dict:
     link = {"kind": "product", "id": pid} if pid else None
     title = args.get("title") or (f"Feedback: {prod['name']}" if prod else "Product feedback")
     req = new_request("product_feedback", title, f"Product: {pm['title'].replace('Product Manager, ', '')}",
-                      {"feedback": args["feedback"], "client_id": args.get("client_id"), "product_id": pid},
+                      {"feedback": args["feedback"], "client_id": args.get("client_id"), "product_id": pid, "meeting_id": args.get("meeting_id")},
                       link, args.get("priority", "normal"), None, pm=pm["name"])
     ob = add_outbox("product_feedback", "Kova Work", {"name": pm["name"], "address": pm["title"]}, title, args["feedback"], source, {"request_id": req["id"]})
     if args.get("client_id"):
@@ -470,8 +471,8 @@ ACTIONS = {
 
 
 def _profile_actions() -> None:
-    from . import profile
-    ACTIONS.update({"update_profile": profile.update_profile, "add_custom_field": profile.add_custom_field,
+    from . import profile, summaries
+    ACTIONS.update({"record_summary": summaries.record_summary, "update_owed": summaries.update_owed,"update_profile": profile.update_profile, "add_custom_field": profile.add_custom_field,
                     "update_custom_field": profile.update_custom_field, "remove_custom_field": profile.remove_custom_field})
 
 

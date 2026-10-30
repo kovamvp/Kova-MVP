@@ -79,6 +79,12 @@ def chat(messages: list[dict], tools: list[dict] | None = None, **_: object) -> 
     if "whatsapp" in text and "propose_send_message" in names:
         calls.append(_call("propose_send_message", {"to_kind": kind, "to_id": scope_id, "channel": "WhatsApp",
                                                     "body": "Hello, a quick note from Kova."}, len(calls) + 1))
+    meeting = re.search(r'This session is about one meeting.*?"id": "(MT-\d+)"', system, re.S)
+    if meeting and "propose_meeting_summary" in names and not calls:
+        calls.append(_call("propose_meeting_summary", {
+            "meeting_id": meeting.group(1), "portfolio": {"discussed": (last.get("content") or "")[:200], "changes": []},
+            "products": [{"product_id": "PD-202", "interest": "Follow up", "feedback": "Client finds the fee too high."}],
+            "to_get": [{"text": "Latest outside statement"}], "outcome": "Needs follow-up"}, 1))
     if calls:
         return _reply({"role": "assistant", "content": "", "tool_calls": calls})
     return _reply({"role": "assistant", "content": "This is the test agent. Nothing to prepare."})
