@@ -72,7 +72,7 @@ export function ActionsPanel({ kind, id, name, initial, onAskAgent, productId }:
 /* WhatsApp only with the client's consent; the server enforces it too */
 function MessageForm({ kind, id, onDone }: { kind: 'client' | 'prospect'; id: string; onDone: () => void }) {
   const { data: who } = useApi<any>(`/c/${kind === 'client' ? 'clients' : 'prospects'}/${id}`)
-  const waAllowed = kind === 'prospect' || !!who?.consent?.whatsapp
+  const waAllowed = !!who?.consent?.whatsapp // clients and prospects alike; the server enforces it too
   const [channel, setChannel] = useState<'Email' | 'WhatsApp'>('Email')
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')

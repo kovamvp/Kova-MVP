@@ -325,17 +325,19 @@ def goals_op(body: dict = Body(...)):
 # ------------------------------------------------------------ prospects
 @app.post("/api/prospects")
 def prospect_create(body: dict = Body(...)):
-    pid = new_id("PR-", "seq_prospect", 2100)
-    p = {"id": pid, "name": body["name"], "age": body.get("age"), "gender": body.get("gender"), "source": body.get("source", "Cold outreach"),
-         "source_detail": body.get("source_detail", ""), "stage": body.get("stage", "Lead"), "estimated_investable": body.get("estimated_investable", 0),
-         "need": body.get("need", ""), "last_contact": now_ist()[:10], "meetings_held": 0, "created": now_ist()[:10], "phone": body.get("phone", ""),
-         "email": body.get("email", ""), "city": body.get("city", "Mumbai"), "risk_indication": "Not assessed", "probability": 10,
-         "next_step": body.get("next_step"), "next_step_date": body.get("next_step_date"), "app_access": False, "kyc_steps": [
-             {"step": s, "done": False} for s in ["Mobile and email verified", "PAN and KYC (KRA)", "Bank account", "FATCA declaration", "Nominee", "Risk profile",
-                                                   "Demat and trading account", "Exchange registration (UCC)", "DDPI"]],
-         "interests": [], "app_activity": [], "suggestions": [], "recommended_portfolio_id": None, "notes": body.get("need", ""),
-         "timeline": [{"id": "e1", "kind": "system", "at": now_ist(), "title": "Prospect created", "body": body.get("need", "")}], "closed": None}
-    return store().put("prospects", pid, p)
+    from . import prospects
+    try:
+        return prospects.create(body)
+    except LookupError as e:
+        raise HTTPException(409, str(e)) from e
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@app.post("/api/prospects/check")
+def prospect_check(body: dict = Body(...)):
+    from . import prospects
+    return {"matches": prospects.duplicates(body.get("phone"), body.get("email"), body.get("pan"), body.get("exclude"))}
 
 
 @app.get("/api/prospects/{id_}/gates")

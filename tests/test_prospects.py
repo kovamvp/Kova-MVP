@@ -33,12 +33,13 @@ def test_backward_move_is_always_allowed_and_logged(client):
     assert "KYC in progress → Prospect" in p["timeline"][0]["body"]
 
 
-def test_lead_needs_need_and_amount_and_contact_to_qualify(client):
-    p = client.post("/api/prospects", json={"name": "Test Lead"}).json()
+def test_lead_needs_need_and_amount_to_qualify(client):
+    # a mobile or email is required at capture since Sprint 4, so the gate checks need and amount
+    p = client.post("/api/prospects", json={"name": "Test Lead", "email": "test.lead@example.com", "estimated_investable": 0}).json()
     r = client.post(f"/api/prospects/{p['id']}/stage", json={"stage": "Prospect"})
     assert r.status_code == 400
     missing = gates(client, p["id"])["Prospect"]["missing"]
-    assert {"What they need", "Investable amount", "Phone or email"} <= set(missing)
+    assert {"What they need", "Investable amount"} <= set(missing) and "Phone or email" not in missing
 
 
 def test_marking_steps_opens_the_gate(client):

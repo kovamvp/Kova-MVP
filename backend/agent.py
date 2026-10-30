@@ -63,7 +63,7 @@ def holdings_view(c: dict) -> list[dict]:
 
 def prospect_brief(p: dict) -> dict:
     return {k: p.get(k) for k in ("id", "name", "age", "stage", "source", "source_detail", "estimated_investable", "need", "last_contact",
-                                   "next_step", "next_step_date", "risk_indication", "email", "phone", "interests", "app_activity")} | {
+                                   "next_step", "next_step_date", "risk_indication", "email", "phone", "interests", "app_activity", "needs", "consent", "contact_verified")} | {
         "kyc_pending": [s["step"] for s in p.get("kyc_steps", []) if not s["done"]][:4],
         "closed": p.get("closed"), "recent_timeline": [{"at": e["at"][:10], "title": e["title"], "body": e.get("body", "")[:120]} for e in p.get("timeline", [])[:4]]}
 
@@ -151,9 +151,13 @@ PROPOSE_TOOLS = {
         "meeting_id": S, "reason": S, "notify_client": {"type": "boolean"}}, ["meeting_id", "reason"]),
     "propose_convert_prospect": T("propose_convert_prospect", "Propose making this prospect a client (only from Investing client or later). The RM records the client's consent on the card and confirms. Creates an approval card.", {
         "prospect_id": S}, ["prospect_id"]),
-    "propose_update_prospect": T("propose_update_prospect", "Propose changes to a prospect's stage, next step, value or product interest. Creates an approval card.", {
+    "propose_update_prospect": T("propose_update_prospect", "Propose changes to a prospect's stage, next step, value, product interest or structured needs (never consent: only the RM records that). Creates an approval card.", {
         "prospect_id": S, "stage": {"type": "string", "enum": ["Lead", "Prospect", "Registered", "KYC in progress", "Investing client", "Investing and trading client"]},
-        "next_step": S, "next_step_date": S, "estimated_investable": N, "interest_product_id": S}, ["prospect_id"]),
+        "next_step": S, "next_step_date": S, "estimated_investable": N, "interest_product_id": S,
+        "needs": {"type": "object", "description": "Structured needs", "properties": {
+            "goal": {"type": "string", "enum": ["Grow wealth", "Regular income", "Preserve capital", "Plan for a goal", "Invest a windfall", "Save tax", "Retirement", "Not sure yet"]},
+            "horizon": {"type": "string", "enum": ["Under 1 year", "1–3 years", "3–5 years", "5+ years"]},
+            "asset_classes": {"type": "array", "items": {"type": "string", "enum": ["Equity", "Debt", "Gold", "Cash"]}}}}}, ["prospect_id"]),
 }
 
 SCOPE_TOOLS = {
@@ -258,7 +262,7 @@ def validate_proposal(name: str, a: dict, scope: dict, said: str = "") -> str | 
         e = st.get("clients" if a.get("to_kind") == "client" else "prospects", a.get("to_id", ""))
         if not e:
             return "Unknown recipient id."
-        if a.get("channel") == "WhatsApp" and a.get("to_kind") == "client" and not e.get("consent", {}).get("whatsapp"):
+        if a.get("channel") == "WhatsApp" and not e.get("consent", {}).get("whatsapp"):
             return f"{e['name']} has not consented to WhatsApp. Propose Email instead and tell the RM why."
     if name == "propose_reimbursement":
         if not st.get("clients", a.get("client_id", "")):

@@ -25,6 +25,99 @@ NEEDS = {
     "Investing and trading client": STEPS,
 }
 CONSENT_KEYS = ["whatsapp", "email", "profile_enrichment", "marketing", "data_sharing_with_partners"]
+PROSPECT_CONSENT = ["whatsapp", "email", "marketing"]  # what a prospect agrees to at capture
+
+# Structured needs, plus the free-text `need` the RM writes
+GOALS = ["Grow wealth", "Regular income", "Preserve capital", "Plan for a goal", "Invest a windfall", "Save tax", "Retirement", "Not sure yet"]
+HORIZONS = ["Under 1 year", "1–3 years", "3–5 years", "5+ years"]
+ASSET_CLASSES = ["Equity", "Debt", "Gold", "Cash"]
+
+# Other RMs' clients and prospects, for the duplicate check (sample; the real product queries the firm's book)
+DIRECTORY = [
+    {"rm": "Arjun Menon", "branch": "Mumbai West", "kind": "prospect", "phone": "+91 98201 45566", "email": "a.kapoor@example.com", "pan": "ABCPK1234F"},
+    {"rm": "Neha Iyer", "branch": "Mumbai South", "kind": "client", "phone": "+91 99300 77881", "email": "rhea.s@example.com", "pan": "BXZPS4321K"},
+    {"rm": "Arjun Menon", "branch": "Mumbai West", "kind": "client", "phone": "+91 98190 22334", "email": "m.joshi@example.com", "pan": "CQRPJ9988L"},
+]
+
+
+def check_needs(needs: dict | None) -> dict:
+    needs = dict(needs or {})
+    if needs.get("goal") and needs["goal"] not in GOALS:
+        raise ValueError(f"Goal must be one of: {', '.join(GOALS)}")
+    if needs.get("horizon") and needs["horizon"] not in HORIZONS:
+        raise ValueError(f"Horizon must be one of: {', '.join(HORIZONS)}")
+    bad = [a for a in needs.get("asset_classes") or [] if a not in ASSET_CLASSES]
+    if bad:
+        raise ValueError(f"Unknown asset class {bad[0]}; use {', '.join(ASSET_CLASSES)}")
+    return {"goal": needs.get("goal") or "Not sure yet", "horizon": needs.get("horizon"), "asset_classes": list(needs.get("asset_classes") or [])}
+
+
+def _phone(s: str | None) -> str:
+    d = "".join(ch for ch in (s or "") if ch.isdigit())
+    return d[-10:] if len(d) >= 10 else ""
+
+
+def duplicates(phone: str | None = None, email: str | None = None, pan: str | None = None, exclude: str | None = None) -> list[dict]:
+    """Who already has this mobile, email or PAN: your clients, your prospects, or another RM (name withheld)."""
+    ph, em, pn = _phone(phone), (email or "").strip().lower(), (pan or "").strip().upper()
+
+    def hit(x: dict) -> str | None:
+        if ph and _phone(x.get("phone")) == ph:
+            return "mobile"
+        if em and (x.get("email") or "").strip().lower() == em:
+            return "email"
+        if pn and (x.get("pan") or "").strip().upper() == pn:
+            return "PAN"
+        return None
+    out = []
+    for c in store().list("clients"):
+        if (m := hit(c)) and c["id"] != exclude:
+            out.append({"kind": "client", "id": c["id"], "name": c["name"], "matched_on": m})
+    for p in store().list("prospects"):
+        if (m := hit(p)) and p["id"] != exclude and not p.get("converted"):
+            out.append({"kind": "prospect", "id": p["id"], "name": p["name"], "matched_on": m})
+    for d in DIRECTORY:
+        if m := hit(d):
+            out.append({"kind": "other_rm", "rm": d["rm"], "branch": d["branch"], "their": d["kind"], "matched_on": m})
+    return out
+
+
+def create(body: dict) -> dict:
+    from . import actions
+    name = (body.get("name") or "").strip()
+    if not name:
+        raise ValueError("Add the prospect's name")
+    if not (body.get("phone") or "").strip() and not (body.get("email") or "").strip():
+        raise ValueError("Add a mobile or email so you can reach them (it stays unverified until Operations confirms it).")
+    needs = check_needs(body.get("needs"))
+    dups = duplicates(body.get("phone"), body.get("email"), body.get("pan"))
+    mine = [d for d in dups if d["kind"] in ("client", "prospect")]
+    if mine:
+        d = mine[0]
+        raise LookupError(f"{d['name']} is already your {d['kind']} ({d['id']}), matched on {d['matched_on']}. Open that record instead.")
+    today = now_ist()[:10]
+    pid = new_id("PR-", "seq_prospect", 2100)
+    consent = {k: bool((body.get("consent") or {}).get(k)) for k in PROSPECT_CONSENT}
+    p = {"id": pid, "name": name, "age": body.get("age"), "gender": body.get("gender"), "source": body.get("source", "Cold outreach"),
+         "source_detail": body.get("source_detail", ""), "stage": body.get("stage", "Lead"), "estimated_investable": body.get("estimated_investable", 0),
+         "need": body.get("need", ""), "needs": needs, "last_contact": today, "meetings_held": 0, "created": today,
+         "phone": body.get("phone", ""), "email": body.get("email", ""), "pan": body.get("pan") or None, "city": body.get("city", "Mumbai"),
+         "contact_verified": {"mobile": False, "email": False},
+         "consent": {**consent, "captured_on": today, "version": "Prospect consent v1.0"},
+         "risk_indication": "Not assessed", "probability": 10, "next_step": body.get("next_step"), "next_step_date": body.get("next_step_date"),
+         "app_access": False, "kyc_steps": [{"step": s, "done": False} for s in STEPS], "interests": [], "app_activity": [], "suggestions": [],
+         "recommended_portfolio_id": None, "notes": body.get("need", ""),
+         "timeline": [{"id": "e1", "kind": "system", "at": now_ist(), "title": "Prospect created", "body": body.get("need", "")}], "closed": None}
+    other = [d for d in dups if d["kind"] == "other_rm"]
+    if other:
+        d = other[0]
+        req = actions.new_request("ownership_check", f"Ownership check: {name}", "Branch head (Rohan Kapoor)",
+                                  {"prospect_id": pid, "with_rm": d["rm"], "matched_on": d["matched_on"]}, {"kind": "prospect", "id": pid}, "high",
+                                  script="ownership_check", rm=d["rm"])
+        p["ownership"] = {"status": "pending", "with_rm": d["rm"], "branch": d["branch"], "matched_on": d["matched_on"], "request_id": req["id"]}
+        _log(p, "Ownership check raised", f"The same {d['matched_on']} is on {d['rm']}'s book ({d['branch']}). Your branch head decides who keeps the relationship.")
+    store().put("prospects", pid, p)
+    return p
 
 
 def _done(p: dict) -> set[str]:
@@ -93,6 +186,8 @@ def mark_step(p: dict, step: str, done: bool, risk_profile: str | None = None) -
         if s["step"] == step:
             s["done"] = done
             s["at"] = now_ist() if done else None
+    if step == STEPS[0]:
+        p["contact_verified"] = {"mobile": done, "email": done}
     _log(p, "Readiness updated", f"{step}: {'done' if done else 'not done'}" + (f" ({risk_profile})" if step == "Risk profile" and done else "")
          + ". Confirmed for Operations in this demo.")
     return p

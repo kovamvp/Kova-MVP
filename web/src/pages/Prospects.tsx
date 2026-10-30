@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ChevronDown, ChevronRight, Plus, RotateCcw } from 'lucide-react'
 import { api, invalidate } from '../lib/api'
@@ -6,6 +6,7 @@ import { useAction } from '../lib/action'
 import { STAGES, STAGE_INFO, useProducts, useProspects, useMeetings, useModels } from '../lib/data'
 import { ago, date, inr, when, daysFrom, sourceText } from '../lib/format'
 import { HBars } from '../charts'
+import { ConsentFields, DuplicateWarning, Needs, NeedsFields } from './ProspectNeeds'
 import { AmountInput, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Stat, useToast, SearchField } from '../ui'
 
 const lowerFirst = (t: string) => t.charAt(0).toLowerCase() + t.slice(1)
@@ -23,6 +24,7 @@ export default function Prospects() {
   const [showClosed, setShowClosed] = useState(params.get('closed') === '1')
   const [creating, setCreating] = useState(params.get('new') === '1')
   const nav = useNavigate()
+  const listRef = useRef<HTMLElement>(null)
   const toast = useToast()
   const { busy, run } = useAction()
   const P = Object.fromEntries(products.map((p) => [p.id, p]))
@@ -34,7 +36,7 @@ export default function Prospects() {
   const nextMeeting = (id: string) => meetings.filter((m) => m.with.id === id && m.status === 'scheduled').sort((a, b) => a.start.localeCompare(b.start))[0]
 
   const list = useMemo(() => {
-    const l = open.filter((p) => (!stage || p.stage === stage) && (!q || (p.name + p.need + p.source).toLowerCase().includes(q.toLowerCase())))
+    const l = open.filter((p) => (!stage || p.stage === stage) && (!q || (p.name + p.need + p.source + (p.needs?.goal || '')).toLowerCase().includes(q.toLowerCase())))
     return [...l].sort((a, b) => sort === 'value' ? b.estimated_investable - a.estimated_investable : sort === 'stale' ? a.last_contact.localeCompare(b.last_contact) : sort === 'next' ? (a.next_step_date || '9').localeCompare(b.next_step_date || '9') : b.probability - a.probability)
   }, [open, stage, q, sort])
 
@@ -58,6 +60,7 @@ export default function Prospects() {
   const srcMap: Record<string, number> = {}
   prospects.forEach((p) => { srcMap[p.source] = (srcMap[p.source] || 0) + p.estimated_investable })
   const sources = Object.entries(srcMap).sort((a, b) => b[1] - a[1])
+  const stuck = open.filter((p) => (daysFrom(p.last_contact) ?? 0) <= -30)
   const suggestions = open.flatMap((p) => p.suggestions.map((s: any) => ({ ...s, p })))
 
   return (
@@ -94,10 +97,13 @@ export default function Prospects() {
         </Panel>
         <div className="col" style={{ gap: 16 }}>
           <Panel title="Pipeline by stage" aside="Open prospects">
-            <HBars data={STAGES.filter((st) => st !== 'Closed').map((st) => ({ label: STAGE_SHORT[st] ?? st, value: open.filter((p) => p.stage === st).length }))} inline />
+            <HBars inline data={STAGES.filter((st) => st !== 'Closed').map((st) => ({ label: STAGE_SHORT[st] ?? st, value: open.filter((p) => p.stage === st).length,
+              title: `${STAGE_INFO[st]}. Show these prospects.`, onClick: () => { setStage(st); listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }))} />
+            <p className="tiny muted" style={{ marginTop: 8 }}>{stuck.length ? `${stuck.length} haven’t heard from you in over 30 days: ${stuck.slice(0, 3).map((p) => p.name.split(' ')[0]).join(', ')}${stuck.length > 3 ? ' and others' : ''}.` : 'Everyone has been contacted in the last 30 days.'} Select a stage to see who’s in it.</p>
           </Panel>
           <Panel title="Where they come from">
-            <HBars data={sources.map(([k, v]) => ({ label: k, value: v }))} format={(v) => inr(v)} inline />
+            <HBars inline data={sources.map(([k, v]) => ({ label: k, value: v, title: `Show prospects from ${k.toLowerCase()}`, onClick: () => { setQ(k); setStage(''); listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }) } }))} format={(v) => inr(v)} />
+            {sources[0] && <p className="tiny muted" style={{ marginTop: 8 }}>{sources[0][0]} brings the most potential ({inr(sources[0][1])} across {prospects.filter((p) => p.source === sources[0][0]).length} people). Select a source to see them.</p>}
           </Panel>
         </div>
       </div>
@@ -121,7 +127,7 @@ export default function Prospects() {
         </Panel>
       )}
 
-      <section className="panel" style={{ marginTop: 16 }}>
+      <section className="panel" style={{ marginTop: 16, scrollMarginTop: 80 }} ref={listRef}>
         <div className="list-toolbar">
           <SearchField value={q} onChange={setQ} placeholder="Name, need or source…" label="Search prospects" width={260} />
           <div className="row wrap" style={{ gap: 6 }}>
@@ -187,27 +193,34 @@ function ProspectRow({ p, next }: { p: any; next?: any }) {
 
 function CreateProspect({ onClose, onCreated }: { onClose: () => void; onCreated: (id: string) => void }) {
   const [f, setF] = useState({ name: '', phone: '', email: '', source: 'Referral', source_detail: '', estimated_investable: 5000000, need: '', stage: 'Lead', next_step: 'Intro call', next_step_date: '' })
+  const [needs, setNeeds] = useState<Needs>({ goal: 'Not sure yet', horizon: null, asset_classes: [] })
+  const [consent, setConsent] = useState<Record<string, boolean>>({ whatsapp: false, email: true, marketing: false })
+  const reachable = !!(f.phone.trim() || f.email.trim())
   const toast = useToast()
   const { busy, run } = useAction()
   const set = (k: string, v: any) => setF({ ...f, [k]: v })
   const save = () => run(async () => {
-    const p = await api('/prospects', { body: f })
+    const p = await api('/prospects', { body: { ...f, needs, consent } })
     invalidate('/c/prospects')
-    toast(`${p.name} added as a ${p.stage.toLowerCase()}`)
+    toast(p.ownership ? `${p.name} added. The same ${p.ownership.matched_on} is with ${p.ownership.with_rm}, so your branch head will confirm who keeps them.` : `${p.name} added as a ${p.stage.toLowerCase()}`)
     onCreated(p.id)
   }, 'Couldn’t add the prospect')
   return (
     <Modal title="Add a prospect" sub="Everything here comes from you. The prospect doesn’t see it." onClose={onClose}
-      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={!f.name.trim() || busy} onClick={save}>{busy ? 'Adding…' : 'Add prospect'}</button></>}>
+      foot={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" disabled={!f.name.trim() || !reachable || busy} onClick={save}>{busy ? 'Adding…' : 'Add prospect'}</button></>}>
       <div className="grid g2" style={{ gap: 12 }}>
         <label className="field" style={{ gridColumn: '1 / -1' }}><span>Name</span><input className="input" autoFocus value={f.name} onChange={(e) => set('name', e.target.value)} /></label>
         <label className="field"><span>Mobile</span><input className="input" type="tel" inputMode="tel" autoComplete="off" value={f.phone} onChange={(e) => set('phone', e.target.value)} /></label>
         <label className="field"><span>Email</span><input className="input" type="email" autoComplete="off" spellCheck={false} value={f.email} onChange={(e) => set('email', e.target.value)} /></label>
+        <p className="tiny muted" style={{ gridColumn: '1 / -1', marginTop: -6 }}>A mobile or email is needed. Both stay unverified until Operations confirms them.</p>
+        <DuplicateWarning phone={f.phone} email={f.email} />
         <label className="field"><span>Source</span><select className="select" value={f.source} onChange={(e) => set('source', e.target.value)}>{['Referral', 'Event', 'Inbound', 'Cold outreach'].map((s) => <option key={s}>{s}</option>)}</select></label>
         <label className="field"><span>Referred by or where you met</span><input className="input" value={f.source_detail} onChange={(e) => set('source_detail', e.target.value)} /></label>
         <label className="field"><span>Estimated investable (₹)</span><AmountInput label="Estimated investable in rupees" value={f.estimated_investable} onChange={(v) => set('estimated_investable', v)} /></label>
         <label className="field"><span>Stage</span><select className="select" value={f.stage} onChange={(e) => set('stage', e.target.value)}><option>Lead</option><option>Prospect</option></select></label>
-        <label className="field" style={{ gridColumn: '1 / -1' }}><span>What they need</span><textarea className="textarea" rows={2} value={f.need} onChange={(e) => set('need', e.target.value)} /></label>
+        <NeedsFields v={needs} onChange={setNeeds} />
+        <label className="field" style={{ gridColumn: '1 / -1' }}><span>In their words</span><textarea className="textarea" rows={2} value={f.need} placeholder="Selling a stake in his company; wants a plan for the proceeds" onChange={(e) => set('need', e.target.value)} /></label>
+        <ConsentFields v={consent} onChange={setConsent} />
         <label className="field"><span>Next step</span><input className="input" value={f.next_step} onChange={(e) => set('next_step', e.target.value)} /></label>
         <label className="field"><span>By</span><input className="input" type="date" value={f.next_step_date} onChange={(e) => set('next_step_date', e.target.value)} />{f.next_step_date && <span className="tiny muted">{when(f.next_step_date)}</span>}</label>
         <label className="check toggle-off" style={{ gridColumn: '1 / -1' }} title="Arrives with Kova Client onboarding">

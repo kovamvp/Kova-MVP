@@ -92,6 +92,7 @@ test('prospect: create, close and reopen', async ({ app }) => {
   await app.goto('/prospects')
   await app.getByRole('button', { name: 'Add a prospect' }).click()
   await app.getByLabel('Name').fill('E2E Prospect')
+  await app.getByRole('textbox', { name: 'Email' }).fill('e2e.prospect@example.com') // a mobile or email is required since Sprint 4
   await app.getByRole('button', { name: 'Add prospect' }).click()
   await expect(app.locator('h1')).toContainText('E2E Prospect')
   await app.getByRole('button', { name: 'Close prospect' }).click()
