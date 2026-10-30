@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { CalendarClock, ChevronLeft, ChevronRight, MapPin, NotebookPen, Pencil, UserX, Users, XCircle } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
@@ -7,6 +7,7 @@ import { TIERS, useClients, useMeetings, useProducts, useProspects } from '../li
 import { date, inr, nowISO, parse, time, todayISO, when } from '../lib/format'
 import { Avatar, Drawer, Panel, Stat, Status, SearchField, TierPill, useToast } from '../ui'
 import { EMPTY_PLAN, Plan, PlanChips, PlanFields } from './MeetingPlan'
+import { FromLastTime, SummarySection } from './MeetingSummary'
 
 const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 const MOM_ROWS = 5
@@ -20,7 +21,6 @@ export default function Meetings() {
   const [anchor, setAnchor] = useState(() => parse(todayISO()))
   const [jump, setJump] = useState<{ day: string; n: number } | null>(null)
   const [allMom, setAllMom] = useState(false)
-  const nav = useNavigate()
   const who = (m: any) => (m.with.kind === 'client' ? clients : prospects).find((x) => x.id === m.with.id)
   const P = Object.fromEntries(products.map((p) => [p.id, p]))
   const open = params.get('m') ? meetings.find((m) => m.id === params.get('m')) : null
@@ -56,13 +56,13 @@ export default function Meetings() {
 
       <div className="grid g-main row-even mb16">
         {next ? <PrepPack m={next} who={who(next)} P={P} meetings={meetings} onOpen={() => setParams({ m: next.id })} /> : <Panel title="Next up"><p className="small muted">Nothing scheduled.</p></Panel>}
-        <Panel title="Needs a MoM" aside="One tap opens the agent">
+        <Panel title="Needs a MoM" aside="Summarise, then send the MoM">
           {needMom.length === 0 && <p className="small muted">All caught up.</p>}
           <div className="col" style={{ gap: 0 }}>
             {(allMom ? needMom : needMom.slice(0, MOM_ROWS)).map((m) => (
               <div key={m.id} className="w-line">
                 <span className="grow small"><span className="strong">{m.title}</span><br /><span className="tiny muted">{who(m)?.name} · {when(m.start)}</span></span>
-                <button className="btn btn-quiet btn-sm" onClick={() => nav(`/${m.with.kind === 'client' ? 'clients' : 'prospects'}/${m.with.id}?panel=agent&mom=${m.id}`)}><NotebookPen />Write MoM</button>
+                <button className="btn btn-quiet btn-sm" onClick={() => setParams({ m: m.id })}><NotebookPen />{m.summary ? 'Send the MoM' : 'Summarise'}</button>
               </div>
             ))}
           </div>
@@ -133,13 +133,14 @@ function MeetingDrawer({ m, who, P, meetings, onClose }: { m: any; who: any; P: 
   const href = `/${m.with.kind === 'client' ? 'clients' : 'prospects'}/${m.with.id}`
   return (
     <Drawer title={m.title} sub={`${when(m.start)}–${time(m.end)} · ${m.type}`} onClose={onClose}
-      foot={<><Link className="btn btn-quiet" to={href}>Open {m.with.kind}</Link>{!m.mom && <Link className="btn btn-primary" to={`${href}?panel=agent&mom=${m.id}`}><NotebookPen />Record MoM with the agent</Link>}</>}>
+      foot={<Link className="btn btn-quiet" to={href}>Open {m.with.kind}</Link>}>
       <div className="col" style={{ gap: 16 }}>
         <div className="row" style={{ gap: 10 }}><Status s={m.status} />{m.created_by === 'agent' && <span className="pill brass"><span className="ring" style={{ width: 8, height: 8 }} />Set up by the agent</span>}</div>
         <Link to={href} className="row" style={{ gap: 10 }}><Avatar name={who?.name || ''} size={36} /><span><span className="strong">{who?.name}</span><br /><span className="tiny muted">{m.with.kind === 'client' ? `${who?.risk_profile} · ${inr(who?.aum)}` : `${who?.stage} · ${inr(who?.estimated_investable)}`}</span></span></Link>
         <div className="small row" style={{ gap: 6 }}><MapPin size={14} />{m.location}</div>
         <div><div className="tiny muted">Attending from Kova</div><div className="small row" style={{ gap: 6, marginTop: 4 }}><Users size={14} />Priya Sharma{m.attendees.map((a: any) => `, ${a.name} (${a.title})`).join('')}</div>
           <p className="tiny muted" style={{ marginTop: 4 }}>Colleagues listed here receive the MoM. Your manager sees it in their view without a notification.</p></div>
+        <SummarySection m={m} P={P} />
         <PlanSection m={m} who={who} P={P} />
         <div><h3>Agenda</h3><ul className="small" style={{ paddingLeft: 18, margin: '6px 0 0' }}>{m.agenda.map((a: string) => <li key={a}>{a}</li>)}</ul>{!m.agenda.length && <p className="small muted">No agenda yet.</p>}</div>
         {m.mom ? (
@@ -157,7 +158,8 @@ function MeetingDrawer({ m, who, P, meetings, onClose }: { m: any; who: any; P: 
           <div>
             <h3>Prep pack</h3>
             <div className="col small" style={{ gap: 8, marginTop: 8 }}>
-              <div className="prep-box"><div className="tiny muted">Last time</div>{past?.mom?.summary || 'First recorded meeting.'}</div>
+              <FromLastTime m={m} meetings={meetings} P={P} />
+              <div className="prep-box"><div className="tiny muted">Last time</div>{past?.mom?.summary || past?.summary?.portfolio?.discussed || 'First recorded meeting.'}</div>
               {open.length > 0 && <div className="prep-box"><div className="tiny muted">Open promises</div><ul>{open.map((p: any) => <li key={p.text}>{p.text}</li>)}</ul></div>}
               {talk.length > 0 && <div className="prep-box"><div className="tiny muted">Holdings to discuss</div><ul>{talk.map((p: any) => <li key={p.id}>{p.name}: {p.cio_view.comment.split('.')[0]}.</li>)}</ul></div>}
             </div>

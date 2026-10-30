@@ -125,6 +125,17 @@ def client_insights(id_: str):
             "comparisons": insights.comparisons(c, bms, meetings, today_ist())}
 
 
+@app.get("/api/meetings/{id_}/mom-draft")
+def meeting_mom_draft(id_: str):
+    from .summaries import mom_draft
+    m = store().get("meetings", id_)
+    if not m:
+        raise HTTPException(404, f"{id_} not found")
+    if not m.get("summary"):
+        raise HTTPException(400, "Record the meeting summary first; the MoM is drafted from it.")
+    return mom_draft(m)
+
+
 @app.get("/api/meetings/plan-summary")
 def meeting_plan_summary(days: int = 30):
     from .meetings import summary

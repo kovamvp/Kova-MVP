@@ -214,7 +214,7 @@ export default function ProspectDetail() {
           <ActionsPanel kind="prospect" id={p.id} name={p.name} initial={params.get('do')} onAskAgent={(x) => { setPrompt(x); setPanel('agent') }} />
         </Drawer>
       )}
-      {panel === 'agent' && <AgentPanel key={initial || 'a'} scope={{ kind: 'prospect', id: p.id }} name={p.name} names={names} initialText={initial} onClose={() => setPanel(null)} />}
+      {panel === 'agent' && <AgentPanel key={(initial || 'a') + (params.get('summary') || '')} anchor={params.get('summary') ? { kind: 'meeting', id: params.get('summary')! } : null} scope={{ kind: 'prospect', id: p.id }} name={p.name} names={names} initialText={initial} onClose={() => setPanel(null)} />}
       {closing && <CloseProspect p={p} onClose={() => setClosing(false)} />}
     </main>
   )

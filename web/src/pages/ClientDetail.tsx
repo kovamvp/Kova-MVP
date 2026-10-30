@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, CalendarPlus, Check, ChevronRight, LayoutGrid, ListChecks, MessageSquareText, Phone, Receipt, Send, ShieldCheck, X } from 'lucide-react'
-import { useApi } from '../lib/api'
+import { api, invalidate, useApi } from '../lib/api'
+import { useAction } from '../lib/action'
 import { pushRecent } from '../lib/session'
 import { EQUITY_BAND, fitsProfile, useClients, useMeetings, useProducts } from '../lib/data'
 import { ago, date, inr, label, when } from '../lib/format'
@@ -159,7 +160,7 @@ export default function ClientDetail() {
           <ActionsPanel kind="client" id={c.id} name={c.name} initial={params.get('do')} onAskAgent={(p) => { setAgentPrompt(p); setPanel('agent') }} />
         </Drawer>
       )}
-      {panel === 'agent' && <AgentPanel key={agentInitial || 'a'} scope={{ kind: 'client', id: c.id }} name={c.name} allowBill names={names} onClose={() => setPanel(null)} initialText={agentInitial} />}
+      {panel === 'agent' && <AgentPanel key={(agentInitial || 'a') + (params.get('summary') || '')} anchor={params.get('summary') ? { kind: 'meeting', id: params.get('summary')! } : null} scope={{ kind: 'client', id: c.id }} name={c.name} allowBill names={names} onClose={() => setPanel(null)} initialText={agentInitial} />}
     </main>
   )
 }
@@ -265,7 +266,7 @@ function NeedsYou({ c, ins, P, onDo, next }: { c: any; ins: any; P: Record<strin
                   : <>{a.date ? when(a.date) : ''}{a.amount ? ` · ${inr(a.amount)}` : ''}{a.detail ? ` · ${a.detail}` : ''}</>}
               </div>
             </div>
-            {a.cta && cta(a.cta)}
+            {a.kind === 'owed' ? <OwedReceived clientId={c.id} owedId={a.owed_id} text={a.title} /> : a.cta && cta(a.cta)}
           </div>
         ))}
       </div>
@@ -274,4 +275,14 @@ function NeedsYou({ c, ins, P, onDo, next }: { c: any; ins: any; P: Record<strin
       </details>}
     </Panel>
   )
+}
+
+function OwedReceived({ clientId, owedId, text }: { clientId: string; owedId: string; text: string }) {
+  const { busy, run } = useAction()
+  const toast = useToast()
+  return <button className="btn btn-quiet btn-sm" disabled={busy} onClick={() => run(async () => {
+    await api('/actions/update_owed', { body: { kind: 'client', id: clientId, owed_id: owedId, status: 'received' } })
+    invalidate('/c/'); invalidate('/clients/')
+    toast(`Marked “${text}” as received`)
+  }, 'That wasn’t updated')}>Mark received</button>
 }

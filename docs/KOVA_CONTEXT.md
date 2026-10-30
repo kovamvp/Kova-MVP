@@ -160,6 +160,14 @@ W = working · D = designed with mock data (inner pages light) · O = out of thi
 - Meetings page: the big day/week/month calendar is replaced by **All meetings**, one list grouped by day, latest first, that opens scrolled to today (later meetings above, earlier below). Search matches client, code, title, type, agenda, plan products (name, category, type), intent, service items and notes; filters for status, type and tier. The calendar is a small month widget whose days jump the list. The meeting drawer shows and edits the plan; the prep pack shows plan chips. Next up, Needs a MoM and Promises stay.
 - Sample meetings got plans inferred from their title and agenda (`infer_plan`, migration).
 
+**Cycle 2, Sprint 6: meeting summary, MoM and chains (built 30 Oct).** `backend/summaries.py`, action `record_summary` (manual form or the agent's `propose_meeting_summary` card):
+- Up to six sections, only the relevant ones: **portfolio** `{discussed, reaction, changes}`, **products** `[{product_id, interest (Interested / Follow up / Not interested), amount, feedback}]`, **service** `[{category, details}]`, **engagement** `{notes, profile}`, **regulatory** `[{kind, note}]`, **to_get** `[{text, due}]`; plus `outcome` (Positive, Neutral, Needs follow-up, Proposal requested, Transaction agreed, Not interested) and `next_meeting`. Only after the meeting has started.
+- Routing: interest → a `pipeline` doc (new collection; Sprint 7 builds on it); feedback → product manager request (sent once); service → service request; regulatory → a task in Updates; to_get → `owed` items on the client/prospect (tracked until received, shown in "Needs you" with Mark received; action `update_owed`); engagement profile fields → `update_profile` (locks and consent respected); next meeting with a time → a follow-up meeting with `previous_meeting_id` and a plan carrying the products, agreed changes and what's still to get; without a time → a "Book the follow-up" reminder.
+- **Editable, changes flow on:** everything created is kept in `meeting.routed` under a stable key. Saving again closes removed pipeline lines, cancels owed items, tasks and the follow-up meeting, reschedules the follow-up if its time changed, and reports what was already sent (requests) and can't be unsent. `summary.version` and `summary_history` keep every version.
+- **MoM from the summary:** `GET /api/meetings/{id}/mom-draft` builds a client-ready draft (discussed and agreed, products to follow up, what Kova is doing, what we need from them, next meeting); product feedback, reactions, engagement, profile and regulatory items stay out. The RM edits and sends it through the existing `log_mom`, which completes the meeting.
+- Meeting drawer: Summary block (sections, outcome, "Filed from this summary", version), Write/Edit summary, Tell the agent, Draft the MoM; after saving, prompts to file a reimbursement or start a transaction. Prep pack shows "From last time" for chained meetings. "Needs a MoM" opens the meeting.
+- **Agent sessions anchored to a meeting:** `POST /api/agent/sessions` with `anchor: {kind: "meeting", id}` reopens that meeting's session or creates one titled "Summary of <meeting> · <date>"; the system prompt then carries the meeting (plan, agenda, summary so far). Session list shows what each session is about.
+
 ## 7. How the agent works (the core working feature)
 
 **Flow.** RM opens a client/prospect/product page → brass orb in the floating bar → session list (past sessions + "New session"; archived toggle) → chat. The RM types, or taps the mic (live words appear; on stop Whisper's transcript replaces them; the text is editable) → `POST /api/agent/sessions/{sid}/message`.
@@ -217,6 +225,7 @@ The real MVP will move to: Python/FastAPI modular monolith, Postgres + pgvector,
 
 | Id | What |
 |---|---|
+| (Sprint 6) | No data migration: new `pipeline` collection starts empty; `summary`, `routed`, `owed` appear as RMs record summaries. |
 | `2026-10-31-meeting-plans` | Meetings get a `plan` inferred from their title and agenda (products, portfolio intent, service items). |
 | `2026-10-31-prospect-capture` | Prospects get structured `needs`, `consent` (WhatsApp off for PR-2004, PR-2010, PR-2016) and `contact_verified` from their readiness step. |
 | `2026-10-31-client-profiles` | Clients get `profile` sections from the sample data, empty `custom_fields` and `profile_changes`; `red_flags` recomputed with `id`, `why` and `cta`. |

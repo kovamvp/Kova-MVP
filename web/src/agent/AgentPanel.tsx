@@ -76,7 +76,7 @@ function md(text: string): ReactNode {
   })
 }
 
-export default function AgentPanel({ scope, name, onClose, allowBill, names = {}, initialText }: { scope: Scope; name: string; onClose: () => void; allowBill?: boolean; names?: Record<string, string>; initialText?: string | null }) {
+export default function AgentPanel({ scope, name, onClose, allowBill, names = {}, initialText, anchor }: { scope: Scope; name: string; onClose: () => void; allowBill?: boolean; names?: Record<string, string>; initialText?: string | null; anchor?: { kind: 'meeting'; id: string } | null }) {
   const [sessions, setSessions] = useState<any[] | null>(null)
   const [archived, setArchived] = useState(false)
   const [sess, setSess] = useState<any>(null)
@@ -85,8 +85,8 @@ export default function AgentPanel({ scope, name, onClose, allowBill, names = {}
   useEffect(() => { loadList() }, [loadList])
   const started = useRef(false)
   useEffect(() => {
-    if (initialText && !started.current) { started.current = true; api('/agent/sessions', { body: scope }).then(setSess) }
-  }, [initialText, scope])
+    if ((initialText || anchor) && !started.current) { started.current = true; api('/agent/sessions', { body: { ...scope, ...(anchor ? { anchor } : {}) } }).then((s) => api(`/agent/sessions/${s.id}`)).then(setSess) }
+  }, [initialText, scope, anchor])
   const open = async (id: string) => setSess(await api(`/agent/sessions/${id}`))
   const create = async () => setSess(await api('/agent/sessions', { body: scope }))
 
@@ -111,7 +111,7 @@ export default function AgentPanel({ scope, name, onClose, allowBill, names = {}
               <button key={s.id} className="session-row" onClick={() => open(s.id)}>
                 <span className="grow" style={{ minWidth: 0, textAlign: 'left' }}>
                   <span className="strong ellipsis" style={{ display: 'block' }}>{s.title}</span>
-                  <span className="tiny muted">{ago(s.updated)} · {s.card_count} card{s.card_count === 1 ? '' : 's'}</span>
+                  <span className="tiny muted">{s.anchor?.kind === 'meeting' ? 'About a meeting · ' : ''}{ago(s.updated)} · {s.card_count} card{s.card_count === 1 ? '' : 's'}{s.preview && !s.anchor ? ` · “${s.preview.slice(0, 50)}${s.preview.length > 50 ? '…' : ''}”` : ''}</span>
                 </span>
                 <span className="tiny faint">{s.id}</span>
               </button>
