@@ -101,6 +101,7 @@ MIGRATIONS: list[Migration] = [
     ("2026-10-30-product-taxonomy", "Products classified asset class → type → subcategory; holdings say which account and where it's held", product_taxonomy),
     ("2026-10-30-client-tiers", "Households tiered Rise / Ascent / Summit / Zenith by assets with Kova", client_tiers),
     ("2026-10-30-history", "Monthly client history since two fiscal years ago, and benchmark indices", history_and_benchmarks),
+    ("2026-10-30-history-by-product", "Monthly client history also split by product, for drill-down comparisons", history_and_benchmarks),
 ]
 
 

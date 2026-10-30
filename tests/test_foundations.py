@@ -152,3 +152,18 @@ def test_new_client_from_a_prospect_starts_in_rise_with_a_kova_account(client):
     c = client.post("/api/actions/convert_prospect", json={"prospect_id": "PR-2006", "consent": CONSENT}).json()["client"]
     assert c["tier"] == "rise" and c["holding_accounts"][0]["held_at"] == "Kova" and c["history"] == []
     assert S.store().get("families", c["family_id"])["tier"] == "rise"
+
+
+def test_history_splits_each_month_by_product(client):
+    """Sprint 2: drill-down cards compare any level (type, subcategory, product), so each month is split by product."""
+    assert "2026-10-30-history-by-product" in migrations.applied(S.store())
+    for c in docs(client, "clients"):
+        if not c["holdings"]:
+            continue
+        for r in c["history"]:
+            assert abs(sum(r["by_product"].values()) - r["value"]) <= len(c["holdings"]) * 2
+        last = c["history"][-1]["by_product"]
+        held: dict = {}
+        for h in c["holdings"]:
+            held[h["product_id"]] = held.get(h["product_id"], 0) + h["value"]
+        assert {k: round(v) for k, v in held.items()} == last

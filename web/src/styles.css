@@ -960,3 +960,44 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 .pill.tier-zenith .tier-steps i.on:last-child { background: var(--brass); }
 .client-code { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .02em; font-variant-numeric: tabular-nums; margin-left: 4px; }
 .client-code.lg { font-size: 13px; vertical-align: middle; }
+
+/* ---------- drill-down cards (one pattern for every analysis card) */
+.drill { display: flex; flex-direction: column; min-height: 0; height: 100%; }
+.drill-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+.drill-crumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-top: 4px; min-height: 22px; }
+.drill-crumbs .linkbtn { font-weight: 400; color: var(--muted); }
+.drill-crumbs .linkbtn:hover { color: var(--forest); }
+.drill-crumbs .linkbtn.here { color: var(--ink-strong); font-weight: 500; }
+.iconbtn.sm { width: 22px; height: 22px; }
+.seg.sm button { padding: 3px 8px; font-size: 12px; }
+.drill-total { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-bottom: 10px; }
+.drill-big { font-size: 24px; line-height: 1.1; font-weight: 450; }
+.drill.compact .drill-big { font-size: 22px; }
+.drill-rows { flex: 1; min-height: 0; overflow-y: auto; margin: 0 -8px; }
+.drill-row-wrap { position: relative; }
+.drill-row { display: grid; grid-template-columns: 1fr 18px; grid-template-rows: auto auto; column-gap: 8px; row-gap: 5px; width: 100%;
+  text-align: left; padding: 9px 8px; border-radius: var(--r-s); border-bottom: 1px solid var(--line); color: inherit; }
+.drill-row:not(:disabled):hover, a.drill-row:hover { background: var(--stone); }
+.drill-row:disabled { cursor: default; color: inherit; }
+.drill-row .drill-line { grid-column: 1; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.drill-row .drill-go { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--muted); }
+.drill-label { font-size: 13.5px; color: var(--ink-strong); }
+.drill-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.drill-bar { flex: 1; height: 4px; border-radius: 2px; background: var(--stone); overflow: hidden; min-width: 40px; }
+.drill-bar i { display: block; height: 100%; background: var(--forest); opacity: .85; border-radius: 2px; }
+.drill-new { font-size: 11.5px; font-weight: 500; color: var(--brass-deep); }
+.drill-open { position: absolute; right: 34px; top: 9px; color: var(--muted); padding: 0 4px; background: var(--paper); }
+.drill-open:hover { color: var(--forest); text-decoration: underline; }
+.drill-row-wrap:has(.drill-open) .drill-line:first-child .num { margin-right: 92px; }
+.drill-foot { padding-top: 10px; margin-top: 4px; }
+.drill-panel { padding: 16px 20px 12px; }
+.drill-panel .drill-rows { max-height: 300px; }
+.drill-head { margin-bottom: 4px; align-items: center; }
+.drill-sub { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 10px; margin-bottom: 10px; }
+.drill-sub .drill-crumbs { margin-top: 0; flex: 1; min-width: 0; }
+.drill.compact .drill-row { grid-template-rows: auto; padding: 7px 8px; }
+.drill.compact .drill-row .drill-go { grid-row: 1; }
+.drill.compact .drill-label { font-size: 13px; }
+.drill-val { min-width: 64px; text-align: right; font-size: 13px; }
+.drill-chg { min-width: 54px; text-align: right; display: inline-flex; justify-content: flex-end; }
+.drill.compact .drill-total { margin-bottom: 6px; }
