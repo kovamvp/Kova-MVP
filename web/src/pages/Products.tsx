@@ -1,12 +1,12 @@
+import { DrillCard } from '../ui/Drill'
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Check, ChevronRight } from 'lucide-react'
 import { fitsProfile, ldStats, useClients, useLd, useProducts, useResearch } from '../lib/data'
 import { date, inr, plural } from '../lib/format'
-import { Donut, HBars, Legend } from '../charts'
+import { HBars } from '../charts'
 import { LoadError, Num, Panel, SkeletonRows, Stat, Status, SearchField } from '../ui'
 
-const CAT_COLORS: Record<string, string> = { 'Mutual fund': '#1D3A2E', PMS: '#5F7D6E', AIF: '#B0A98E', Bond: '#C9A961', 'Fixed deposit': '#A9B8A9', Credit: '#77736A' }
 
 export function suitsCount(p: any, clients: any[]) {
   return clients.filter((c) => c.segment !== 'lost' && !c.holdings.some((h: any) => h.product_id === p.id) && fitsProfile(p, c.risk_profile) && p.min_investment <= c.aum * 0.25)
@@ -39,9 +39,7 @@ export default function Products() {
     clients.forEach((c) => c.holdings.forEach((h: any) => { m[h.product_id] ||= { value: 0, n: 0 }; m[h.product_id].value += h.value; m[h.product_id].n++ }))
     return m
   }, [clients])
-  const byCat: Record<string, number> = {}
-  products.forEach((p) => (byCat[p.category] = (byCat[p.category] || 0) + (held[p.id]?.value || 0)))
-  const total = Object.values(byCat).reduce((a, b) => a + b, 0)
+  const total = products.reduce((a, p) => a + (held[p.id]?.value || 0), 0)
   const top = [...products].sort((a, b) => (held[b.id]?.value || 0) - (held[a.id]?.value || 0)).slice(0, 6)
   const cats = [...new Set(products.map((p) => p.category))]
   const list = products.filter((p) => (!cat || p.category === cat) && (!q || (p.name + p.sub_category + p.manufacturer).toLowerCase().includes(q.toLowerCase()))
@@ -85,12 +83,9 @@ export default function Products() {
             </div>
           </section>
           <div className="grid g3 row-even" style={{ marginBottom: 16 }}>
-            <Panel title="Your book by product type" className="chart-card">
-              <div className="row" style={{ gap: 18 }}>
-                <Donut size={150} data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k], note: inr(v) }))} center={<div className="tiny muted">by value</div>} />
-                <div className="grow"><Legend notes data={Object.entries(byCat).filter(([, v]) => v > 0).map(([k, v]) => ({ label: k, value: v, color: CAT_COLORS[k], note: inr(v) }))} format={(v) => `${Math.round((v / total) * 100)}%`} /></div>
-              </div>
-            </Panel>
+            <section className="panel chart-card drill-panel">
+              <DrillCard title={<h2>Your book by product type</h2>} rootLabel="All products" clients={clients} products={products} levels={['product_type', 'subcategory', 'product', 'client']} />
+            </section>
             <Panel title="Most held">
               <HBars data={top.map((p) => ({ label: <><Link to={`/products/${p.id}`}>{p.name}</Link> <span className="tiny muted">· {plural(held[p.id]?.n || 0, 'client')}</span></>, value: held[p.id]?.value || 0 }))} format={(v) => inr(v)} />
             </Panel>

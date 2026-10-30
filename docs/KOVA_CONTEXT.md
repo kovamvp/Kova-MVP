@@ -137,6 +137,12 @@ W = working · D = designed with mock data (inner pages light) · O = out of thi
 - UI: tier pill (four steps filled to the tier, plus the name) on the client list, families and client page; tier filter that combines with segments; client code beside every client name and searchable.
 - "Active" still means transacted in 6 months (redefinition not confirmed).
 
+**Cycle 2, Sprint 2: drill-down and comparison cards (built 30 Oct).** One card pattern for every analysis card, in `web/src/ui/Drill.tsx` (`DrillCard`, `Change`) with the logic in `web/src/lib/drill.ts` (`drill`, `comparePoint`, `pointLabel`, `revenueSoFar`, unit-tested).
+- Levels: asset class → product type → category → product → the clients who hold it (client lines open the client page; product lines also link to the product page). Breadcrumb and back arrow to go up. A card can start at any level (the Products page starts at product type).
+- Comparison: Month (vs a month ago), Quarter (vs three months ago), FY (vs 31 March). "Now" is current holdings; the earlier figure is the client history's `by_product` split (new migration). Lines that didn't exist then say "New"; sold-out lines say "Exited". The chosen period is remembered per viewer (localStorage `kova.period`).
+- Live on Home "Book at a glance" (with revenue this fiscal year vs the same months last year) and Products "Your book by product type" (replaces the donut). Default Home layout gives the book card more height (only applies to layouts not yet saved).
+- Sample market path changed to a calmer one (`kova-market-v245`, equity volatility 4% a month): equity ~14% over a year, ~12% a year over ten. The book grows from ~₹46 Cr (Apr 2024) to ₹142 Cr because of when the sample holdings started; revenue growth follows.
+
 ## 7. How the agent works (the core working feature)
 
 **Flow.** RM opens a client/prospect/product page → brass orb in the floating bar → session list (past sessions + "New session"; archived toggle) → chat. The RM types, or taps the mic (live words appear; on stop Whisper's transcript replaces them; the text is editable) → `POST /api/agent/sessions/{sid}/message`.
@@ -194,6 +200,7 @@ The real MVP will move to: Python/FastAPI modular monolith, Postgres + pgvector,
 
 | Id | What |
 |---|---|
+| `2026-10-30-history-by-product` | Re-generates client history with a `by_product` split per month (and the calmer market path) and the benchmark indices. |
 | `2026-10-30-product-taxonomy` | Products get asset class / product type / subcategory / benchmark id; holdings get account, held at, on shelf; clients get `holding_accounts`. |
 | `2026-10-30-client-tiers` | Families and clients get `tier` (Rise / Ascent / Summit / Zenith); family `aum` recomputed from members. |
 | `2026-10-30-history` | Clients get monthly `history`; new `benchmarks` collection. |

@@ -5,6 +5,8 @@ import { ago, date, inr, time, when, daysFrom, label, todayISO } from '../lib/fo
 import { assetClassOf, bookHistory, ldStats, SEGMENTS, STAGES } from '../lib/data'
 import { Area, AllocBar } from '../charts'
 import { ASSET_COLORS, Avatar, Bar, Num, Status } from '../ui'
+import { Change, DrillCard } from '../ui/Drill'
+import { revenueSoFar } from '../lib/drill'
 
 export type Ctx = {
   clients: any[]; prospects: any[]; products: any[]; portfolios: any[]; meetings: any[]; requests: any[]
@@ -28,27 +30,29 @@ const Head = ({ title, href, sub }: { title: string; href?: string; sub?: string
   </div>
 )
 
+/* Book at a glance: the whole book by asset class, opening down to product type, category, product and clients */
+const BOOK_LEVELS = ['asset_class', 'product_type', 'subcategory', 'product', 'client'] as const
+function BookGlance({ clients, products }: { clients: any[]; products: any[] }) {
+  const months: Record<string, number> = {}
+  clients.forEach((c) => (c.history || []).forEach((h: any) => (months[h.month] = (months[h.month] || 0) + (h.revenue || 0))))
+  const rev = revenueSoFar(Object.keys(months).sort().map((m) => ({ month: m, revenue: months[m] })))
+  return (
+    <DrillCard compact title="Book at a glance" clients={clients} products={products} levels={[...BOOK_LEVELS]}
+      headAside={<Link to="/clients" className="iconbtn w-open" aria-label="Open Clients"><ArrowUpRight /></Link>}
+      foot={<div className="small">
+        <div className="spread"><span className="muted">Revenue this fiscal year</span><Num v={rev.now} src="Trail and advisory fees, sample data" className="strong" /></div>
+        {rev.before > 0 && <div className="row tiny muted" style={{ gap: 6, justifyContent: 'flex-end', marginTop: 2 }}><Change now={rev.now} prev={rev.before} />on the same months last year</div>}
+      </div>} />
+  )
+}
+
 const Missing = ({ what }: { what: string }) => <div className="empty small">This {what} is no longer available. Remove the widget or pick another.</div>
 
 export const WIDGETS: WidgetDef[] = [
   /* ---------------- summaries */
   {
-    type: 'book', name: 'Book at a glance', desc: 'Assets you look after, clients and revenue', icon: Wallet, w: 4, h: 4, minW: 3, minH: 3,
-    render: ({ clients }) => {
-      const aum = clients.reduce((a, c) => a + c.aum, 0)
-      const rev = clients.reduce((a, c) => a + (c.revenue_ytd || 0), 0)
-      const byClass: Record<string, number> = {}
-      clients.forEach((c) => c.holdings.forEach((h: any) => (byClass[h.asset_class] = (byClass[h.asset_class] || 0) + h.value)))
-      return (
-        <>
-          <Head title="Book at a glance" href="/clients" />
-          <div className="stat"><span className="value l"><Num v={aum} src="Sum of client holdings" /></span><span className="sub">across {clients.filter((c) => c.segment !== 'lost').length} clients in {new Set(clients.map((c) => c.family_id)).size} families</span></div>
-          <div style={{ margin: '14px 0 8px' }}><AllocBar parts={Object.entries(byClass).map(([k, v]) => ({ label: k, value: v, color: ASSET_COLORS[k] }))} /></div>
-          <div className="row wrap tiny muted" style={{ gap: 12 }}>{Object.entries(byClass).map(([k, v]) => <span key={k} className="row" style={{ gap: 5 }}><i style={{ width: 8, height: 8, borderRadius: 2, background: ASSET_COLORS[k] }} />{k} {Math.round((v / aum) * 100)}%</span>)}</div>
-          <div className="spread small" style={{ marginTop: 'auto', paddingTop: 12 }}><span className="muted">Revenue this year</span><Num v={rev} src="Trail and advisory fees, mock" className="strong" /></div>
-        </>
-      )
-    },
+    type: 'book', name: 'Book at a glance', desc: 'Your book by asset class; open any line to go deeper', icon: Wallet, w: 4, h: 7, minW: 3, minH: 5,
+    render: ({ clients, products }) => <BookGlance clients={clients} products={products} />,
   },
   {
     type: 'aum_trend', name: 'Assets over 12 months', desc: 'How your book has moved', icon: LineChart, w: 4, h: 4, minW: 3, minH: 3,
@@ -426,12 +430,12 @@ export const WIDGET = Object.fromEntries(WIDGETS.map((w) => [w.type, w]))
 
 
 export const DEFAULT_LAYOUT = [
-  { i: 'w-today', type: 'today', x: 0, y: 0, w: 8, h: 5 },
-  { i: 'w-book', type: 'book', x: 8, y: 0, w: 4, h: 5 },
-  { i: 'w-pipe', type: 'pipeline', x: 0, y: 5, w: 4, h: 4 },
-  { i: 'w-inc', type: 'incentive', x: 4, y: 5, w: 4, h: 4 },
-  { i: 'w-req', type: 'requests_sum', x: 8, y: 5, w: 4, h: 4 },
-  { i: 'w-cl', type: 'client', ref: 'CL-1001', x: 0, y: 9, w: 4, h: 4 },
-  { i: 'w-pf', type: 'portfolio', ref: 'PF-2026-000118', x: 4, y: 9, w: 4, h: 4 },
-  { i: 'w-ld', type: 'ld', x: 8, y: 9, w: 4, h: 4 },
+  { i: 'w-today', type: 'today', x: 0, y: 0, w: 8, h: 7 },
+  { i: 'w-book', type: 'book', x: 8, y: 0, w: 4, h: 7 },
+  { i: 'w-pipe', type: 'pipeline', x: 0, y: 7, w: 4, h: 4 },
+  { i: 'w-inc', type: 'incentive', x: 4, y: 7, w: 4, h: 4 },
+  { i: 'w-req', type: 'requests_sum', x: 8, y: 7, w: 4, h: 4 },
+  { i: 'w-cl', type: 'client', ref: 'CL-1001', x: 0, y: 11, w: 4, h: 4 },
+  { i: 'w-pf', type: 'portfolio', ref: 'PF-2026-000118', x: 4, y: 11, w: 4, h: 4 },
+  { i: 'w-ld', type: 'ld', x: 8, y: 11, w: 4, h: 4 },
 ]

@@ -102,6 +102,7 @@ npm run dev          # http://localhost:5173 ; /api is proxied to :8000
 | `web/src/pages/` | One file per page; `shared.tsx` has ContextBar, ActionsPanel, forms, Timeline; `Updates.tsx` is the fixed Home panel |
 | `web/src/agent/` | `AgentPanel.tsx` (sessions, chat, approval cards, bill attach), `useSpeech.ts` (hybrid speech) |
 | `web/src/widgets/registry.tsx` | Home widget library and default layout |
+| `web/src/ui/Drill.tsx` + `web/src/lib/drill.ts` | The drill-down/comparison card used by every analysis card |
 | `web/src/ui/index.tsx` | Avatar, Num (number with source tooltip), Status pills, Panel, Drawer, Modal, Toasts, links |
 | `web/src/charts/index.tsx` | Hand-drawn SVG charts: Donut, HBars, Columns, Area, AllocBar |
 | `web/src/lib/` | `api.ts` (fetch + cache + `invalidate`), `format.ts` (₹ lakh/crore, dates), `data.ts` (hooks, segments, stages, suitability), `session.ts` |

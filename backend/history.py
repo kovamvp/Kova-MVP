@@ -16,7 +16,7 @@ from .store import today_ist
 
 MARKET_MONTHS = 150  # benchmark history, enough for 10-year returns later
 # monthly mean and volatility per asset class
-_CLASS = {"Equity": (0.0105, 0.045), "Debt": (0.0058, 0.006), "Gold": (0.0085, 0.035), "Cash": (0.0054, 0.0006)}
+_CLASS = {"Equity": (0.0105, 0.04), "Debt": (0.0058, 0.006), "Gold": (0.0085, 0.035), "Cash": (0.0054, 0.0006)}
 # annual trail/fee earned by Kova, by product type (shapes revenue month to month; scaled to revenue_ytd)
 _TRAIL = {"Mutual fund": 0.008, "PMS": 0.015, "AIF": 0.012, "Bond": 0.002, "Fixed deposit": 0.003}
 
@@ -69,7 +69,7 @@ def history_start(today: dt.date | None = None) -> dt.date:
 def market(today: dt.date | None = None) -> dict[str, dict[str, float]]:
     """Monthly return per asset class for each of the last MARKET_MONTHS months (keyed 'YYYY-MM')."""
     now = (today or today_ist()).replace(day=1)
-    rng = random.Random("kova-market-v1")
+    rng = random.Random("kova-market-v245")  # chosen for believable returns: equity ~14% over 1 year, ~12% a year over 10
     out: dict[str, dict[str, float]] = {}
     for k in range(MARKET_MONTHS, 0, -1):  # oldest first, so the shape never depends on today
         m = month_key(add_months(now, -k + 1))
@@ -145,11 +145,12 @@ def client_history(client: dict, products: dict[str, dict], today: dt.date | Non
         for k, (v, inv) in zip(keys, path):
             if k < month_key(start):
                 continue
-            e = months.setdefault(k, {"month": k, "value": 0.0, "invested": 0.0, "revenue": 0.0, "by_class": {}})
+            e = months.setdefault(k, {"month": k, "value": 0.0, "invested": 0.0, "revenue": 0.0, "by_class": {}, "by_product": {}})
             e["value"] += v
             e["invested"] += inv
             e["revenue"] += v * rate / 12
             e["by_class"][h["asset_class"]] = e["by_class"].get(h["asset_class"], 0.0) + v
+            e["by_product"][h["product_id"]] = e["by_product"].get(h["product_id"], 0.0) + v
     rows = [months[k] for k in sorted(months)]
     # scale revenue so this fiscal year adds up to the client's revenue so far
     fy = month_key(fy_start(today))
@@ -160,6 +161,7 @@ def client_history(client: dict, products: dict[str, dict], today: dt.date | Non
         r["invested"] = round(r["invested"])
         r["revenue"] = round(r["revenue"] * scale)
         r["by_class"] = {k: round(v) for k, v in r["by_class"].items()}
+        r["by_product"] = {k: round(v) for k, v in r["by_product"].items()}
     if rows and rows[-1]["month"] == month_key(now):
         cur = [r for r in rows if r["month"] >= fy]
         drift = round(client.get("revenue_ytd") or 0) - sum(r["revenue"] for r in cur)
