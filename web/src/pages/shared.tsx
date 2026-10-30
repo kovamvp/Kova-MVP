@@ -4,7 +4,8 @@ import { CalendarPlus, FileText, Lock, Headset, MessageSquare, NotebookPen, Rece
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
 import { date, nowISO, time, when } from '../lib/format'
-import { STAGES, useMeetings, useProducts } from '../lib/data'
+import { SERVICE_CATEGORIES, STAGES, useMeetings, useProducts } from '../lib/data'
+import { EMPTY_PLAN, Plan, PlanFields } from './MeetingPlan'
 import { useToast } from '../ui'
 import { ReimbursementForm } from './Expense'
 
@@ -133,8 +134,7 @@ function MomForm({ kind, id, onDone }: { kind: 'client' | 'prospect'; id: string
   )
 }
 
-export const SERVICE_CATEGORIES = ['Demographic update', 'Family details update', 'Nominee update', 'Bank account change', 'KYC re-verification',
-  'Statement or certificate', 'Transaction issue', 'SIP or STP change', 'Other'] // same list as backend/profile.py
+export { SERVICE_CATEGORIES } from '../lib/data'
 
 function ServiceForm({ clientId, onDone }: { clientId: string; onDone: () => void }) {
   const [params] = useSearchParams()
@@ -188,12 +188,15 @@ function StageForm({ id, onDone }: { id: string; onDone: () => void }) {
 
 export function ScheduleForm({ kind, id, name, onDone }: { kind: 'client' | 'prospect'; id: string; name: string; onDone: () => void }) {
   const [f, setF] = useState({ title: `Review with ${name}`, type: kind === 'prospect' ? 'First meeting' : 'Review', start: nextSlot(), duration_minutes: 45, location: '', agenda: '' })
+  const [plan, setPlan] = useState<Plan>(EMPTY_PLAN)
+  const { data: who } = useApi<any>(`/c/${kind === 'client' ? 'clients' : 'prospects'}/${id}`)
+  const suggest: string[] = kind === 'client' ? (who?.holdings || []).map((h: any) => h.product_id) : (who?.interests || [])
   const [busy, setBusy] = useState(false)
   const toast = useToast()
   const save = async () => {
     setBusy(true)
     try {
-      await api('/actions/schedule_meeting', { body: { with_kind: kind, with_id: id, ...f, agenda: f.agenda.split('\n').filter(Boolean) } })
+      await api('/actions/schedule_meeting', { body: { with_kind: kind, with_id: id, ...f, agenda: f.agenda.split('\n').filter(Boolean), plan } })
       invalidate('/c/')
       toast(<>Meeting scheduled and invite placed in the outbox</>)
       onDone()
@@ -208,7 +211,8 @@ export function ScheduleForm({ kind, id, name, onDone }: { kind: 'client' | 'pro
         <label className="field"><span>Type</span><select className="select" value={f.type} onChange={(e) => setF({ ...f, type: e.target.value })}>{['Review', 'Proposal', 'First meeting', 'Service', 'Family meeting'].map((t) => <option key={t}>{t}</option>)}</select></label>
         <label className="field"><span>Where</span><input className="input" value={f.location} placeholder="Their office, Kova office, phone" onChange={(e) => setF({ ...f, location: e.target.value })} /></label>
       </div>
-      <label className="field"><span>Agenda, one point per line</span><textarea className="textarea" rows={3} value={f.agenda} onChange={(e) => setF({ ...f, agenda: e.target.value })} /></label>
+      <label className="field"><span>Agenda, one point per line (goes in the invite)</span><textarea className="textarea" rows={3} value={f.agenda} onChange={(e) => setF({ ...f, agenda: e.target.value })} /></label>
+      <PlanFields v={plan} onChange={setPlan} suggest={suggest} />
       <div className="row"><button className="btn btn-primary" disabled={busy} onClick={save}>Schedule and send invite</button><button className="btn btn-ghost" onClick={onDone}>Cancel</button></div>
     </div>
   )

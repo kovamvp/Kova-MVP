@@ -28,6 +28,8 @@ export const TIERS = [
   { key: 'zenith', label: 'Zenith', level: 4, rule: 'Household assets with Kova of ₹20 Cr and above' },
 ]
 export const tierOf = (key?: string | null) => TIERS.find((t) => t.key === key)
+export const SERVICE_CATEGORIES = ['Demographic update', 'Family details update', 'Nominee update', 'Bank account change', 'KYC re-verification',
+  'Statement or certificate', 'Transaction issue', 'SIP or STP change', 'Other'] // same list as backend/profile.py
 export const STAGES = ['Lead', 'Prospect', 'Registered', 'KYC in progress', 'Investing client', 'Investing and trading client']
 export const STAGE_INFO: Record<string, string> = {
   Lead: 'Name and context only; not yet qualified',

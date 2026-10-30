@@ -126,7 +126,10 @@ PROPOSE_TOOLS = {
     "propose_schedule_meeting": T("propose_schedule_meeting", "Propose a meeting. Creates an approval card; nothing is booked until the RM approves.", {
         "with_kind": {"type": "string", "enum": ["client", "prospect"]}, "with_id": S, "title": S, "type": {"type": "string", "enum": ["Review", "Proposal", "First meeting", "Service", "Family meeting"]},
         "start": {"type": "string", "description": "Local IST datetime YYYY-MM-DDTHH:MM"}, "duration_minutes": N, "location": S,
-        "agenda": ARR, "attendees": {"type": "array", "items": {"type": "object", "properties": {"name": S, "title": S}}}}, ["with_kind", "with_id", "title", "start"]),
+        "agenda": ARR, "attendees": {"type": "array", "items": {"type": "object", "properties": {"name": S, "title": S}}},
+        "plan": {"type": "object", "description": "Internal plan, never sent to the client: product ids to discuss, portfolio intent, service items", "properties": {
+            "products": ARR, "portfolio": {"type": "string", "enum": ["Review", "Rebalance", "New portfolio", "Maturity reinvestment"]},
+            "service": ARR, "notes": S}}}, ["with_kind", "with_id", "title", "start"]),
     "propose_send_message": T("propose_send_message", "Propose a WhatsApp or email message to the client or prospect. Creates an approval card.", {
         "to_kind": {"type": "string", "enum": ["client", "prospect"]}, "to_id": S, "channel": {"type": "string", "enum": ["WhatsApp", "Email"]},
         "subject": S, "body": S, "purpose": S}, ["to_kind", "to_id", "channel", "body"]),

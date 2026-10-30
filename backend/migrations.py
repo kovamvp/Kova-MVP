@@ -138,6 +138,17 @@ def prospect_capture(store: Any) -> None:
             store.put("prospects", p["id"], new)
 
 
+def meeting_plans(store: Any) -> None:
+    """Sample meetings get a plan (products, portfolio intent, service items) read from their title and agenda."""
+    from .meetings import infer_plan
+    prods = {p["id"]: p for p in store.list("products")}
+    for m in store.list("meetings"):
+        if m.get("plan"):
+            continue
+        who = store.get("clients" if m["with"]["kind"] == "client" else "prospects", m["with"]["id"])
+        store.put("meetings", m["id"], {**m, "plan": infer_plan(m, prods, who)})
+
+
 # (id, description, function(store)). Append only; never edit or reorder applied ones.
 MIGRATIONS: list[Migration] = [
     ("2026-10-28-rupee-sign", "Amounts in text use ₹ and Indian digit grouping (not 'Rs' or 10,000,000)", rupee_sign),
@@ -147,6 +158,7 @@ MIGRATIONS: list[Migration] = [
     ("2026-10-30-history-by-product", "Monthly client history also split by product, for drill-down comparisons", history_and_benchmarks),
     ("2026-10-31-client-profiles", "Client profile sections from sample data; red flags recomputed with why and a next step", client_profiles),
     ("2026-10-31-prospect-capture", "Prospects get structured needs, consent and contact verification", prospect_capture),
+    ("2026-10-31-meeting-plans", "Meetings get a plan (products, portfolio intent, service items) from their title and agenda", meeting_plans),
 ]
 
 
