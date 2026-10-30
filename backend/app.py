@@ -125,6 +125,12 @@ def client_insights(id_: str):
             "comparisons": insights.comparisons(c, bms, meetings, today_ist())}
 
 
+@app.get("/api/meetings/plan-summary")
+def meeting_plan_summary(days: int = 30):
+    from .meetings import summary
+    return summary(days)
+
+
 @app.get("/api/tiers")
 def get_tiers():
     from .tiers import TIERS

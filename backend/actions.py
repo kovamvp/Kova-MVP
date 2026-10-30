@@ -139,11 +139,14 @@ def schedule_meeting(args: dict, source: dict | None = None) -> dict:
     start = args["start"][:16]
     dur = int(args.get("duration_minutes") or 45)
     end = (dt.datetime.fromisoformat(start) + dt.timedelta(minutes=dur)).isoformat(timespec="minutes")
+    from .meetings import check_plan
+    plan = check_plan(args.get("plan"))  # internal: never goes into the invite
     m = {
         "id": new_id("MT-", "seq_meeting", 600), "title": args.get("title") or f"Meeting with {who.get('name', '')}",
         "type": args.get("type") or "Review", "with": link, "start": start, "end": end, "status": "scheduled",
         "location": args.get("location") or "To be confirmed", "attendees": args.get("attendees") or [],
         "agenda": args.get("agenda") or [], "mom": None, "promises": [], "created_by": "agent" if source and source.get("card_id") else "rm",
+        "plan": plan,
     }
     store().put("meetings", m["id"], m)
     when = dt.datetime.fromisoformat(start).strftime("%a %d %b, %I:%M %p")
@@ -397,6 +400,12 @@ def edit_meeting(args: dict, source: dict | None = None) -> dict:
         if k in args and args[k] not in (None, "") and args[k] != m.get(k):
             before[k], after[k] = m.get(k), args[k]
             m[k] = args[k]
+    if args.get("plan") is not None:
+        from .meetings import check_plan
+        plan = check_plan(args["plan"])
+        if plan != m.get("plan"):
+            before["plan"], after["plan"] = m.get("plan"), plan
+            m["plan"] = plan
     if not after:
         raise ValueError("Nothing to change.")
     _record(m, "edited", before, after, args.get("reason"), source)
