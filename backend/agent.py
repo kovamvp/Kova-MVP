@@ -140,7 +140,8 @@ PROPOSE_TOOLS = {
         "client_id": S, "category": {"type": "string", "enum": ["Client meeting meals", "Local travel", "Outstation travel", "Client gifts", "Events", "Phone and internet"]},
         "amount": N, "merchant": S, "bill_date": S, "gst": S, "purpose": S}, ["client_id", "category", "amount", "merchant", "bill_date"]),
     "propose_service_request": T("propose_service_request", "Propose a service request to Client Experience (address change, nominee update, statement, SIP change...). Creates an approval card.", {
-        "client_id": S, "title": S, "details": S, "priority": {"type": "string", "enum": ["normal", "high"]}}, ["client_id", "title", "details"]),
+        "client_id": S, "category": {"type": "string", "enum": ["Demographic update", "Family details update", "Nominee update", "Bank account change", "KYC re-verification", "Statement or certificate", "Transaction issue", "SIP or STP change", "Other"]},
+        "title": S, "details": S, "priority": {"type": "string", "enum": ["normal", "high"]}}, ["client_id", "title", "details"]),
     "propose_add_note": T("propose_add_note", "Propose an internal note on the client's or prospect's record. Creates an approval card.", {
         "about_kind": {"type": "string", "enum": ["client", "prospect"]}, "about_id": S, "title": S, "text": S}, ["about_kind", "about_id", "text"]),
     "propose_reschedule_meeting": T("propose_reschedule_meeting", "Propose moving an existing meeting to a new time (optionally a new place, length or agenda). Find its id with get_meetings. Creates an approval card; the client gets an updated invite only after approval.", {

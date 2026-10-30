@@ -245,10 +245,16 @@ def reimbursement(args: dict, source: dict | None = None) -> dict:
 
 
 def service_request(args: dict, source: dict | None = None) -> dict:
+    from .profile import SERVICE_CATEGORIES
     link = {"kind": "client", "id": args["client_id"]}
-    req = new_request("service_request", args["title"], "Client Experience", {"request": args["details"]}, link, args.get("priority", "normal"))
-    ob = add_outbox("service_request", "Kova Work", {"name": "Client Experience team", "address": "cx@kova.in"}, args["title"], args["details"], source, {"request_id": req["id"]})
-    add_timeline(link, {"kind": "system", "title": f"Service request raised: {args['title']}", "body": args["details"]})
+    cat = args.get("category")
+    if cat and cat not in SERVICE_CATEGORIES:
+        raise ValueError(f"Unknown service category. Use one of: {', '.join(SERVICE_CATEGORIES)}")
+    title = (args.get("title") or "").strip()
+    title = f"{cat}: {title}" if cat and title and not title.startswith(cat) else (title or cat or "Service request")
+    req = new_request("service_request", title, "Client Experience", {"request": args["details"], "category": cat or "Other"}, link, args.get("priority", "normal"))
+    ob = add_outbox("service_request", "Kova Work", {"name": "Client Experience team", "address": "cx@kova.in"}, title, args["details"], source, {"request_id": req["id"]})
+    add_timeline(link, {"kind": "system", "title": f"Service request raised: {title}", "body": args["details"]})
     return {"request": req, "outbox": ob}
 
 
@@ -439,6 +445,15 @@ ACTIONS = {
     "cancel_meeting": cancel_meeting,
     "mark_no_show": mark_no_show,
 }
+
+
+def _profile_actions() -> None:
+    from . import profile
+    ACTIONS.update({"update_profile": profile.update_profile, "add_custom_field": profile.add_custom_field,
+                    "update_custom_field": profile.update_custom_field, "remove_custom_field": profile.remove_custom_field})
+
+
+_profile_actions()
 
 
 def run(action: str, args: dict, source: dict | None = None) -> dict:

@@ -25,9 +25,9 @@ export function Change({ now, prev }: { now: number; prev?: number }) {
   return <span className={`delta ${up ? 'up' : 'down'}`}>{up ? '▲' : '▼'} {Math.abs(pct).toFixed(1)}%</span>
 }
 
-export function DrillCard({ title, clients, products, levels, rootLabel = 'Book', foot, compact, headAside, src = 'Sum of client holdings' }: {
+export function DrillCard({ title, clients, products, levels, rootLabel = 'Book', foot, compact, headAside, src = 'Sum of client holdings', showClients = true }: {
   title: ReactNode; clients: any[]; products: any[]; levels: Level[]; rootLabel?: string; foot?: ReactNode; compact?: boolean
-  headAside?: ReactNode; src?: string
+  headAside?: ReactNode; src?: string; showClients?: boolean
 }) {
   const [path, setPath] = useState<Step[]>([])
   const [period, setPeriodState] = useState<Period>(readPeriod)
@@ -85,7 +85,7 @@ export function DrillCard({ title, clients, products, levels, rootLabel = 'Book'
               <span className="drill-line tiny">
                 <span className="drill-bar" aria-hidden><i style={{ width: `${(r.value / max) * 100}%`, background: colorOf(r.key) }} /></span>
                 <span className="muted num">{Math.round(r.share * 100)}%</span>
-                {r.level !== 'client' && <span className="muted">{r.clients} {r.clients === 1 ? 'client' : 'clients'}</span>}
+                {r.level !== 'client' && showClients && <span className="muted">{r.clients} {r.clients === 1 ? 'client' : 'clients'}</span>}
                 <Change now={r.value} prev={r.prev} />
               </span>
             </>

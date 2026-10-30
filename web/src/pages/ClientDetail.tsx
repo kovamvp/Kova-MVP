@@ -8,6 +8,8 @@ import { ago, date, inr, label, when } from '../lib/format'
 import { AllocBar, Donut } from '../charts'
 import { ASSET_COLORS, Avatar, Delta, DetailSkeleton, Drawer, Empty, SkeletonRows, Num, Panel, Stat, Status, TierPill, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
+import { DrillCard, Change } from '../ui/Drill'
+import { ProfilePanel } from './ClientProfile'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
 
 const CONSENTS = [
@@ -23,6 +25,7 @@ export default function ClientDetail() {
   const { data: clients = [] } = useClients()
   const { data: products = [] } = useProducts()
   const { data: meetings = [] } = useMeetings()
+  const { data: ins } = useApi<any>(id ? `/clients/${id}/insights` : null)
   const panel = params.get('panel')
   const setPanel = (p: string | null, extra: Record<string, string> = {}) => setParams(p ? { panel: p, ...extra } : {})
   const [agentPrompt, setAgentPrompt] = useState<string | null>(null)
@@ -41,6 +44,10 @@ export default function ClientDetail() {
   const gain = c.aum - c.invested
   const band = EQUITY_BAND[c.risk_profile]
   const eq = c.allocation?.Equity || 0
+  const doCta = (cta: any) => {
+    if (cta.do === 'service') setPanel('actions', { do: 'service', category: cta.category })
+    else if (cta.do === 'schedule') setPanel('actions', { do: 'schedule' })
+  }
 
   return (
     <main className="page has-ctxbar">
@@ -79,14 +86,13 @@ export default function ClientDetail() {
 
       <div className="grid g-main-wide" style={{ marginTop: 16 }}>
         <div className="col" style={{ gap: 16 }}>
-          <section className="panel">
-            <div className="statline">
-              <Stat label="Invested" value={<Num v={c.invested} src="Purchase cost" />} />
-              <Stat label="Current value" value={<Num v={c.aum} />} />
-              <Stat label="Gain" value={<span className="row" style={{ gap: 6, color: gain >= 0 ? 'var(--gain-ink)' : 'var(--loss-ink)' }}>{gain !== 0 && <span aria-hidden style={{ fontSize: '0.6em' }}>{gain > 0 ? '▲' : '▼'}</span>}<Num v={gain} src="Current value minus cost" /></span>} />
-              <Stat label="Revenue this year" value={<Num v={c.revenue_ytd} src="Trail and fees, mock" />} />
-            </div>
-          </section>
+          <Comparisons c={c} ins={ins} />
+          <NeedsYou c={c} ins={ins} P={P} onDo={doCta} next={upcoming[0]} />
+          {c.holdings.length > 0 && (
+            <section className="panel drill-panel">
+              <DrillCard title={<h2>Holdings</h2>} rootLabel="All holdings" clients={[c]} products={products} levels={['asset_class', 'product_type', 'subcategory', 'product']} src={`${c.first_name}'s holdings`} showClients={false} />
+            </section>
+          )}
 
           {c.goals?.length > 0 && (
             <Panel title="Goals" aside="As the client described them">
@@ -122,32 +128,7 @@ export default function ClientDetail() {
           </Panel>
           )}
 
-          <Panel title="Coming up">
-            {upcoming.length === 0 && c.cash_flows.length === 0 && <p className="small muted">Nothing scheduled.</p>}
-            <div className="col" style={{ gap: 0 }}>
-              {upcoming.slice(0, 3).map((m) => (
-                <Link key={m.id} to={`/meetings?m=${m.id}`} className="w-line"><CalendarPlus size={15} color="var(--forest)" /><span className="grow small">{m.title}<br /><span className="tiny muted">{when(m.start)} · {m.location}</span></span></Link>
-              ))}
-              {c.cash_flows.slice(0, 4).map((f: any, i: number) => (
-                <div key={i} className="w-line small"><span className="grow">{f.kind}: {P[f.product_id]?.name}<br /><span className="tiny muted">{when(f.date)}</span></span><span className="num" style={{ color: f.amount < 0 ? 'var(--muted)' : 'var(--ink-strong)' }}>{inr(f.amount, { fixed: true })}</span></div>
-              ))}
-            </div>
-          </Panel>
-
-          {c.red_flags.length > 0 && (
-            <Panel title="Red flags">
-              <div className="col" style={{ gap: 8 }}>{c.red_flags.map((f: any, i: number) => <div key={i} className={`sev ${f.severity} small`}>{f.text}</div>)}</div>
-            </Panel>
-          )}
-
-          <Panel title="About">
-            <p className="small" style={{ marginBottom: 12 }}>{c.notes_summary}</p>
-            <dl className="kv" style={{ gridTemplateColumns: '110px 1fr' }}>
-              <dt>Mobile</dt><dd>{c.phone}</dd><dt>Email</dt><dd className="ellipsis">{c.email}</dd><dt>Age</dt><dd>{c.age}</dd>
-              <dt>PAN</dt><dd>{c.pan_masked}</dd><dt>Last contact</dt><dd>{ago(c.last_contact)}</dd><dt>Nominee</dt><dd>{c.nominee}</dd>
-              <dt>Interests</dt><dd>{c.consent.profile_enrichment ? c.interests.join(', ') : <span className="muted">Not recorded: no profile-enrichment consent</span>}</dd>
-            </dl>
-          </Panel>
+          <ProfilePanel c={c} onRequest={(category, what) => setPanel('actions', { do: 'service', category, ...(what ? { what } : {}) })} />
 
           {family.length > 0 && (
             <Panel title="Family">
@@ -235,5 +216,62 @@ function PortfolioPanel({ c, P, products, onClose }: { c: any; P: Record<string,
         ))}
       </div>
     </Drawer>
+  )
+}
+
+/* Value, return against a benchmark blend, revenue against last year, and how often you've met */
+function Comparisons({ c, ins }: { c: any; ins: any }) {
+  const cmp = ins?.comparisons
+  const gain = c.aum - c.invested
+  const diff = cmp?.return_1y != null && cmp?.benchmark_1y != null ? cmp.return_1y - cmp.benchmark_1y : null
+  return (
+    <section className="panel">
+      <div className="statline">
+        <Stat label="Current value" value={<Num v={c.aum} />} sub={c.invested > 0 ? <span className="row" style={{ gap: 6 }}>{gain >= 0 ? '▲' : '▼'} <Num v={Math.abs(gain)} src="Current value minus cost" /> on <Num v={c.invested} src="Purchase cost" /> invested</span> : 'Nothing invested yet'} />
+        <Stat label="Return, last 12 months" value={cmp?.return_1y != null ? <Num v={cmp.return_1y} src="Change in value net of money added (modified Dietz), sample history">{cmp.return_1y}%</Num> : '—'}
+          sub={diff != null ? <span title={cmp.benchmark_name}><span className={`delta ${diff >= 0 ? 'up' : 'down'}`}>{diff >= 0 ? '▲' : '▼'} {Math.abs(diff).toFixed(1)} pts</span> vs {cmp.benchmark_1y}% benchmark blend</span> : 'Needs a year of history'} />
+        <Stat label="Revenue this fiscal year" value={<Num v={cmp?.revenue.fy ?? c.revenue_ytd} src="Trail and fees, sample data" />}
+          sub={cmp ? <span className="row" style={{ gap: 6 }}><Change now={cmp.revenue.fy} prev={cmp.revenue.fy_before || undefined} /><span>vs same months last year · {inr(cmp.revenue.lifetime)} since {cmp.revenue.since ? date(cmp.revenue.since + '-01', true).replace(/^\d+ /, '') : 'joining'}</span></span> : null} />
+        <Stat label="Meetings, last 90 days" value={cmp?.interactions.meetings_90d ?? '—'}
+          sub={cmp ? <>{cmp.interactions.meetings_prev_90d} in the 90 days before · last contact {ago(c.last_contact)}</> : null} />
+      </div>
+    </section>
+  )
+}
+
+/* Red flags say why they matter and offer the next step; actionables are what's coming in the next days and months */
+function NeedsYou({ c, ins, P, onDo, next }: { c: any; ins: any; P: Record<string, any>; onDo: (cta: any) => void; next?: any }) {
+  if (!ins) return null
+  const { flags } = ins
+  const soon = ins.actionables.some((a: any) => a.kind === 'meeting')
+  const actionables = [...ins.actionables, ...(!soon && next ? [{ kind: 'next', title: `Next meeting: ${next.title}`, date: next.start, detail: next.location, cta: { label: 'Open the meeting', href: `/meetings?m=${next.id}` } }] : [])]
+  if (!flags.length && !actionables.length) return null
+  const cta = (x: any) => x.href ? <Link className="btn btn-quiet btn-sm" to={x.href}>{x.label}</Link> : <button className="btn btn-quiet btn-sm" onClick={() => onDo(x)}>{x.label}</button>
+  return (
+    <Panel title="Needs you" aside={flags.length ? `${flags.length} flag${flags.length > 1 ? 's' : ''}` : undefined}>
+      <div className="col" style={{ gap: 0 }}>
+        {flags.map((f: any) => (
+          <div key={f.id} className="flag-row">
+            <div className={`sev ${f.severity} grow`}><div className="strong small">{f.text}</div><div className="tiny muted" style={{ marginTop: 2 }}>{f.why}</div></div>
+            {cta(f.cta)}
+          </div>
+        ))}
+        {actionables.map((a: any, i: number) => (
+          <div key={i} className="flag-row act">
+            <div className="grow small">
+              <div className="strong">{a.title}</div>
+              <div className="tiny muted">
+                {a.kind === 'cash_flows' ? <>{inr(a.inflow)} coming in, {inr(Math.abs(a.outflow))} going out · {a.detail}</>
+                  : <>{a.date ? when(a.date) : ''}{a.amount ? ` · ${inr(a.amount)}` : ''}{a.detail ? ` · ${a.detail}` : ''}</>}
+              </div>
+            </div>
+            {a.cta && cta(a.cta)}
+          </div>
+        ))}
+      </div>
+      {c.cash_flows?.length > 0 && <details className="tiny" style={{ marginTop: 8 }}><summary className="muted">All scheduled cash flows</summary>
+        <div className="col" style={{ gap: 0, marginTop: 6 }}>{c.cash_flows.map((f: any, i: number) => <div key={i} className="spread" style={{ padding: '4px 0' }}><span>{f.kind}: {P[f.product_id]?.name} · {date(f.date)}</span><span className="num">{inr(f.amount, { fixed: true })}</span></div>)}</div>
+      </details>}
+    </Panel>
   )
 }

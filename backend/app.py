@@ -98,6 +98,33 @@ def get_taxonomy():
     return {"asset_classes": ASSET_CLASSES, "tree": tree(store().list("products"))}
 
 
+@app.get("/api/profile/library")
+def profile_library():
+    from .profile import LOCKED, SECTIONS, SERVICE_CATEGORIES, library
+    return {"sections": SECTIONS, "locked": LOCKED, "fields": library(), "service_categories": SERVICE_CATEGORIES}
+
+
+@app.get("/api/clients/{id_}/insights")
+def client_insights(id_: str):
+    import datetime as _dt
+
+    from . import insights
+    from .store import today_ist
+    c = store().get("clients", id_)
+    if not c:
+        raise HTTPException(404, f"{id_} not found")
+    prods = {p["id"]: p for p in store().list("products")}
+    meetings = store().list("meetings")
+    flags = insights.flags(c, prods, meetings, today_ist())
+    stored = [{"id": f["id"], "severity": f["severity"], "text": f["text"], "why": f["why"], "cta": f["cta"]} for f in flags]
+    if c.get("red_flags") != stored:  # the list page reads the stored flags
+        c["red_flags"] = stored
+        store().put("clients", c["id"], c)
+    bms = {b["name"]: b for b in store().list("benchmarks")}
+    return {"flags": flags, "actionables": insights.actionables(c, prods, meetings, _dt.datetime.fromisoformat(now_ist())),
+            "comparisons": insights.comparisons(c, bms, meetings, today_ist())}
+
+
 @app.get("/api/tiers")
 def get_tiers():
     from .tiers import TIERS

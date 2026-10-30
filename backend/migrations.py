@@ -95,6 +95,21 @@ def history_and_benchmarks(store: Any) -> None:
             store.put("clients", c["id"], {**c, "history": hist})
 
 
+def client_profiles(store: Any) -> None:
+    """Profile sections built from the sample data; red flags recomputed with why and a next step."""
+    from .insights import flags
+    from .profile import seed_profile
+    from .store import today_ist
+    prods = {p["id"]: p for p in store.list("products")}
+    meetings = store.list("meetings")
+    for c in store.list("clients"):
+        new = {**c, "profile": seed_profile(dict(c)), "custom_fields": c.get("custom_fields", []), "profile_changes": c.get("profile_changes", [])}
+        new["red_flags"] = [{"id": f["id"], "severity": f["severity"], "text": f["text"], "why": f["why"], "cta": f["cta"]}
+                            for f in flags(new, prods, meetings, today_ist())]
+        if new != c:
+            store.put("clients", c["id"], new)
+
+
 # (id, description, function(store)). Append only; never edit or reorder applied ones.
 MIGRATIONS: list[Migration] = [
     ("2026-10-28-rupee-sign", "Amounts in text use ₹ and Indian digit grouping (not 'Rs' or 10,000,000)", rupee_sign),
@@ -102,6 +117,7 @@ MIGRATIONS: list[Migration] = [
     ("2026-10-30-client-tiers", "Households tiered Rise / Ascent / Summit / Zenith by assets with Kova", client_tiers),
     ("2026-10-30-history", "Monthly client history since two fiscal years ago, and benchmark indices", history_and_benchmarks),
     ("2026-10-30-history-by-product", "Monthly client history also split by product, for drill-down comparisons", history_and_benchmarks),
+    ("2026-10-31-client-profiles", "Client profile sections from sample data; red flags recomputed with why and a next step", client_profiles),
 ]
 
 
