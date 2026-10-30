@@ -80,6 +80,8 @@ SIM = {
     "ticket": [(1, "in_review", "{team} team lead", "Assigned within the team"), (6, "done", "{team} team lead", "Resolved; please confirm")],
     "portfolio_approval": [(1.5, "in_review", "CIO Office (Anand Iyer)", "Under review"), (4, "{decision}", "CIO Office (Anand Iyer)", "{decision_text}")],
     "mom_ack": [(3, "done", "{client}", "Acknowledged in Kova Client")],
+    "ownership_check": [(2, "in_review", "Branch head (Rohan Kapoor)", "Checking with {rm}"),
+                        (6, "done", "Branch head (Rohan Kapoor)", "Spoke to {rm}: no active conversation on their side. The relationship stays with you.")],
 }
 
 
@@ -174,7 +176,7 @@ def send_message(args: dict, source: dict | None = None) -> dict:
     link = {"kind": args.get("to_kind", "client"), "id": args["to_id"]}
     who = entity(link["kind"], link["id"]) or {}
     channel = args.get("channel", "Email")
-    if channel == "WhatsApp" and link["kind"] == "client" and not who.get("consent", {}).get("whatsapp"):
+    if channel == "WhatsApp" and not who.get("consent", {}).get("whatsapp"):
         raise ValueError(f"{who.get('name')} has not consented to WhatsApp. Use email instead.")
     ob = add_outbox("send_message", channel, {"name": who.get("name"), "address": who.get("phone") if channel == "WhatsApp" else who.get("email")},
                     args.get("subject"), args["body"], {**(source or {}), "kind": link["kind"], "id": link["id"]})
@@ -281,6 +283,17 @@ def update_prospect(args: dict, source: dict | None = None) -> dict:
     if args.get("interest_product_id"):
         p["interests"] = list(dict.fromkeys(p.get("interests", []) + [args["interest_product_id"]]))
         changes.append(f"interested in {args['interest_product_id']}")
+    if args.get("needs"):
+        p["needs"] = prospects.check_needs({**(p.get("needs") or {}), **args["needs"]})
+        n = p["needs"]
+        changes.append(f"needs: {n['goal']}" + (f", {n['horizon']}" if n.get("horizon") else "") + (f", {', '.join(n['asset_classes'])}" if n.get("asset_classes") else ""))
+    if args.get("consent"):
+        cur = p.get("consent") or {}
+        new = {k: bool(v) for k, v in args["consent"].items() if k in prospects.PROSPECT_CONSENT}
+        diff = [f"{k} {'given' if v else 'withdrawn'}" for k, v in new.items() if bool(cur.get(k)) != v]
+        p["consent"] = {**cur, **new, "captured_on": now_ist()[:10]}
+        if diff:
+            changes.append("consent: " + ", ".join(diff))
     store().put("prospects", p["id"], p)
     add_timeline({"kind": "prospect", "id": p["id"]}, {"kind": "agent" if source else "system", "title": "Prospect updated", "body": "; ".join(changes)})
     return {"prospect": p}

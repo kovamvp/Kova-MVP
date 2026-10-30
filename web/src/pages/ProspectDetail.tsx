@@ -9,6 +9,7 @@ import { ago, date, inr, when, sourceText, label } from '../lib/format'
 import { Avatar, DetailSkeleton, Drawer, Empty, Modal, Num, Panel, Status, useToast } from '../ui'
 import AgentPanel from '../agent/AgentPanel'
 import { ActionsPanel, ContextBar, Timeline } from './shared'
+import { NeedsPanel } from './ProspectNeeds'
 
 export default function ProspectDetail() {
   const { id = '' } = useParams()
@@ -136,6 +137,8 @@ export default function ProspectDetail() {
               {!p.converted && <p className="tiny muted" style={{ marginTop: 10 }}>Operations confirms these in the full product. In this demo you mark them yourself.</p>}
             </Panel>
           </div>
+
+          <NeedsPanel p={p} />
 
           <Panel title="Timeline" aside="Everything here was entered by you or the agent">
             <Timeline items={p.timeline} />

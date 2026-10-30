@@ -110,6 +110,34 @@ def client_profiles(store: Any) -> None:
             store.put("clients", c["id"], new)
 
 
+# what each sample prospect told the RM, as structured needs (goal, horizon, asset classes)
+_PROSPECT_NEEDS = {
+    "PR-2001": ("Invest a windfall", "5+ years", ["Equity", "Debt"]), "PR-2002": ("Regular income", "3–5 years", ["Debt"]),
+    "PR-2003": ("Grow wealth", "5+ years", ["Equity", "Debt"]), "PR-2004": ("Grow wealth", "5+ years", ["Equity"]),
+    "PR-2005": ("Grow wealth", "3–5 years", ["Equity"]), "PR-2006": ("Regular income", "3–5 years", ["Debt"]),
+    "PR-2007": ("Grow wealth", "5+ years", ["Equity"]), "PR-2008": ("Preserve capital", "5+ years", ["Equity", "Debt"]),
+    "PR-2009": ("Preserve capital", "1–3 years", ["Debt", "Cash"]), "PR-2010": ("Invest a windfall", "1–3 years", ["Cash", "Equity"]),
+    "PR-2011": ("Grow wealth", "5+ years", ["Equity"]), "PR-2012": ("Retirement", "3–5 years", ["Debt", "Equity"]),
+    "PR-2013": ("Save tax", "3–5 years", ["Equity"]), "PR-2014": ("Grow wealth", "5+ years", ["Equity"]),
+    "PR-2015": ("Preserve capital", "3–5 years", ["Debt"]), "PR-2016": ("Preserve capital", "5+ years", ["Equity", "Debt", "Gold"]),
+}
+_NO_WHATSAPP = {"PR-2004", "PR-2010", "PR-2016"}  # asked for email only
+
+
+def prospect_capture(store: Any) -> None:
+    """Prospects get structured needs, consent recorded at capture, and whether their contact details are verified."""
+    for p in store.list("prospects"):
+        g, h, a = _PROSPECT_NEEDS.get(p["id"], ("Not sure yet", None, []))
+        verified = next((s["done"] for s in p.get("kyc_steps", []) if s["step"] == "Mobile and email verified"), False)
+        new = {**p, "needs": p.get("needs") or {"goal": g, "horizon": h, "asset_classes": a},
+               "consent": p.get("consent") or {"whatsapp": p["id"] not in _NO_WHATSAPP, "email": bool(p.get("email")),
+                                                "marketing": p["source"] in ("Inbound", "Event"), "captured_on": p.get("created"),
+                                                "version": "Prospect consent v1.0"},
+               "contact_verified": p.get("contact_verified") or {"mobile": verified, "email": verified}}
+        if new != p:
+            store.put("prospects", p["id"], new)
+
+
 # (id, description, function(store)). Append only; never edit or reorder applied ones.
 MIGRATIONS: list[Migration] = [
     ("2026-10-28-rupee-sign", "Amounts in text use ₹ and Indian digit grouping (not 'Rs' or 10,000,000)", rupee_sign),
@@ -118,6 +146,7 @@ MIGRATIONS: list[Migration] = [
     ("2026-10-30-history", "Monthly client history since two fiscal years ago, and benchmark indices", history_and_benchmarks),
     ("2026-10-30-history-by-product", "Monthly client history also split by product, for drill-down comparisons", history_and_benchmarks),
     ("2026-10-31-client-profiles", "Client profile sections from sample data; red flags recomputed with why and a next step", client_profiles),
+    ("2026-10-31-prospect-capture", "Prospects get structured needs, consent and contact verification", prospect_capture),
 ]
 
 

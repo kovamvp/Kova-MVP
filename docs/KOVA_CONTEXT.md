@@ -149,6 +149,12 @@ W = working · D = designed with mock data (inner pages light) · O = out of thi
 - Service requests have categories (Demographic update, Family details update, Nominee update, Bank account change, KYC re-verification, Statement or certificate, Transaction issue, SIP or STP change, Other); the form can open pre-filled from a flag or a locked field. The agent's service request tool takes the category too.
 - Client page: comparison stats, "Needs you" (flags + actionables, each with its button), holdings on the drill card (asset class → product), profile panel with an edit button per section and "Add a field". Client list: "Last contact" filter (30 days, 3 or 6 months) combining with tier, segment and risk.
 
+**Cycle 2, Sprint 4: prospects (built 30 Oct).** In `backend/prospects.py`:
+- **Structured needs** `needs: {goal, horizon, asset_classes}` beside the free-text `need`. Goals: Grow wealth, Regular income, Preserve capital, Plan for a goal, Invest a windfall, Save tax, Retirement, Not sure yet. Horizons: under 1 year, 1–3, 3–5, 5+ years. Editable by the RM (Needs and consent panel) and proposable by the agent (`propose_update_prospect.needs`).
+- **Capture** (`create()`): a mobile or email is required; both start `contact_verified: false` and flip when the "Mobile and email verified" readiness step is marked. **Consent at capture** `consent: {whatsapp, email, marketing, captured_on, version}`; only the RM changes it (the agent can't). WhatsApp to a prospect without consent is refused by the action and by the agent's validation (closes known issue 7).
+- **Duplicates** (`duplicates()`, `POST /api/prospects/check`): matches mobile (last 10 digits), email (any case) or PAN against your clients, your prospects and a sample directory of other RMs' books (`DIRECTORY`; the real product queries the firm's book). Your own client/prospect → refused (409) with the record to open; another RM's → created with `ownership: {status, with_rm, matched_on, request_id}` and a simulated "Ownership check" request to the branch head (who settles it for you). Another RM's person is never shown by name.
+- Prospects page: "Pipeline by stage" and "Where they come from" bars open the list at that stage or source, with one line on why. The add form has goal, horizon, asset classes, consent and a live duplicate warning.
+
 ## 7. How the agent works (the core working feature)
 
 **Flow.** RM opens a client/prospect/product page → brass orb in the floating bar → session list (past sessions + "New session"; archived toggle) → chat. The RM types, or taps the mic (live words appear; on stop Whisper's transcript replaces them; the text is editable) → `POST /api/agent/sessions/{sid}/message`.
@@ -206,6 +212,7 @@ The real MVP will move to: Python/FastAPI modular monolith, Postgres + pgvector,
 
 | Id | What |
 |---|---|
+| `2026-10-31-prospect-capture` | Prospects get structured `needs`, `consent` (WhatsApp off for PR-2004, PR-2010, PR-2016) and `contact_verified` from their readiness step. |
 | `2026-10-31-client-profiles` | Clients get `profile` sections from the sample data, empty `custom_fields` and `profile_changes`; `red_flags` recomputed with `id`, `why` and `cta`. |
 | `2026-10-30-history-by-product` | Re-generates client history with a `by_product` split per month (and the calmer market path) and the benchmark indices. |
 | `2026-10-30-product-taxonomy` | Products get asset class / product type / subcategory / benchmark id; holdings get account, held at, on shelf; clients get `holding_accounts`. |
@@ -226,7 +233,7 @@ The real MVP will move to: Python/FastAPI modular monolith, Postgres + pgvector,
 4. **Reseed on deploy:** bumping `SEED_VERSION` deletes all sessions, outbox items and changes in production. A deploy that switches versions while requests are in flight can wipe sessions created seconds earlier.
 5. **Groq free-tier limits** (~8K tokens/minute per organisation); each agent turn uses roughly 3–12K tokens across tool rounds. Two people using agents at once can see waits.
 6. "By Friday" said on a Friday: prompt rule added (means next week) but not re-tested on the live site.
-7. Prospects have no consent fields; the agent can draft WhatsApp to any prospect.
+7. ~~Prospects have no consent fields~~ Fixed in Sprint 4: prospect consent recorded at capture and enforced for WhatsApp.
 8. Card fields that are ids (`with_id`, `client_id`…) are not editable in the card editor.
 9. Server time is IST; the browser uses its local time zone for "today".
 10. Phone layouts don't break but aren't polished. No code splitting (one ~300 KB JS bundle).
