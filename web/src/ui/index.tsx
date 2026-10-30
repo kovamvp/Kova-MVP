@@ -50,6 +50,24 @@ export function Status({ s, children }: { s?: string | null; children?: ReactNod
   return <span className={`pill ${STATUS[k] ?? ''}`}><span className="dot" />{children ?? STATUS_TEXT[k] ?? label(k)}</span>
 }
 
+/* ---------- client tier: four steps, filled up to the tier, plus the name (never the marks alone) */
+const TIER_INFO: Record<string, { label: string; level: number; rule: string }> = {
+  rise: { label: 'Rise', level: 1, rule: 'Household assets with Kova below ₹5 Cr' },
+  ascent: { label: 'Ascent', level: 2, rule: 'Household assets with Kova of ₹5 Cr to ₹10 Cr' },
+  summit: { label: 'Summit', level: 3, rule: 'Household assets with Kova of ₹10 Cr to ₹20 Cr' },
+  zenith: { label: 'Zenith', level: 4, rule: 'Household assets with Kova of ₹20 Cr and above' },
+}
+export function TierPill({ t }: { t?: string | null }) {
+  const info = t ? TIER_INFO[t] : undefined
+  if (!info) return null
+  return (
+    <span className={`pill tier tier-${t}`} title={`${info.label} tier: ${info.rule}`}>
+      <span className="tier-steps" aria-hidden>{[1, 2, 3, 4].map((i) => <i key={i} className={i <= info.level ? 'on' : ''} />)}</span>
+      {info.label}
+    </span>
+  )
+}
+
 /* ---------- panels */
 export function Panel({ title, aside, children, className = '', pad = true, id }: { title?: ReactNode; aside?: ReactNode; children: ReactNode; className?: string; pad?: boolean; id?: string }) {
   return (

@@ -55,9 +55,52 @@ def rupee_sign(store: Any) -> None:
             store.put(coll, id_, new)
 
 
+# ---------------------------------------------------------------- 2026-10-30: Sprint 1 foundations
+def product_taxonomy(store: Any) -> None:
+    """Products get asset class → product type → subcategory and a benchmark id; every holding says
+    which account it sits in, where that account is held and whether it's on Kova's shelf."""
+    from .history import benchmark_id
+    from .taxonomy import classify
+    for p in store.list("products"):
+        new = {**p, **classify(p)}
+        if p.get("benchmark"):
+            new["benchmark_id"] = benchmark_id(p["benchmark"])
+        if new != p:
+            store.put("products", p["id"], new)
+    for c in store.list("clients"):
+        acc_id = f"AC-{c['id']}-K"
+        accounts = c.get("holding_accounts") or [{"id": acc_id, "provider": "Kova", "held_at": "Kova", "kind": "kova",
+                                                   "label": "Kova account", "opened": c.get("client_since")}]
+        holdings = [{**h, "account_id": h.get("account_id") or acc_id, "held_at": h.get("held_at") or "Kova",
+                     "on_shelf": h.get("on_shelf", True)} for h in c.get("holdings", [])]
+        new = {**c, "holding_accounts": accounts, "holdings": holdings}
+        if new != c:
+            store.put("clients", c["id"], new)
+
+
+def client_tiers(store: Any) -> None:
+    from .tiers import refresh
+    refresh(store)
+
+
+def history_and_benchmarks(store: Any) -> None:
+    """Month-end values for each client since two fiscal years ago, and the benchmark indices."""
+    from .history import benchmark_docs, client_history
+    for b in benchmark_docs():
+        store.put("benchmarks", b["id"], b)
+    products = {p["id"]: p for p in store.list("products")}
+    for c in store.list("clients"):
+        hist = client_history(c, products)
+        if c.get("history") != hist:
+            store.put("clients", c["id"], {**c, "history": hist})
+
+
 # (id, description, function(store)). Append only; never edit or reorder applied ones.
 MIGRATIONS: list[Migration] = [
     ("2026-10-28-rupee-sign", "Amounts in text use ₹ and Indian digit grouping (not 'Rs' or 10,000,000)", rupee_sign),
+    ("2026-10-30-product-taxonomy", "Products classified asset class → type → subcategory; holdings say which account and where it's held", product_taxonomy),
+    ("2026-10-30-client-tiers", "Households tiered Rise / Ascent / Summit / Zenith by assets with Kova", client_tiers),
+    ("2026-10-30-history", "Monthly client history since two fiscal years ago, and benchmark indices", history_and_benchmarks),
 ]
 
 

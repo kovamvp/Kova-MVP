@@ -91,6 +91,28 @@ def patch_single(name: str, patch: dict = Body(...)):
 
 
 # ------------------------------------------------------------ actions (manual or approved agent cards)
+# ------------------------------------------------------------ shared reference data
+@app.get("/api/taxonomy")
+def get_taxonomy():
+    from .taxonomy import ASSET_CLASSES, tree
+    return {"asset_classes": ASSET_CLASSES, "tree": tree(store().list("products"))}
+
+
+@app.get("/api/tiers")
+def get_tiers():
+    from .tiers import TIERS
+    fams = store().list("families")
+    return [{**t, "families": sum(1 for f in fams if f.get("tier") == t["key"])} for t in TIERS]
+
+
+@app.get("/api/book/history")
+def book_history():
+    from .history import book, fy_label, fy_start
+    from .store import today_ist
+    return {"months": book(store().list("clients")), "fy_start": fy_start(today_ist()).isoformat()[:7], "fy": fy_label(today_ist()),
+            "note": "Illustrative sample history for the demo."}
+
+
 @app.post("/api/actions/{action}")
 def run_action(action: str, args: dict = Body(...)):
     try:

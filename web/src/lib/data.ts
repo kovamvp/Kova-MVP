@@ -20,6 +20,14 @@ export const SEGMENTS = [
   { key: 'dormant', label: 'Dormant', color: '#C9A961', rule: 'No contact or transaction in 6 months' },
   { key: 'lost', label: 'Lost', color: '#A4573A', rule: 'Fully redeemed or moved away' },
 ]
+/* Client tiers by household value; thresholds live in backend/tiers.py (the server stamps c.tier). Keep labels in sync. */
+export const TIERS = [
+  { key: 'rise', label: 'Rise', level: 1, rule: 'Household assets with Kova below ₹5 Cr' },
+  { key: 'ascent', label: 'Ascent', level: 2, rule: 'Household assets with Kova of ₹5 Cr to ₹10 Cr' },
+  { key: 'summit', label: 'Summit', level: 3, rule: 'Household assets with Kova of ₹10 Cr to ₹20 Cr' },
+  { key: 'zenith', label: 'Zenith', level: 4, rule: 'Household assets with Kova of ₹20 Cr and above' },
+]
+export const tierOf = (key?: string | null) => TIERS.find((t) => t.key === key)
 export const STAGES = ['Lead', 'Prospect', 'Registered', 'KYC in progress', 'Investing client', 'Investing and trading client']
 export const STAGE_INFO: Record<string, string> = {
   Lead: 'Name and context only; not yet qualified',
@@ -38,6 +46,7 @@ export const EQUITY_BAND: Record<string, [number, number]> = {
 
 export function assetClassOf(p: any): string {
   if (!p) return 'Equity'
+  if (p.asset_class) return p.asset_class // the shared product classification, when the product has it
   if (p.sub_category?.startsWith('Commodity') || p.id === 'PD-601') return 'Gold'
   if (['PD-109', 'PD-110'].includes(p.id)) return 'Cash'
   if (['Bond', 'Fixed deposit'].includes(p.category) || p.sub_category?.startsWith('Debt') || p.id === 'PD-301') return 'Debt'

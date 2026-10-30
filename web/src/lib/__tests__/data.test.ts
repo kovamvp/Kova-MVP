@@ -38,3 +38,16 @@ describe('ldStats', () => {
     expect(s.overall).toBe(50)
   })
 })
+
+describe('tiers and the shared classification', () => {
+  it('names every tier in order', async () => {
+    const { TIERS, tierOf } = await import('../data')
+    expect(TIERS.map((t) => t.label)).toEqual(['Rise', 'Ascent', 'Summit', 'Zenith'])
+    expect(tierOf('summit')?.level).toBe(3)
+    expect(tierOf(undefined)).toBeUndefined()
+  })
+  it('uses the product’s own asset class when it has one', () => {
+    expect(assetClassOf({ id: 'PD-105', category: 'Mutual fund', sub_category: 'Hybrid: Balanced advantage', asset_class: 'Equity' })).toBe('Equity')
+    expect(assetClassOf({ id: 'PD-X', category: 'Bond', asset_class: 'Gold' })).toBe('Gold')
+  })
+})

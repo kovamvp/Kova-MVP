@@ -90,6 +90,9 @@ npm run dev          # http://localhost:5173 ; /api is proxied to :8000
 | `backend/actions.py` | Every RM action (schedule meeting, product feedback, message, MoM, reimbursement, service request, note, prospect update, ticket) + outbox + timeline + simulated team replies |
 | `backend/expenses.py` | Reimbursement policy (manager-editable, defaults) and the checks every claim goes through |
 | `backend/prospects.py` | Prospect stage gates, readiness steps, RM-confirmed conversion to client |
+| `backend/taxonomy.py` | One product classification: asset class → product type → subcategory (incl. types Kova doesn't sell) |
+| `backend/tiers.py` | Client tiers by household value (Rise, Ascent, Summit, Zenith) |
+| `backend/history.py` | Sample monthly client history, benchmark indices, fiscal-year helpers |
 | `backend/migrations.py` | Additive data migrations (snapshot first); list of applied ones in `docs/KOVA_CONTEXT.md` 10b |
 | `backend/agent.py` | Page agents (client, prospect, product): system prompt, read tools, propose tools → approval cards, validation, sessions, decide, transcribe, read-bill, dev test routes |
 | `backend/llm.py` | Groq gateway: two keys with fallback, model fallback, rate-limit wait, call log |
