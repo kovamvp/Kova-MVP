@@ -143,6 +143,12 @@ W = working · D = designed with mock data (inner pages light) · O = out of thi
 - Live on Home "Book at a glance" (with revenue this fiscal year vs the same months last year) and Products "Your book by product type" (replaces the donut). Default Home layout gives the book card more height (only applies to layouts not yet saved).
 - Sample market path changed to a calmer one (`kova-market-v245`, equity volatility 4% a month): equity ~14% over a year, ~12% a year over ten. The book grows from ~₹46 Cr (Apr 2024) to ₹142 Cr because of when the sample holdings started; revenue growth follows.
 
+**Cycle 2, Sprint 3: client page (built 30 Oct).**
+- `backend/profile.py`: profile in sections (Identity and KYC, Family, Work, Lifestyle and interests, What they own outside Kova, Preferences, How they decide) stored as `client.profile[section][field]`. **Locked** (change only by service request, each mapped to a category): name, date of birth, PAN, mobile, email, KYC, accounts, nominee, bank, risk profile. Lifestyle needs profile-enrichment consent. Edits log to `profile_changes` `{at, by, section, field, from, to}` and the timeline; occupation, interests and notes mirror the older top-level fields the agent reads. Actions `update_profile`, `add_custom_field`, `update_custom_field`, `remove_custom_field` (removed values stay in the change log). `custom_fields: [{id, label, type, value, section, options, added_by, at}]`; types text, number, date, choice, yes/no, tags. Field library in `_single/field_library` (defaults + RM-added). `GET /api/profile/library`.
+- `backend/insights.py` (rules, no AI): **flags** with `why` and a `cta` (no nominee → nominee update request; equity above band → Studio; risk profile over 18 months → book a review; no contact in 6 months → check-in; holding under CIO review → product page; maturity within 30 days with no meeting → plan reinvestment). **Actionables**: meetings in the next 24 hours (else the next meeting), maturities in 6 months, cash flows in 12 months. **Comparisons**: 12-month return (modified Dietz, net of money added) vs a benchmark blend by allocation, revenue this FY vs the same months last year and since history starts, meetings in the last 90 days vs the 90 before. `GET /api/clients/{id}/insights`; it also stores the flags on `client.red_flags` so the list page stays in step.
+- Service requests have categories (Demographic update, Family details update, Nominee update, Bank account change, KYC re-verification, Statement or certificate, Transaction issue, SIP or STP change, Other); the form can open pre-filled from a flag or a locked field. The agent's service request tool takes the category too.
+- Client page: comparison stats, "Needs you" (flags + actionables, each with its button), holdings on the drill card (asset class → product), profile panel with an edit button per section and "Add a field". Client list: "Last contact" filter (30 days, 3 or 6 months) combining with tier, segment and risk.
+
 ## 7. How the agent works (the core working feature)
 
 **Flow.** RM opens a client/prospect/product page → brass orb in the floating bar → session list (past sessions + "New session"; archived toggle) → chat. The RM types, or taps the mic (live words appear; on stop Whisper's transcript replaces them; the text is editable) → `POST /api/agent/sessions/{sid}/message`.
@@ -200,6 +206,7 @@ The real MVP will move to: Python/FastAPI modular monolith, Postgres + pgvector,
 
 | Id | What |
 |---|---|
+| `2026-10-31-client-profiles` | Clients get `profile` sections from the sample data, empty `custom_fields` and `profile_changes`; `red_flags` recomputed with `id`, `why` and `cta`. |
 | `2026-10-30-history-by-product` | Re-generates client history with a `by_product` split per month (and the calmer market path) and the benchmark indices. |
 | `2026-10-30-product-taxonomy` | Products get asset class / product type / subcategory / benchmark id; holdings get account, held at, on shelf; clients get `holding_accounts`. |
 | `2026-10-30-client-tiers` | Families and clients get `tier` (Rise / Ascent / Summit / Zenith); family `aum` recomputed from members. |

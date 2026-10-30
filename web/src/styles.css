@@ -1001,3 +1001,23 @@ button.month-cell { text-align: left; width: 100%; align-items: stretch; border-
 .drill-val { min-width: 64px; text-align: right; font-size: 13px; }
 .drill-chg { min-width: 54px; text-align: right; display: inline-flex; justify-content: flex-end; }
 .drill.compact .drill-total { margin-bottom: 6px; }
+
+/* ---------- client page: needs you, profile sections */
+.flag-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.flag-row:last-child { border-bottom: 0; }
+.flag-row .btn { flex: none; }
+.flag-row.act .grow { padding-left: 12px; border-left: 2px solid var(--line); }
+.profile-sections { display: flex; flex-direction: column; }
+.pf-sec { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.pf-sec:first-child { padding-top: 0; }
+.pf-sec:last-child { border-bottom: 0; }
+.pf-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.pf-head h3 { font-size: 14.5px; }
+.pf-kv { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.pf-row { display: grid; grid-template-columns: 120px 1fr auto; gap: 8px; align-items: baseline; font-size: 13px; }
+.pf-row dt { color: var(--muted); }
+.pf-row dd { margin: 0; color: var(--ink-strong); min-width: 0; overflow-wrap: anywhere; }
+.pf-row.locked .iconbtn { color: var(--muted); align-self: center; }
+.pf-form { display: flex; flex-direction: column; gap: 8px; }
+.pf-sec.editing { background: var(--cream); margin: 0 -12px; padding: 12px; border-radius: var(--r-s); }
+.pf-add { margin-bottom: 12px; padding: 12px; background: var(--cream); border-radius: var(--r-s); }

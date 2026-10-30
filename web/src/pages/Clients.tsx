@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Check, ChevronRight, UserPlus, Users } from 'lucide-react'
 import { useClients, useFamilies, useMeetings, useProducts, useProspects } from '../lib/data'
 import { SEGMENTS, RISK_ORDER, EQUITY_BAND, TIERS } from '../lib/data'
-import { ago, inr, label, when, sinceText, sourceText } from '../lib/format'
+import { ago, daysFrom, inr, label, when, sinceText, sourceText } from '../lib/format'
 import { Donut, HBars, AllocBar } from '../charts'
 import { ASSET_COLORS, Avatar, LoadError, Modal, Num, Panel, SkeletonRows, Status, Stat, SearchField, TierPill } from '../ui'
 
@@ -21,6 +21,7 @@ export default function Clients() {
   const [onboard, setOnboard] = useState(params.get('onboard') === '1')
   const seg = params.get('segment') || ''
   const tier = params.get('tier') || ''
+  const quiet = Number(params.get('quiet') || 0)
   const setFilter = (k: string, v: string) => { const n = new URLSearchParams(params); if (v) n.set(k, v); else n.delete(k); setParams(n) }
   const nav = useNavigate()
 
@@ -32,11 +33,11 @@ export default function Clients() {
   const flagged = clients.filter((c) => c.red_flags.some((f: any) => f.severity === 'high'))
 
   const list = useMemo(() => {
-    let l = clients.filter((c) => (!seg || c.segment === seg) && (!tier || c.tier === tier) && (!risk || c.risk_profile === risk) && (!q || (c.name + c.id + c.locality + c.occupation).toLowerCase().includes(q.toLowerCase())))
+    let l = clients.filter((c) => (!seg || c.segment === seg) && (!tier || c.tier === tier) && (!quiet || (daysFrom(c.last_contact) ?? 0) <= -quiet) && (!risk || c.risk_profile === risk) && (!q || (c.name + c.id + c.locality + c.occupation).toLowerCase().includes(q.toLowerCase())))
     const nm = (c: any) => nextMeeting(c.id)?.start || '9999'
     l = [...l].sort((a, b) => sort === 'aum' ? b.aum - a.aum : sort === 'name' ? a.name.localeCompare(b.name) : sort === 'contact' ? a.last_contact.localeCompare(b.last_contact) : sort === 'next' ? nm(a).localeCompare(nm(b)) : b.red_flags.length - a.red_flags.length)
     return l
-  }, [clients, seg, tier, risk, q, sort, meetings])
+  }, [clients, seg, tier, quiet, risk, q, sort, meetings])
 
   const suggestions = useMemo(() => {
     if (!clients.length) return []
@@ -136,6 +137,12 @@ export default function Clients() {
             <select className="select sm" value={tier} onChange={(e) => setFilter('tier', e.target.value)} aria-label="Tier" style={{ width: 130 }}>
               <option value="">Any tier</option>
               {[...TIERS].reverse().map((t) => <option key={t.key} value={t.key} title={t.rule}>{t.label}</option>)}
+            </select>
+            <select className="select sm" value={quiet || ''} onChange={(e) => setFilter('quiet', e.target.value)} aria-label="Last contact" style={{ width: 190 }}>
+              <option value="">Any last contact</option>
+              <option value="30">Not contacted in 30 days</option>
+              <option value="90">Not contacted in 3 months</option>
+              <option value="180">Not contacted in 6 months</option>
             </select>
             <select className="select sm" value={risk} onChange={(e) => setRisk(e.target.value)} aria-label="Risk profile" style={{ width: 190 }}>
               <option value="">Any risk profile</option>

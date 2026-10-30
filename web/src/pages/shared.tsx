@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { CalendarPlus, FileText, Lock, Headset, MessageSquare, NotebookPen, Receipt, Send, UserCog } from 'lucide-react'
 import { api, invalidate, useApi } from '../lib/api'
 import { useAction } from '../lib/action'
@@ -132,8 +133,13 @@ function MomForm({ kind, id, onDone }: { kind: 'client' | 'prospect'; id: string
   )
 }
 
+export const SERVICE_CATEGORIES = ['Demographic update', 'Family details update', 'Nominee update', 'Bank account change', 'KYC re-verification',
+  'Statement or certificate', 'Transaction issue', 'SIP or STP change', 'Other'] // same list as backend/profile.py
+
 function ServiceForm({ clientId, onDone }: { clientId: string; onDone: () => void }) {
-  const [f, setF] = useState({ title: '', details: '', priority: 'normal' })
+  const [params] = useSearchParams()
+  const pre = params.get('category')
+  const [f, setF] = useState({ category: pre && SERVICE_CATEGORIES.includes(pre) ? pre : 'Demographic update', title: params.get('what') || '', details: '', priority: 'normal' })
   const { busy, run } = useAction()
   const toast = useToast()
   const save = () => run(async () => {
@@ -144,10 +150,13 @@ function ServiceForm({ clientId, onDone }: { clientId: string; onDone: () => voi
   }, 'The request wasn’t raised')
   return (
     <div className="action-form">
-      <label className="field"><span>What’s needed</span><input className="input" value={f.title} placeholder="Nominee update, address change, statement…" onChange={(e) => setF({ ...f, title: e.target.value })} /></label>
+      <label className="field"><span>Type of request</span>
+        <select className="select" value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>{SERVICE_CATEGORIES.map((c) => <option key={c}>{c}</option>)}</select>
+      </label>
+      <label className="field"><span>What’s needed</span><input className="input" value={f.title} placeholder="New address, add a nominee, capital gains statement…" onChange={(e) => setF({ ...f, title: e.target.value })} /></label>
       <label className="field"><span>Details for Client Experience</span><textarea className="textarea" rows={3} value={f.details} onChange={(e) => setF({ ...f, details: e.target.value })} /></label>
       <div className="seg" role="group" aria-label="Priority"><button className={f.priority === 'normal' ? 'on' : ''} aria-pressed={f.priority === 'normal'} onClick={() => setF({ ...f, priority: 'normal' })}>Normal</button><button className={f.priority === 'high' ? 'on' : ''} aria-pressed={f.priority === 'high'} onClick={() => setF({ ...f, priority: 'high' })}>High priority</button></div>
-      <div className="row"><button className="btn btn-primary" disabled={busy || !f.title.trim() || !f.details.trim()} onClick={save}>Raise request</button><button className="btn btn-ghost" onClick={onDone}>Cancel</button></div>
+      <div className="row"><button className="btn btn-primary" disabled={busy || !f.details.trim()} onClick={save}>Raise request</button><button className="btn btn-ghost" onClick={onDone}>Cancel</button></div>
     </div>
   )
 }
